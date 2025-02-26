@@ -813,7 +813,7 @@ models <- list(
 
 # Capture the stargazer output as text
 tex_table <- capture.output(
-  stargazer(models, omit = "town",
+  stargazer(models, omit = "town", header = FALSE, 
             digits = 2,
             title = "Weibull Survival Models of Market Timing Decisions",
             covariate.labels = c("More Buyers Expected", "Less Buyers Expected",
@@ -823,9 +823,14 @@ tex_table <- capture.output(
 )
 
 # Wrap the stargazer output in a resizebox environment so it fits the page
-tex_table <- c("\\resizebox{\\textwidth}{!}{%", 
-               tex_table, 
-               "}")
+tex_table <- paste(
+  "\\begin{table}[!htbp] \\centering",
+  "\\resizebox{\\textwidth}{!}{%",
+  tex_table,
+  "}",
+  "\\end{table}",
+  sep = "\n"
+)
 
 # Write the table to the .tex file
 out_path <- here("tables", "Weibull_Survival_Model_basic.tex")
