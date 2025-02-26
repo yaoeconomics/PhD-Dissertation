@@ -1,0 +1,858 @@
+---
+title: "Yanan_apple_analysis_code"
+author: "Zhiyao (Yao) Ma"
+date: "2025-02-24"
+output:
+  html_document: 
+  mathjax: default
+---
+```{r setup}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+```
+# Loading the Data
+```{r Packages and Loading the Data}
+# install.packages("readxl")
+# install.packages("dplyr")
+# install.packages("ggplot2")
+# install.packages("lmtest")
+# install.packages("sandwich")
+# install.packages("stargazer")
+# install.packages("margins")
+# install.packages("xtable")
+# install.packages("survival")
+# install.packages("tidyr")
+# install.packages("fmsb")
+# install.packages("gridExtra")
+# install.packages("knitr")
+# install.packages("ggcorrplot")
+# install.packages("kableExtra")
+# install.packages("here")
+
+library(readxl)
+library(dplyr)
+library(ggplot2)
+library(gridExtra)
+library(lmtest)
+library(sandwich)
+library(stargazer)
+library(margins)
+library(survival)
+library(tidyr)
+library(fmsb)
+library(knitr)
+library(kableExtra)
+library(here)
+
+# set the working dictionary
+## here() 自动定位到项目的根目录, 然后可以构造相对路径,而不需要手动setwd()
+## here("..") 这会返回 项目根目录的上一级目录。
+setwd(here())
+
+# Read the data
+df <- read_excel("data/combined_updated.xlsx")
+data <- read_excel("data/combined_updated.xlsx")
+```
+
+# Descriptive Statistics
+
+## Table of Summary Statistics
+
+```{r Table of Summary Statistics (tex file)}
+# Define conversion factor from mu to acre
+mu_to_acre <- 0.1657
+
+# Function to calculate summary statistics with conversion for land size
+calc_stats <- function(data, var, storage_data) {
+  if(var == "acres_mu") {
+    full_mean <- round(mean(data[[var]], na.rm = TRUE) * mu_to_acre,2)
+    full_sd <- round(sd(data[[var]], na.rm = TRUE) * mu_to_acre,2)
+    storage_mean <- round(mean(storage_data[[var]], na.rm = TRUE) * mu_to_acre,2)
+    storage_sd <- round(sd(storage_data[[var]], na.rm = TRUE) * mu_to_acre,2)
+  } else {
+    full_mean <- round(mean(data[[var]], na.rm = TRUE),2)
+    full_sd <- round(sd(data[[var]], na.rm = TRUE),2)
+    storage_mean <- round(mean(storage_data[[var]], na.rm = TRUE),2)
+    storage_sd <- round(sd(storage_data[[var]], na.rm = TRUE),2)
+  }
+  return(c(full_mean, full_sd, storage_mean, storage_sd))
+}
+
+# Subsample for storage usage
+storage_data <- data %>% filter(storage_usage_binary == 1)
+
+# Get number of observations
+n_full <- nrow(data)
+n_storage <- nrow(storage_data)
+
+# Define panel variables and labels with units (update: acres_mu is now acre)
+# Panel A: Farmer Demographics
+panel1_vars <- c("age", "hh_size", "labor_size", "education_highest", "family_ever_village_leader")
+panel1_names <- c("Age (years)", "Household size (persons)", "Labor size (persons)", "Highest education (level)", "Family ever village leader (dummy)")
+
+# Panel B: Production and Consumption
+panel2_vars <- c("yield_tons", "acres_mu", "bad_ratio", "apple_income", "Income", "labor_cost", "fam_consump")
+panel2_names <- c("Apple yield (tons)", "Land size (acre)", "Bad apple ratio", "Apple income (RMB)", "Total income (RMB)", "Labor cost (RMB)", "Family consumption (RMB)")
+
+# Panel C: Storage and Risk-Related Factors
+panel3_vars <- c("car_track", "nd_insurance", "p_insurance", "CRRA_adjusted", "storage_in_village",
+                   "far_to_small_storage", "far_to_large_storage", "storage_purpose_wider_marketing",
+                   "storage_purpose_bargaining_tool")
+panel3_names <- c("Car/truck ownership (dummy)", "Natural disaster insurance (dummy)", "Price insurance (dummy)", "CRRA adjusted (coef)", "Storage in village (dummy)", 
+                   "Distance to small storage (km)", "Distance to large storage (km)", "Storage for wider marketing (dummy)", "Storage as bargaining tool (dummy)")
+
+# Panel D: Marketing
+panel4_vars <- c("highest_price_kg", "ly_good_price_kg", "Wechat_sell", "relatiol_sell", "contract_sell")
+panel4_names <- c("Highest price per kg (RMB/kg)", "Last year good price per kg (RMB/kg)", "WeChat selling (dummy)", "Relational selling (dummy)", "Contract selling (dummy)")
+
+# Panel E: Market Competitive Conditions
+panel5_vars <- c("more_buyers_future", "less_buyers_future", "num_buyers", "subjective_belief_buyer_com")
+panel5_names <- c("Expect more buyers (dummy)", "Expect fewer buyers (dummy)", "Number of buyers (count)", "Subjective buyer competitiveness (score)")
+
+# Function to create panel dataframe with stats
+create_panel <- function(vars, names) {
+  panel_stats <- matrix(nrow = length(vars), ncol = 4)
+  for(i in 1:length(vars)) {
+    panel_stats[i,] <- calc_stats(data, vars[i], storage_data)
+  }
+  panel_df <- data.frame(
+    Variable = names,
+    Full_Mean = panel_stats[,1],
+    Full_SD = panel_stats[,2],
+    Storage_Mean = panel_stats[,3],
+    Storage_SD = panel_stats[,4]
+  )
+  return(panel_df)
+}
+
+panel1 <- create_panel(panel1_vars, panel1_names)
+panel2 <- create_panel(panel2_vars, panel2_names)
+panel3 <- create_panel(panel3_vars, panel3_names)
+panel4 <- create_panel(panel4_vars, panel4_names)
+panel5 <- create_panel(panel5_vars, panel5_names)
+
+# Build LaTeX table string
+latex_table <- "\\begin{table}[htbp]
+\\centering
+\\caption{Summary Statistics}
+\\begin{tabular}{lcccc}
+\\hline
+& \\multicolumn{2}{c}{Full Sample} & \\multicolumn{2}{c}{Storage Users} \\\\
+\\cline{2-3} \\cline{4-5}
+Variable & Mean & SD & Mean & SD \\\\
+\\hline
+\\multicolumn{5}{l}{\\	extbf{Panel A: Farmer Demographics}} \\\\
+"
+
+add_panel_to_latex <- function(panel, latex_table) {
+  for(i in 1:nrow(panel)) {
+    latex_table <- paste0(latex_table, "\
+", panel$Variable[i], " & ",
+                            sprintf("%.2f", panel$Full_Mean[i]), " & ",
+                            sprintf("%.2f", panel$Full_SD[i]), " & ",
+                            sprintf("%.2f", panel$Storage_Mean[i]), " & ",
+                            sprintf("%.2f", panel$Storage_SD[i]), " \\\\ ")
+  }
+  return(latex_table)
+}
+
+latex_table <- add_panel_to_latex(panel1, latex_table)
+latex_table <- paste0(latex_table, "\
+\\hline\
+\\multicolumn{5}{l}{\\	extbf{Panel B: Production and Consumption}} \\\\
+")
+latex_table <- add_panel_to_latex(panel2, latex_table)
+latex_table <- paste0(latex_table, "\
+\\hline\
+\\multicolumn{5}{l}{\\	extbf{Panel C: Storage and Risk-Related Factors}} \\\\
+")
+latex_table <- add_panel_to_latex(panel3, latex_table)
+latex_table <- paste0(latex_table, "\
+\\hline\
+\\multicolumn{5}{l}{\\	extbf{Panel D: Marketing}} \\\\
+")
+latex_table <- add_panel_to_latex(panel4, latex_table)
+latex_table <- paste0(latex_table, "\
+\\hline\
+\\multicolumn{5}{l}{\\	extbf{Panel E: Market Competitive Conditions}} \\\\
+")
+latex_table <- add_panel_to_latex(panel5, latex_table)
+
+# Add observations row
+latex_table <- paste0(latex_table, "\
+\\hline\
+Observations & ", n_full, " & - & ", n_storage, " & - \\\\
+")
+
+latex_table <- paste0(latex_table, "\\hline\
+\\end{tabular}\
+\\end{table}")
+
+# Save the LaTeX table to a tex file
+writeLines(latex_table, con = here("tables", "summary_statistics.tex"))
+```
+
+```{r Table of Summary Statistics (show in R)}
+
+setwd(here())
+# Load the data from Excel file; adjust the sheet name if needed
+data <- as.data.frame(read_excel(here("data", "combined_updated.xlsx")))
+
+# Get storage users
+storage_data <- data %>% filter(storage_usage_binary == 1)
+
+# Conversion factor (mu to acre)
+mu_to_acre <- 0.1657
+
+# Function to calculate summary statistics for a vector with potential conversion for 'acres_mu'
+calc_stats_vec <- function(vec, convert = FALSE) {
+  if(convert) {
+    vec <- vec * mu_to_acre
+  }
+  c(mean = round(mean(vec, na.rm = TRUE), 2),
+    sd = round(sd(vec, na.rm = TRUE), 2))
+}
+
+# Function to calculate panel stats given variable names and labels
+calc_panel_stats <- function(data, vars, storage_data, var_labels) {
+  stats_list <- lapply(1:length(vars), function(i) {
+    var <- vars[i]
+    convert <- ifelse(var == "acres_mu", TRUE, FALSE)
+    full_stats <- calc_stats_vec(data[[var]], convert = convert)
+    storage_stats <- calc_stats_vec(storage_data[[var]], convert = convert)
+    c(full_stats, storage_stats)
+  })
+  stats_matrix <- do.call(rbind, stats_list)
+  rownames(stats_matrix) <- var_labels
+  colnames(stats_matrix) <- c("Full Sample Mean", "Full Sample SD", 
+                              "Storage Users Mean", "Storage Users SD")
+  return(stats_matrix)
+}
+
+# Define panel variables and their labels in a list
+panels <- list(
+  "Panel A: Farmer Demographics" = list(
+    vars = c("age", "hh_size", "labor_size", "education_highest", "family_ever_village_leader"),
+    labels = c("Age (years)", "Household size (persons)", "Labor size (persons)",
+               "Highest education (level)", "Family ever village leader (dummy)")
+  ),
+  "Panel B: Production and Consumption" = list(
+    vars = c("yield_tons", "acres_mu", "bad_ratio", "apple_income", "Income", "labor_cost", "fam_consump"),
+    labels = c("Apple yield (tons)", "Land size (acre)", "Bad apple ratio",
+               "Apple income (RMB)", "Total income (RMB)", "Labor cost (RMB)", "Family consumption (RMB)")
+  ),
+  "Panel C: Storage and Risk-Related Factors" = list(
+    vars = c("car_track", "nd_insurance", "p_insurance", "CRRA_adjusted",
+             "storage_in_village", "far_to_small_storage", "far_to_large_storage",
+             "storage_purpose_wider_marketing", "storage_purpose_bargaining_tool"),
+    labels = c("Car/truck ownership (dummy)", "Natural disaster insurance (dummy)",
+               "Price insurance (dummy)", "CRRA adjusted (coef)",
+               "Storage in village (dummy)", "Distance to small storage (km)",
+               "Distance to large storage (km)", "Storage for wider marketing (dummy)",
+               "Storage as bargaining tool (dummy)")
+  ),
+  "Panel D: Marketing" = list(
+    vars = c("highest_price_kg", "ly_good_price_kg", "Wechat_sell", "relatiol_sell", "contract_sell"),
+    labels = c("Highest price per kg (RMB/kg)", "Last year good price per kg (RMB/kg)",
+               "WeChat selling (dummy)", "Relational selling (dummy)", "Contract selling (dummy)")
+  ),
+  "Panel E: Market Competitive Conditions" = list(
+    vars = c("more_buyers_future", "less_buyers_future", "num_buyers", "subjective_belief_buyer_com"),
+    labels = c("Expect more buyers (dummy)", "Expect fewer buyers (dummy)",
+               "Number of buyers (count)", "Subjective buyer competitiveness (score)")
+  )
+)
+
+# Build the full table by combining panel statistics
+table_list <- list()
+panel_names <- names(panels)
+for(panel in panel_names) {
+  panel_info <- panels[[panel]]
+  panel_stats <- calc_panel_stats(data, panel_info$vars, storage_data, panel_info$labels)
+  # Create a matrix with the panel name as a header row (empty columns)
+  header_row <- matrix(rep("", ncol(panel_stats)), nrow = 1)
+  rownames(header_row) <- panel
+  table_list[[panel]] <- rbind(header_row, panel_stats)
+}
+
+# Combine all panels into one table
+full_table <- do.call(rbind, table_list)
+
+# Add the Observations row at the end
+obs_row <- matrix(c(nrow(data), "-", nrow(storage_data), "-"), nrow = 1)
+colnames(obs_row) <- colnames(full_table)
+rownames(obs_row) <- "Observations"
+full_table <- rbind(full_table, obs_row)
+
+# Print the table in the console using kable
+print(kable(full_table, format = "pipe", digits = 2))
+```
+
+
+## Price-Info Sources
+
+```{r price info sources}
+# First, let's look at the distribution of storage types
+print(table(df$cold_storage_usage_type))
+
+# Filter and summarize the data for visualization
+# Focus on age, education, vehicle ownership (car/truck), CRRA-adjusted values, relational sales, and contractual sales
+
+# Summarize the data by storage type
+summary_data <- df %>% 
+  group_by(cold_storage_usage_type) %>% 
+  summarise(
+    avg_age = mean(age, na.rm = TRUE),
+    avg_education = mean(education_highest, na.rm = TRUE),
+    car_truck_ownership = mean(car_track, na.rm = TRUE),
+    avg_crra = mean(CRRA_adjusted, na.rm = TRUE),
+    avg_relational_sales = mean(relatiol_sell, na.rm = TRUE),
+    avg_contractual_sales = mean(contract_sell, na.rm = TRUE)
+  )
+
+print(summary_data)
+
+
+# 2. Radar plot for information sources
+info_sources <- df %>%
+  group_by(cold_storage_usage_type) %>%
+  summarise(
+    village_info = mean(villige_info, na.rm = TRUE),
+    gov_info = mean(gov_info, na.rm = TRUE),
+    market_info = mean(market_info, na.rm = TRUE),
+    futures_info = mean(futures_info, na.rm = TRUE),
+    buyer_info = mean(buyer_info, na.rm = TRUE)
+  )
+
+# Prepare data for radar plot
+radar_data <- as.data.frame(info_sources)
+rownames(radar_data) <- radar_data$cold_storage_usage_type
+radar_data <- radar_data[,-1]
+
+# Add max and min rows for radar plot scaling
+max_min <- data.frame(
+  village_info = c(1, 0),
+  gov_info = c(1, 0),
+  market_info = c(1, 0),
+  futures_info = c(1, 0),
+  buyer_info = c(1, 0)
+)
+radar_data <- rbind(max_min, radar_data)
+
+# Create radar plot
+png(here("figures", "radar_storage_info.png"), width = 800, height = 800)
+colors <- c("red", "blue", "green", "purple")
+radarchart(radar_data,
+           pcol = colors,
+           pfcol = scales::alpha(colors, 0.3),
+           plwd = 2,
+           plty = 1,
+           title = "Information Source Usage by Storage Type")
+legend("topright", 
+       legend = unique(df$cold_storage_usage_type),
+       col = colors,
+       lty = 1,
+       lwd = 2,
+       bty = "n")
+```
+```{r, echo=FALSE, out.width="80%"}
+knitr::include_graphics(here("figures", "radar_storage_info.png"))
+```
+
+
+## Demographics by storage type
+
+```{r Demographics by storage type}
+
+# Define individual plots
+plot_age <- ggplot(summary_data, aes(x = cold_storage_usage_type, y = avg_age, fill = cold_storage_usage_type)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(title = "Average Age", x = "Storage Type", y = "Age") +
+  theme(legend.position = "none")
+
+plot_education <- ggplot(summary_data, aes(x = cold_storage_usage_type, y = avg_education, fill = cold_storage_usage_type)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(title = "Average Education", x = "Storage Type", y = "Education Level") +
+  theme(legend.position = "none")
+
+plot_vehicle <- ggplot(summary_data, aes(x = cold_storage_usage_type, y = car_truck_ownership, fill = cold_storage_usage_type)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(title = "Vehicle Ownership", x = "Storage Type", y = "Ownership Rate") +
+  theme(legend.position = "none")
+
+plot_crra <- ggplot(summary_data, aes(x = cold_storage_usage_type, y = avg_crra, fill = cold_storage_usage_type)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(title = "CRRA-Adjusted", x = "Storage Type", y = "CRRA Value") +
+  theme(legend.position = "none")
+
+plot_relational <- ggplot(summary_data, aes(x = cold_storage_usage_type, y = avg_relational_sales, fill = cold_storage_usage_type)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(title = "Relational Sales", x = "Storage Type", y = "Sales Rate") +
+  theme(legend.position = "none")
+
+plot_contractual <- ggplot(summary_data, aes(x = cold_storage_usage_type, y = avg_contractual_sales, fill = cold_storage_usage_type)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(title = "Contractual Sales", x = "Storage Type", y = "Sales Rate") +
+  theme(legend.position = "none")
+
+# Combine plots into a grid with shared legend
+combined_plot <- grid.arrange(
+  arrangeGrob(plot_age, plot_education, plot_vehicle, nrow = 1),
+  arrangeGrob(plot_crra, plot_relational, plot_contractual, nrow = 1),
+  nrow = 2
+)
+
+# Save the combined plot to a file
+ggsave(here("figures", "combined_storage_metrics.png"), combined_plot, width = 12, height = 8)
+```
+
+## Apple Selling Price by Month and Storage Type
+
+```{r Selling Price by Month and Storage Type}
+# Check NA values in selling_month
+print("Number of NA values in selling_month:")
+print(sum(is.na(df$selling_month)))
+
+# Display some rows where selling_month is NA
+print("\
+Sample of rows where selling_month is NA:")
+print(head(df[is.na(df$selling_month), c("selling_month", "ly_good_price_kg", "cold_storage_usage_type")]))
+
+# Let's clean the data by removing rows where either selling_month or ly_good_price_kg is NA
+df_clean <- df %>%
+  filter(!is.na(selling_month) & !is.na(ly_good_price_kg))
+
+# Extract month
+df_clean$selling_month <- format(df_clean$selling_month, "%m")
+
+
+# Constants for conversion
+yuan_to_dollar = 0.139  # 1 Yuan = 0.139 USD (approximate rate)
+kg_to_pound = 2.20462  # 1 kg = 2.20462 pounds
+
+# Convert price from Yuan/kg to Dollar/pound
+df_clean$price_dollar_pound <- (df_clean$ly_good_price_kg * yuan_to_dollar) / kg_to_pound
+
+# Calculate frequency for bubble size with converted price
+freq_data <- df_clean %>%
+  group_by(selling_month, price_dollar_pound, cold_storage_usage_type) %>%
+  summarise(count = n(), .groups = 'drop')
+
+# Create the improved bubble plot
+p <- ggplot(freq_data, aes(x=selling_month, y=price_dollar_pound, 
+                      size=count, color=cold_storage_usage_type)) +
+  geom_point(alpha=0.6) +
+  scale_size(range = c(3, 15)) +
+  labs(title="Apple Selling Price by Month and Storage Type",
+       x="Selling Month",
+       y="Price (USD/lb)",
+       size="Number of\
+Observations",
+       color="Storage Usage Type") +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 14, face = "bold"),
+    legend.position="right",
+    axis.text = element_text(size = 10),
+    axis.title = element_text(size = 12)
+  )
+
+# Save the plot
+ggsave(here("figures", "apple_price_bubble_plot.png"), p, width = 12, height = 8, dpi = 300)
+
+# Display the plot
+print(p)
+
+# Updated summary statistics with Dollar/pound
+summary_stats <- df_clean %>%
+  group_by(cold_storage_usage_type) %>%
+  summarise(
+    mean_price_usd_lb = mean(price_dollar_pound, na.rm=TRUE),
+    sd_price_usd_lb = sd(price_dollar_pound, na.rm=TRUE),
+    median_price_usd_lb = median(price_dollar_pound, na.rm=TRUE),
+    n_observations = n()
+  )
+
+print("\
+Updated Summary Statistics by Storage Type (USD/lb):")
+print(summary_stats)
+
+# Updated monthly average prices in USD/lb
+monthly_avg <- df_clean %>%
+  group_by(selling_month) %>%
+  summarise(
+    mean_price_usd_lb = mean(price_dollar_pound, na.rm=TRUE),
+    n_observations = n()
+  ) %>%
+  arrange(selling_month)
+
+print("\
+Updated Monthly Average Prices (USD/lb):")
+print(monthly_avg)
+```
+
+## Selling Weeks (months) Distribution by Storage Type
+
+```{r Selling Weeks Distribution by Storage Type}
+# Create a function to convert dates to week labels
+create_week_labels <- function(date) {
+    month <- format(date, "%B")
+    week_labels <- case_when(
+        month == "October" ~ "1 to 4",
+        month == "November" ~ "5 to 8",
+        month == "December" ~ "9 to 12",
+        TRUE ~ "13 to 28"
+    )
+    return(week_labels)
+}
+
+# Convert selling_month and create week labels
+df$selling_month <- as.POSIXct(df$selling_month, origin="1970-01-01")
+df$week_label <- create_week_labels(df$selling_month)
+
+# Order the week labels correctly
+df$week_label <- factor(df$week_label, 
+                       levels = c("1 to 4", "5 to 8", "9 to 12", "13 to 28"))
+
+# Create distribution plot for the full sample
+full_sample_dist <- ggplot(df, aes(x = week_label)) +
+  geom_bar(fill = "skyblue") +
+  theme_minimal() +
+  labs(title = "Distribution of Selling Weeks - Full Sample",
+       x = "Weeks",
+       y = "Count") +
+  theme(axis.text.x = element_text(angle = 0))
+
+
+# Create distribution plot by storage type
+storage_dist <- ggplot(df, aes(x = week_label, fill = cold_storage_usage_type)) +
+  geom_bar(position = "dodge") +
+  theme_minimal() +
+  labs(title = "Distribution of Selling Weeks by Storage Type",
+       x = "Weeks",
+       y = "Count") +
+  theme(axis.text.x = element_text(angle = 0)) +
+  scale_fill_brewer(palette = "Set3") +
+  labs(fill = "Storage Type")
+
+# Arrange plots
+combined_plot <- grid.arrange(full_sample_dist, storage_dist, nrow = 2)
+
+# Save the plot
+ggsave(here("figures", "selling_weeks_distribution.png"), combined_plot, width = 12, height = 10, dpi = 300)
+
+```
+
+# Binary Storage Decisions: Buyers’ Competitiveness at Harvest
+
+```{r logit analysis}
+data <- read_excel(here("data","combined_updated.xlsx"))
+# Ensure necessary libraries for logistic regression and fixed effects are loaded
+# install.packages("lme4")
+library(lme4)
+
+# Convert relevant variables to factors or numeric as needed
+data$storage_usage_binary <- as.factor(data$storage_usage_binary)
+data$town <- as.factor(data$town)
+data$family_ever_village_leader <- as.factor(data$family_ever_village_leader)
+data$education_highest <- as.numeric(data$education_highest)
+data$num_buyers <- as.numeric(data$num_buyers)
+data$subjective_belief_buyer_com <- as.numeric(data$subjective_belief_buyer_com)
+data$CRRA_adjusted <- as.numeric(data$CRRA_adjusted)
+data$age <- as.numeric(data$age)
+
+# Model 1: num_buyers only
+model1 <- glmer(storage_usage_binary ~ num_buyers + age + education_highest + family_ever_village_leader + CRRA_adjusted + (1 | town), 
+                data = data, family = binomial)
+
+# Model 2: subjective_belief_buyer_com only
+model2 <- glmer(storage_usage_binary ~ subjective_belief_buyer_com + age + education_highest + family_ever_village_leader + CRRA_adjusted + (1 | town), 
+                data = data, family = binomial)
+
+# Model 3: Both variables
+model3 <- glmer(storage_usage_binary ~ num_buyers + subjective_belief_buyer_com + age + education_highest + family_ever_village_leader + CRRA_adjusted + (1 | town), 
+                data = data, family = binomial)
+
+# Model 4: Both variables with interaction term
+model4 <- glmer(storage_usage_binary ~ num_buyers * subjective_belief_buyer_com + age + education_highest + family_ever_village_leader + CRRA_adjusted + (1 | town), 
+                data = data, family = binomial)
+
+# Extract coefficients and standard errors
+models_list <- list(model1, model2, model3, model4)
+
+
+# Create LaTeX table
+stargazer(models_list,
+          type = "text",
+          out = here("tables", "buyer's_competition_logistic_results.tex"),
+          title = "Logistic Regression Results",
+          column.labels = c("Model 1", "Model 2", "Model 3", "Model 4"),
+          covariate.labels = c("Number of Buyers",
+                             "Subjective Belief",
+                             "Age",
+                             "Education Level",
+                             "Family Village Leader",
+                             "CRRA Adjusted",
+                             "Num Buyers $\\	imes$ Subjective Belief",
+                             "Constant"),
+          dep.var.labels = "Storage Usage (Binary)",
+          model.numbers = TRUE,
+          single.row = FALSE,
+          digits = 2,
+          font.size = "footnotesize",
+          add.lines = list(c("Fixed Effects", "Yes", "Yes", "Yes", "Yes")))
+```
+
+# Binary Storage Decisions: Farmers' Expectations on Buyers' Competitiveness
+
+```{r}
+# ReLoad the data
+data <- read_excel(here("data","combined_updated.xlsx"))
+
+# Convert "expected_number_of_buyers_in_3_months" to a categorical variable
+data <- data %>%
+  mutate(expect_3_months = case_when(
+    expected_number_of_buyers_in_3_months == -1 ~ "fewer_buyers",
+    expected_number_of_buyers_in_3_months == 0 ~ "no_change",
+    expected_number_of_buyers_in_3_months == 1 ~ "more_buyers"
+  ))
+
+# Ensure "expect_3_months" is a factor with "no_change" as the baseline
+data$expect_3_months <- factor(data$expect_3_months, levels = c("no_change", "fewer_buyers", "more_buyers"))
+
+# Prepare the formula for the logistic regression
+formula_base <- storage_usage_binary ~ expect_3_months + age + education_highest + family_ever_village_leader + CRRA_adjusted + factor(town)
+formula_with_additional <- update(formula_base, . ~ . + num_buyers + subjective_belief_buyer_com)
+
+# Run the logistic regressions
+model_base <- glm(formula_base, data = data, family = binomial)
+model_with_additional <- glm(formula_with_additional, data = data, family = binomial)
+
+# Create a combined table of results
+stargazer(model_base, model_with_additional, 
+          type = "text",
+          omit = "town",
+          add.lines = list(c("Town Fixed Effects", "Yes", "Yes")),
+          out = here("tables", "farmer_expectations_logistic_results.tex"),
+          dep.var.labels = "Storage Usage (Binary)",
+          covariate.labels = c("Fewer Buyers", "More Buyers", "Age", "Education", "Family Leader", "CRRA Adjusted", "Num Buyers", "Subjective Belief"),
+          digits = 2, 
+          star.cutoffs = c(0.05, 0.01, 0.001)
+          )
+
+# Calculate marginal effects for "expect_3_months"
+marginal_effects <- margins(model_base, variables = "expect_3_months")
+summary_marginal_effects <- summary(marginal_effects)
+
+# Save marginal effects to a file
+write.csv(summary_marginal_effects, here("tables", "marginal_effects_expect_3_months.csv"))
+```
+
+```{r predicted probability from the model}
+# Calculate predicted probabilities with bootstrap standard errors
+library(boot)
+
+# Create prediction function for bootstrap
+pred_func <- function(data, indices) {
+  # Fit model on bootstrap sample
+  boot_model <- glm(storage_usage_binary ~ expect_3_months + age + 
+                    education_highest + family_ever_village_leader + 
+                    CRRA_adjusted + factor(town),
+                    data = data[indices,], 
+                    family = binomial)
+  
+  # Create prediction dataset
+  newdata <- expand.grid(
+    expect_3_months = c("no_change", "fewer_buyers", "more_buyers"),
+    age = mean(data$age, na.rm = TRUE),
+    education_highest = mean(data$education_highest, na.rm = TRUE),
+    family_ever_village_leader = as.numeric(names(sort(table(data$family_ever_village_leader), decreasing = TRUE)[1])),
+    CRRA_adjusted = mean(data$CRRA_adjusted, na.rm = TRUE),
+    town = names(sort(table(data$town), decreasing = TRUE)[1])
+  )
+  
+  # Return predictions
+  predict(boot_model, newdata, type = "response")
+}
+
+# Perform bootstrap
+set.seed(123)
+boot_results <- boot(data = data, statistic = pred_func, R = 1000)
+
+# Calculate means and standard errors
+pred_means <- colMeans(boot_results$t)
+pred_ses <- apply(boot_results$t, 2, sd)
+
+# Create results dataframe
+results_df <- data.frame(
+  Expected_Buyers = c("No Change", "Fewer Buyers", "More Buyers"),
+  Predicted_Probability = round(pred_means, 3),
+  SE = round(pred_ses, 3)
+)
+
+# Add 95% confidence intervals
+results_df$CI_Lower <- round(results_df$Predicted_Probability - 1.96 * results_df$SE, 3)
+results_df$CI_Upper <- round(results_df$Predicted_Probability + 1.96 * results_df$SE, 3)
+
+# Print results
+print(results_df)
+
+# Create LaTeX table
+library(xtable)
+latex_table <- xtable(results_df, 
+                     caption = "Predicted Probabilities of Storage by Expected Buyers",
+                     label = "tab:predicted_probs",
+                     digits = 3)
+
+# Save LaTeX table
+print(latex_table, 
+      file = here("tables", "predicted_probabilities.tex"),
+      floating = TRUE,
+      table.placement = "htbp",
+      include.rownames = FALSE)
+```
+
+```{r Difference-from-Baseline Plot}
+# Calculate difference from baseline (No Change) dynamically
+baseline <- results_df$Predicted_Probability[results_df$Expected_Buyers == "No Change"]
+results_df$Difference <- results_df$Predicted_Probability - baseline
+results_df$Diff_CI_Lower <- results_df$CI_Lower - baseline
+results_df$Diff_CI_Upper <- results_df$CI_Upper - baseline
+
+
+# Exclude "No Change" from the graph
+results_df_filtered <- results_df %>% filter(Expected_Buyers != "No Change")
+
+# Create an updated Difference-from-Baseline Plot excluding "No Change"
+plot_filtered <- ggplot(results_df_filtered, aes(x = Expected_Buyers, y = Difference)) +
+  geom_point(size = 4, color = 'darkblue') +
+  geom_errorbar(aes(ymin = Diff_CI_Lower, ymax = Diff_CI_Upper), width = 0.2, color = 'darkred') +
+  geom_hline(yintercept = 0, linetype = 'dashed', color = 'gray') +
+  labs(title = 'Difference-from-Baseline Plot',
+       subtitle = 'Predicted Probability Changes Relative to "No Change"',
+       x = 'Expected Buyers Category',
+       y = 'Difference in Predicted Probability') +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(hjust = 0.5),
+    axis.title = element_text(face = "bold"),
+    axis.text = element_text(size = 12)
+  )
+
+# Save the updated plot to a file
+ggsave(filename = here("figures", "filtered_difference_from_baseline_plot.png"), plot = plot_filtered, width = 8, height = 5, dpi = 300)
+
+# Print the updated plot
+print(plot_filtered)
+```
+
+```{r Correlation Matrix of Controls}
+# Load the new package and re-run correlation matrix plot
+library(ggcorrplot)
+
+df <- read_excel(here("data","combined_updated.xlsx"))
+# Extract control variables
+control_vars <- df[, c("age", "education_highest", "family_ever_village_leader", "CRRA_adjusted", "num_buyers", "subjective_belief_buyer_com")]
+
+# Calculate correlation matrix
+cor_matrix <- cor(control_vars, use = "complete.obs")
+
+# Visualize the correlation matrix
+cor_plot <- ggcorrplot(cor_matrix, 
+                      lab = TRUE, 
+                      lab_size = 3,
+                      colors = c("#6D9EC1", "white", "#E46726"),
+                      title = "Correlation Matrix of Control Variables",
+                      ggtheme = theme_minimal())
+
+# Save the plot
+ggsave(filename = here("figures", "correlation_matrix_controls.png"), plot = cor_plot, width = 6, height = 5, dpi = 300)
+
+# Print the plot
+print(cor_plot)
+```
+
+# Hazard Models with AFT parametrization
+
+```{r baseline AFT}
+# Load required libraries and data
+library(survival)
+
+data$lower_bound_weeks <- as.numeric(data$lower_bound)
+data$upper_bound_weeks <- as.numeric(data$upper_bound)
+storage_users <- subset(data, storage_usage_binary == 1)
+
+# Run all models in one go
+models <- list(
+  # Full Sample Binary
+  survreg(Surv(lower_bound_weeks, upper_bound_weeks, type="interval2") ~ 
+          more_buyers_future + less_buyers_future + factor(town), 
+          data = data, dist = "weibull"),
+  
+  # Storage Users Binary
+  survreg(Surv(lower_bound_weeks, upper_bound_weeks, type="interval2") ~ 
+          more_buyers_future + less_buyers_future + factor(town), 
+          data = storage_users, dist = "weibull"),
+  
+  # Full Sample Continuous
+  survreg(Surv(lower_bound_weeks, upper_bound_weeks, type="interval2") ~ 
+          expected_number_of_buyers_in_3_months + factor(town), 
+          data = data, dist = "weibull"),
+  
+  # Storage Users Continuous
+  survreg(Surv(lower_bound_weeks, upper_bound_weeks, type="interval2") ~ 
+          expected_number_of_buyers_in_3_months + factor(town), 
+          data = storage_users, dist = "weibull")
+)
+
+# Generate text table for easier viewing
+stargazer(models, omit = "town",
+          out = here("tables", "Weibull_Survival_Model_basic.tex"),
+          digits = 2,
+          title = "Weibull Survival Models of Market Timing Decisions",
+          covariate.labels = c("More Buyers Expected", "Less Buyers Expected",
+                              "Expected Number of Buyers"),
+          add.lines = list(c("Town Fixed Effects", "Yes", "Yes", "Yes", "Yes")),
+          type = "text")
+```
+
+```{r extended AFT with controls}
+# Split the data into full sample and storage users
+full_sample <- data
+storage_users <- subset(data, storage_usage_binary == 1)
+
+
+# Check if datasets are loaded
+if (!exists("full_sample") || !exists("storage_users")) {
+  cat("Datasets 'full_sample' and 'storage_users' are not loaded. Please provide the data.")
+} else {
+  # Estimate models
+  model_full <- survreg(Surv(time = lower_bound_weeks, time2 = upper_bound_weeks, type = 'interval2') ~ 
+                        more_buyers_future + less_buyers_future + family_ever_village_leader + 
+                        far_to_small_storage + far_to_large_storage + storage_purpose_wider_marketing + 
+                        storage_purpose_bargaining_tool + education_highest + num_buyers + 
+                        factor(town), data = full_sample, dist = "weibull")
+
+  model_storage <- survreg(Surv(time = lower_bound_weeks, time2 = upper_bound_weeks, type = 'interval2') ~ 
+                           more_buyers_future + less_buyers_future + family_ever_village_leader + 
+                           far_to_small_storage + far_to_large_storage + storage_purpose_wider_marketing + 
+                           storage_purpose_bargaining_tool + education_highest + num_buyers + 
+                           factor(town), data = storage_users, dist = "weibull")
+
+# Generate LaTeX table using stargazer
+stargazer(model_full, model_storage, type = "text", 
+          add.lines = list(c("Town Fixed Effects", "Yes", "Yes")),omit = "town",digits = 2,
+            title = "Extended Weibull Survival Models with Controls",
+            dep.var.labels = c("Full Sample", "Storage Users"),
+            covariate.labels = c("More Buyers Future", "Less Buyers Future", "Family Village Leader",
+                                 "Far to Small Storage", "Far to Large Storage", "Storage Purpose: Marketing",
+                                 "Storage Purpose: Bargaining", "Education Level", "Number of Buyers"),
+            out = here("tables", "Extended_Weibull_Survival_Models_with_Controls.tex"))
+}
+```
