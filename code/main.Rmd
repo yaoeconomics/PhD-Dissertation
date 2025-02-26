@@ -54,9 +54,34 @@ data <- read_excel("data/combined_updated.xlsx")
 ```
 
 # Descriptive Statistics
+## Pie chart of storage users' type
+```{r pie chart}
+# Group by storage type and get counts
+storage_counts <- df %>%
+  group_by(cold_storage_usage_type) %>%
+  summarise(count = n())
+
+# Create a pie chart using ggplot2
+pie_chart <- ggplot(storage_counts, aes(x = "", y = count, fill = cold_storage_usage_type)) +
+  geom_bar(stat = "identity", width = 1, color="white") +
+  coord_polar(theta = "y") +
+  theme_minimal() +
+  labs(title = "Storage Usage Types") +
+  theme(axis.title.x=element_blank(),
+        axis.title.y=element_blank(),
+        panel.grid=element_blank(),
+        axis.text=element_blank(),
+        axis.ticks=element_blank()) +
+  geom_text(aes(label = paste0(cold_storage_usage_type, ' (', count, ')')),
+            position = position_stack(vjust = 0.5))
+
+# Save the plot to a file
+ggsave(here("figures", "pie_chart_storage_use_type.png"), pie_chart, width = 12, height = 8)
+print(pie_chart)
+```
+
 
 ## Table of Summary Statistics
-
 ```{r Table of Summary Statistics (tex file)}
 # Define conversion factor from mu to acre
 mu_to_acre <- 0.1657
