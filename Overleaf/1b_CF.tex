@@ -1,0 +1,106 @@
+\noindent I construct a conceptual framework capturing how smallholder farmers adopt on-farm storage to cope with middlemen's time-varying oligposony power. To sharpen focus on our objective of analyzing the effects of time-varying market competitive conditions, my model necessarily abstracts from farming decisions like crop production; instead, it treats the harvest as given so that the focus is on farmers' intra-seasonal strategies rather than inter-seasonal ones. It involves a simple storing-decision process where middlemen compete to buy the farmers' crops. Farmers observe the farm-gate price at harvest and decide whether to sell some, all, or none of their crop at this time and store any unsold product. 
+
+\subsection{Baseline Model}
+\noindent I start from a dynamic two-period model of household post-harvest management. Consider a small region in the interior of a developing country where local farmers' only income source is from production of a specific cash crop that is sold at harvest to "middlemen" at farm gates because the transaction cost to the nearest large market is unbearable. Households are assumed to be risk-neutral and value their own consumption of the cash crop at a reservation price, with a zero discount rate of profits in future trading periods. 
+
+
+In the initial trading period, each farming household observes one or more farm-gate price offers from different middlemen,\footnote{We do not need all farmers to receive the same price offers. There can be quality differences. The baseline model assumes quality is perfectly observable and reflected in price offers.}\textsuperscript{,}\footnote{Fresh apple deals are often quoted based on different diameter sizes ranging from 70mm to 95mm. However, I assume here for illustrative purposes that prices are one-dimensional and come from the kind of apples with the largest trading volume, or that I have non-problematically aggregated them into a one-dimensional price measure.} selects the highest offer ($p_1$), and decides the portion of the harvest to sell immediately and the portion to store for sale in the second period. This decision is influenced by their anticipation of a higher price ($p_2$) in the second trading period resulting from a potential increased competition among buyers. Symmetric information and zero transaction costs prevail in each trading period. Consequently, when farmers determine their storage strategy, they can fully realize the farm-gate prices set by middlemen. 
+
+Therefore, the objective of a farming household is to maximize its expected total profit ($\mathop{\mathbb{E}}[\pi]$) under the given harvest ($q$) over two trading periods, by choosing the share of the harvest stored at the first trading period and sold later ($s$). Denoting stochastic elements with $\sim$, the two-period household optimization problem can be expressed as follows:
+\begin{equation}
+    \max_{s \in [0,1]} \mathop{\mathbb{E}}[\pi] =  p_1 q(1-s)+E\left[\tilde{p_2}\right]q s -r^f q s 
+\label{Eq: Baseline Basic}
+\end{equation}
+where the first term represents the total revenue from period $t=1$, the second captures the expected revenue from selling all the stored harvest at $t=2$, and the third term depicts the total variable storage cost. 
+
+Farmers are assumed not to be the optimal stage in the supply chain for storage; instead, downstream entities like middlemen and wholesalers are assumed to be more efficient, primarily due to scale considerations. We assume $r^f > r^T$, where $r^T$ denotes per-unit variable storage cost for traders.
+
+The time-varying oligopsony power of middlemen is captured by assuming the existence of independent simplified Bertrand competition in each trading period, which allows a potentially higher farm-gate price to sell in future periods if a farmer chooses to store. I assume that there are only two traders in the market area, they compete with each other to purchase the crop from the growers, but each trader cannot visit every producing location, and hence $n \in\{1,2\}$, the number of traders at a specific village, is assumed to be stochastic in each trading period.\footnote{One possible explanation is the trader's limited resources, such as an insufficient number of trucks to visit every village. Another factor could be collusion among traders, leading to the allocation of markets, turning each trader into a monopsony in their assigned markets during the designated periods \citep{herings2005intertemporal}. However, collusion is prone to breakdowns, as cartels are inherently unstable. Therefore, even if trader collusion occurs in period 1, it may not persist into period 2.}\textsuperscript{,}\footnote{In the case of Bertrand competition, the inclusion of additional traders does not significantly impact the model. This is because, under Bertrand competition, the crucial determinant of equilibrium prices is whether only one trader or more than one trader visits. Having two traders is sufficient to yield a competitive outcome.}
+
+Therefore, in each period $t=\{1,2\}$, two scenarios can unfold. When there's only one middleman in the village ($n=1$), their monopsony purchasing power compels growers to sell at a reservation price of subsistence, denoted as $p^R_t$. However, if there are two middlemen ($n=2$), the classic Bertrand Paradox leads to an equilibrium where the farm-gate price is bid up to their marginal value product $p^\star_t$, which is the trader's sales price minus his marginal costs from selling the cash crop to the next level downstream and larger than $p^R_t$. The farm-gate price in each period is now contingent on the number of traders:
+\begin{equation}
+p_t=
+        \begin{cases}
+            p^R_t, & \text {when $n=1$, Monopsony} \\ 
+            p^{\star}_t, & \text {when $n=2$, Bertrand Competitive}
+        \end{cases}
+\end{equation}
+Downstream demand is assumed to be constant, indicating that both remain constant over time.
+
+
+\subsection{Results}
+
+\subsubsection{Under Certainty}
+\noindent I first consider the behavior of households in a deterministic world where a farming household's storage decision simplifies to a binary choice, $s \in \{0,1\}$. Under fixed downstream demand and certainty in middlemen's competitive structures, the partial derivative with respect to the storage share $\frac{\partial \pi}{\partial s}=(p_2-p_1-r^f)q$ becomes a constant. A household would store all the harvest ($s=1$) when the farm-gate price spread ($p_2-p_1$) exceeds the carrying cost ($r^f$), and sell everything at the first trading period ($s=0$) otherwise. In other words, any interior solution would be sub-optimal. It is worth noting that storage usage occurs only when a Bertrand paradox arises at $t=2$ coupled with the household experiencing monopsony power at $t=1$. This condition is necessary but not sufficient to compel storage. In addition, we need that the Bertrand price exceeds the monopsony price by at least the variable cost of storage: $p^\star_t - p^R_t \geq r^f$. 
+
+In our scenario, without competition concerns, farmers would avoid storage. With fixed downstream demand and stable competitive conditions, they consistently receive the same price offers, eliminating the incentive for storage. Even with varying downstream demand over time, farmer storage becomes economically impractical if prices are expected to fall or to rise by less than carrying costs. In a competitive storage model, the increase in price for efficient storage will be equal to the marginal storage cost between two periods. Since we have assumed that farmers are not in the efficient storage stage along the supply chain, they will never engage in storage under the competitive storage model.
+
+
+
+
+\subsubsection{With Stochasticity}
+\noindent The introduction of uncertainty in the time-varying competitive conditions adds complexity to the household's challenge. Suppose we specify that the number of middlemen in village $j$ during period $t$ is stochastic, with the probability of one middleman being $\beta$ (i.e., $Pr(n_t=1)=\beta$). In that case, the probability of two intermediaries appearing in village $j$ is $Pr(n_t = 2) = 1-\beta$. Then with our assumption of risk neutrality, Equation (\ref{Eq: Baseline Basic}) becomes
+\begin{equation}
+    \max _{s \in\{0,1\}} p_1 q(1-s)+\left[\beta p^Rqs + (1-\beta)p^\star qs\right] -r^f q s 
+\end{equation}
+
+Through simple derivation, we can know that a farmer would store all the harvest ($s=1$) when the variable storage cost is lower than the difference between the expected farm-gate price at $t=2$ and the observed price at $t=1$, i.e.
+\begin{equation}
+    \left[ \beta p^R + (1-\beta)p^\star - p_1    \right] > r^f
+    \label{Eq: price condition for practical storing}
+\end{equation}
+Otherwise, he or she will not use storage but sell all crops in period $t=1$. 
+
+Now, let's consider the situation based on the observed competition level for farmers in the first trading period. When only monopsony power appears in the first trading period, i.e. $p_1=p^R$, Condition (\ref{Eq: price condition for practical storing}) becomes $ s^\star=1 \text{ if } (1-\beta)(p^\star - p^R) > r^f $. This indicates that storing is the optimal strategy only when the variable storage cost is less than the product of the probability of Bertrand Competition occurring and the difference between the farmer's reservation price and the trader's marginal value of the crops. In simpler terms, both a higher price spread and a greater likelihood of market competition in the second stage increase farmers' incentives to store their harvest.
+
+However, if two traders compete in Bertrand Paradox initially, i.e., $p_1=p^\star$, Condition (\ref{Eq: price condition for practical storing}) can never be met since it's impossible to have $\beta (p^R-p^\star) > r^f$ while maintaining the non-negativity of $r^f$. Thus, in this case, a farmer would sell all harvest at $t=1$ and not store at all, $s^\star=0$. 
+
+
+
+
+%----------------------------------------------------%
+%----------------------------------------------------%
+
+
+\subsection{Extensions}
+\noindent I will extend my conceptual framework accordingly to better align with real-world conditions. The extension will account for the risk aversion of farmers, involve assumptions of market structures other than Bertrand competition, relax the restriction on the variability of downstream demand, and discuss the possibility of non-linear storage costs.
+
+\subsubsection{Risk Aversion}
+\noindent Risk aversion is a prevalent trait among small-scale farmers in developing countries, particularly a strong aversion to losses. Therefore, my theoretical model will incorporate this factor by exploring simple mean-variance or the Loss Aversion model \citep{kahneman1979prospect}, rather than the expected utility.
+
+According to \cite{o2018modeling}, "Real-world risk aversion is clearly not as straightforward as expected utility suggests. Additional sources of risk aversion (or risk-seeking) need to be used instead of, or in conjunction with, diminishing marginal utility of wealth." As depicted in Figure \ref{fig:Loss Aversion}, when individuals assess options involving both gains and losses, the "kink" in the value function between losses and gains induces risk aversion.
+
+\begin{figure}[thp]
+    \centering
+    \includegraphics[width=1\linewidth]{Figures/loss_aversion.png}
+    \caption{Expected Utility versus Loss Aversion (Source: \cite{o2018modeling})}
+    \label{fig:Loss Aversion}
+\end{figure}
+
+The approach developed by \cite{kHoszegi2006model, kHoszegi2007reference, kHoszegi2009reference} in addressing loss aversion with an endogenous reference point aims to mitigate this degree of freedom by asserting that the reference point is entirely determined by one's expectations about outcomes. Despite this, there has been limited progress in adapting alternative models to dynamic settings, with a notable exception of \cite{kHoszegi2009reference}, who define loss aversion concerning changes in beliefs regarding both current and future consumption.
+
+% Figure 1B depicts a simple, two-part-linear functional form for the value function that captures this feature. With this functional form, there is a single parameter, λ, that reflects the degree of loss aversion. Formally it indexes the relative slope in the loss domain versus the gain domain, so that λ = 1 implies no loss aversion and λ > 1 implies loss aversion, with larger λ implying more loss aversion. When a person evaluates options involving gains and losses, the “kink” in the value function between losses and gains will generate risk aversion.
+
+
+
+\subsubsection{Competition Beyond Bertrand Paradox}
+\noindent Based on my initial empirical findings, it appears probable that numerous traders or cartels of middlemen (more than 2) will frequent villages. This suggests the potential for ensuring competitive pricing in the first marketing period after the harvest.
+In this prospectus, I employ a basic Bertrand competition form as the fundamental framework for each period. However, I will extend the analysis to encompass more complex competition models, such as Cournot and Stackelberg, to offer a thorough understanding of the underlying dynamics. Drawing inspiration from \cite{saloner1987cournot}, I will modify the Cournot model by introducing two procurement periods before market clearance. Middlemen simultaneously determine procurement quantities in the first period, which becomes common knowledge. Subsequently, in the second period, they decide on additional procurement before the market clears.
+
+
+\subsubsection{Collective-Action Dilemma: Storage "Treadmill"}
+\noindent Another important observation from the fieldwork is that increasing storage adoption among farmers in a village would discourage traders from visiting there. If the majority of farmers in a village adopt storage, middlemen may redirect their focus to other villages where farmers have not yet embraced this technology. This spillover effect could stem from middlemen favoring farmers with less bargaining power, as they could negotiate lower prices for the crops they purchase. This leaves farmers without storage in this well-equipped village facing less competitive market conditions and creates in essence an escalating incentive within the village to obtain storage. However, the higher the adoption rate in this village, the lower the marginal benefit of storage adoption is as the less likely the traders would visit there. Therefore, this creates a storage "treadmill" similar to the technology treadmill envisioned by Willard Cochrane \citep{levins1996treadmill, cochrane1958farm}. I will discuss this collective-action dilemma and try to introduce a parameter into the current model to capture it. 
+
+
+\subsubsection{Downstream Demand Variability}
+\noindent I made an initial assumption of constant downstream demand and deliberately designed the baseline model to ensure that, without additional chances to have more draws of the competitive environment, farmers would consistently sell during the harvest period to avoid incurring storage costs and experiencing quality deterioration. However, in reality, downstream demand levels do fluctuate over time due to inherent seasonality and unforeseen shocks. To address this reality, I will NOT introduce an additional parameter since the primary focus of my model is on time-varying competition. Instead, I will explore the interaction between a farmer's optimal storage choice and the various temporal trajectories of downstream demand, which play a risk-aversion factor only.
+
+
+
+\subsubsection{Non-linear Storage Cost}
+\noindent Storage costs for farmers, defined as the sum of the actual cost of renting or operating storage space and the cost of deterioration, could be non-linear in many cases. For perishable goods like apples, the primary reason for convex storage costs is probably that spoilage and quality deterioration increase over time. Also, the operating costs of storage may not increase linearly with the volume of goods stored. Managing temperature and humidity conditions for larger quantities might require more sophisticated technology and energy consumption, leading to non-linear cost increases.
+
+Supporting this notion, \cite{williams1989economic} demonstrates, through a quadratic form of total marketing costs, that farmers need to weigh the marginal revenue of later sales against the elevated costs incurred. This balance leads to a positive inventory, even without considering risk aversion. Applying a similar analytical framework to the extended model, I will be able to account for the non-linear nature of storage costs.
+
+
+

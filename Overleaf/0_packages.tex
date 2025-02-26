@@ -1,0 +1,59 @@
+\usepackage[figuresright]{rotating}
+\usepackage{hyperref}
+\usepackage{adjustbox}   %% you can resize if the table goes beyond \textwidth
+\usepackage{graphicx}
+\usepackage{pdfpages}
+\usepackage{dirtytalk}
+\usepackage{amsmath}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning}
+
+\usepackage{xpatch}
+    \newlength{\chaptertopskip}
+    \setlength{\chaptertopskip}{10pt}
+    \makeatletter
+    \xpatchcmd{\@makechapterhead}{\vspace*{50\p@}}{\vspace*{\chaptertopskip}}{\typeout{Success}}{\typeout{Failure!!!}}
+\makeatother
+\usepackage{dialogue}
+    % redefine dialogue environment to use new parameters
+    \makeatletter
+    \renewenvironment{dialogue} {%
+        \begin{list}{} {%
+            \setlength\itemsep{\z@ \@plus .5ex}%
+            \setlength{\parsep}{\parskip}%
+            \setlength{\rightmargin}{0pt}% no indentation on right; change this if you wish
+            \setlength{\labelsep}{0.5em}% space between (longest) name and text
+            \setlength{\leftmargin}{\labelwidth}% set margin on left to same width
+            \addtolength{\leftmargin}{\labelsep}% plus the label sep
+            \defcommand\speak[2]{\item[\hfill {##1}] {\itshape ``{##2}''}} % define speak command
+            \let\makelabel\DialogueLabel
+          }%
+          \PreDialogue\relax
+        }{%
+      \end{list}%
+      }
+    \makeatother
+\usepackage[caption=false]{subfig}
+\usepackage{subfiles} % Best loaded last in the preamble
+\usepackage{natbib}
+\usepackage{diagbox}
+\usepackage[figuresright]{rotating}
+\usepackage{threeparttable}
+\usepackage{multirow}
+\usepackage{bbm}
+\usepackage{url}
+\usepackage{lipsum}
+\usepackage{setspace}
+    \footnotesep=10pt
+    \usepackage{etoolbox}
+    \makeatletter
+    \patchcmd{\@footnotetext}
+      {\setspace@singlespace}{0.8}
+      {}{}
+    \makeatother % 调整footnote的行间距
+    
+
+\renewcommand{\baselinestretch}{1.8} % 调整行间距
+\DeclareRobustCommand{\firstsecond}[2]{#1}
