@@ -315,7 +315,6 @@ print(kable(full_table, format = "pipe", digits = 2))
 
 
 ## Price-Info Sources
-
 ```{r price info sources}
 # First, let's look at the distribution of storage types
 print(table(df$cold_storage_usage_type))
@@ -545,20 +544,10 @@ df$week_label <- create_week_labels(df$selling_month)
 df$week_label <- factor(df$week_label, 
                        levels = c("1 to 4", "5 to 8", "9 to 12", "13 to 28"))
 
-# Create distribution plot for the full sample
-full_sample_dist <- ggplot(df, aes(x = week_label)) +
-  geom_bar(fill = "skyblue") +
-  theme_minimal() +
-  labs(title = "Distribution of Selling Weeks - Full Sample",
-       x = "Weeks",
-       y = "Count") +
-  theme(axis.text.x = element_text(angle = 0))
-
-
 # Create distribution plot by storage type
 storage_dist <- ggplot(df, aes(x = week_label, fill = cold_storage_usage_type)) +
   geom_bar(position = "dodge") +
-  theme_minimal() +
+  theme(text = element_text(size = 16)) +
   labs(title = "Distribution of Selling Weeks by Storage Type",
        x = "Weeks",
        y = "Count") +
@@ -566,11 +555,8 @@ storage_dist <- ggplot(df, aes(x = week_label, fill = cold_storage_usage_type)) 
   scale_fill_brewer(palette = "Set3") +
   labs(fill = "Storage Type")
 
-# Arrange plots
-combined_plot <- grid.arrange(full_sample_dist, storage_dist, nrow = 2)
-
 # Save the plot
-ggsave(here("figures", "selling_weeks_distribution.png"), combined_plot, width = 12, height = 10, dpi = 300)
+ggsave(here("figures", "selling_weeks_distribution.png"), storage_dist, width = 12, height = 5, dpi = 300)
 
 ```
 
