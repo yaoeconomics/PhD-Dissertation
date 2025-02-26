@@ -826,9 +826,7 @@ tex_table <- capture.output(
 resized_table <- c(
   "\\begin{table}[!htbp] \\centering",
   "\\resizebox{\\textwidth}{!}{%",
-  "\\begin{minipage}{\\textwidth}",
   tex_table,
-  "\\end{minipage}",
   "}",
   "\\end{table}"
 )
