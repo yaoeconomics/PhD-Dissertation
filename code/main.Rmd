@@ -134,6 +134,7 @@ panel5 <- create_panel(panel5_vars, panel5_names)
 latex_table <- "\\begin{table}[htbp]
 \\centering
 \\caption{Summary Statistics}
+\\label{tab: summary statistics}
 \\begin{tabular}{lcccc}
 \\hline
 & \\multicolumn{2}{c}{Full Sample} & \\multicolumn{2}{c}{Storage Users} \\\\
@@ -589,6 +590,7 @@ models_list <- list(model1, model2, model3, model4)
 # Create LaTeX table
 stargazer(models_list,
           type = "text",
+          label = "tab: binary storage ~ buyers' competition at harvest",
           out = here("tables", "buyer's_competition_logistic_results.tex"),
           title = "Logistic Regression Results",
           column.labels = c("Model 1", "Model 2", "Model 3", "Model 4"),
@@ -637,6 +639,7 @@ model_with_additional <- glm(formula_with_additional, data = data, family = bino
 stargazer(model_base, model_with_additional, 
           type = "text",
           omit = "town",
+          label = "tab: binary storage ~ farmer's expectation on movement"
           add.lines = list(c("Town Fixed Effects", "Yes", "Yes")),
           out = here("tables", "farmer_expectations_logistic_results.tex"),
           dep.var.labels = "Storage Usage (Binary)",
@@ -814,6 +817,7 @@ models <- list(
 # Capture the stargazer output as text
 tex_table <- capture.output(
   stargazer(models, omit = "town", float = FALSE,
+            label = "tab: Survival AFT baseline",
             digits = 2,
             title = "Weibull Survival Models of Market Timing Decisions",
             covariate.labels = c("More Buyers Expected", "Less Buyers Expected",
@@ -861,6 +865,7 @@ if (!exists("full_sample") || !exists("storage_users")) {
 
 # Generate LaTeX table using stargazer
 stargazer(model_full, model_storage, type = "text", 
+          label = "tab: extended Survival AFT with controls",
           add.lines = list(c("Town Fixed Effects", "Yes", "Yes")),omit = "town",digits = 2,
             title = "Extended Weibull Survival Models with Controls",
             dep.var.labels = c("Full Sample", "Storage Users"),
