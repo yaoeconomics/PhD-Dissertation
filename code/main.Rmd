@@ -140,7 +140,7 @@ latex_table <- "\\begin{table}[htbp]
 \\cline{2-3} \\cline{4-5}
 Variable & Mean & SD & Mean & SD \\\\
 \\hline
-\\multicolumn{5}{l}{\\	extbf{Panel A: Farmer Demographics}} \\\\
+\\multicolumn{5}{l}{\\textbf{Panel A: Farmer Demographics}} \\\\
 "
 
 add_panel_to_latex <- function(panel, latex_table) {
@@ -158,22 +158,22 @@ add_panel_to_latex <- function(panel, latex_table) {
 latex_table <- add_panel_to_latex(panel1, latex_table)
 latex_table <- paste0(latex_table, "\
 \\hline\
-\\multicolumn{5}{l}{\\	extbf{Panel B: Production and Consumption}} \\\\
+\\multicolumn{5}{l}{\\textbf{Panel B: Production and Consumption}} \\\\
 ")
 latex_table <- add_panel_to_latex(panel2, latex_table)
 latex_table <- paste0(latex_table, "\
 \\hline\
-\\multicolumn{5}{l}{\\	extbf{Panel C: Storage and Risk-Related Factors}} \\\\
+\\multicolumn{5}{l}{\\textbf{Panel C: Storage and Risk-Related Factors}} \\\\
 ")
 latex_table <- add_panel_to_latex(panel3, latex_table)
 latex_table <- paste0(latex_table, "\
 \\hline\
-\\multicolumn{5}{l}{\\	extbf{Panel D: Marketing}} \\\\
+\\multicolumn{5}{l}{\\textbf{Panel D: Marketing}} \\\\
 ")
 latex_table <- add_panel_to_latex(panel4, latex_table)
 latex_table <- paste0(latex_table, "\
 \\hline\
-\\multicolumn{5}{l}{\\	extbf{Panel E: Market Competitive Conditions}} \\\\
+\\multicolumn{5}{l}{\\textbf{Panel E: Market Competitive Conditions}} \\\\
 ")
 latex_table <- add_panel_to_latex(panel5, latex_table)
 
