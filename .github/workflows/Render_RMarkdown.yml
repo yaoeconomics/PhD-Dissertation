@@ -24,7 +24,7 @@ jobs:
 
       - name: Install R dependencies
         run: Rscript -e 'install.packages(c("rmarkdown"))'
-code/main.Rmd
+        
       - name: Render R Markdown
         run: Rscript -e 'rmarkdown::render("code/main.Rmd")'  # Change to match your actual file name
 
