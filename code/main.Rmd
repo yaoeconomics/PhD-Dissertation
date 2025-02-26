@@ -817,7 +817,6 @@ models <- list(
 # Capture the stargazer output as text
 tex_table <- capture.output(
   stargazer(models, omit = "town", float = FALSE,
-            label = "tab: Survival AFT baseline",
             digits = 2,
             title = "Weibull Survival Models of Market Timing Decisions",
             covariate.labels = c("More Buyers Expected", "Less Buyers Expected",
@@ -829,6 +828,7 @@ tex_table <- capture.output(
 # Wrap the stargazer output in a resizebox environment so it fits the page
 resized_table <- c(
   "\\begin{table}[!htbp] \\centering",
+  "\\label{tab: Survival AFT baseline}",
   "\\resizebox{\\textwidth}{!}{%",
   tex_table,
   "}",
