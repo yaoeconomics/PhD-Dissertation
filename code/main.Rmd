@@ -27,6 +27,11 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 # install.packages("ggcorrplot")
 # install.packages("kableExtra")
 # install.packages("here")
+# install.packages("reshape2")
+# install.packages("cowplot")
+# install.packages("ggrepel")
+
+
 
 library(readxl)
 library(dplyr)
@@ -42,6 +47,9 @@ library(fmsb)
 library(knitr)
 library(kableExtra)
 library(here)
+library(reshape2)
+library(cowplot)
+library(ggrepel)
 
 # set the working dictionary
 ## here() 自动定位到项目的根目录, 然后可以构造相对路径,而不需要手动setwd()
@@ -54,32 +62,72 @@ data <- read_excel("data/combined_updated.xlsx")
 ```
 
 # Descriptive Statistics
-## Pie chart of storage users' type
-```{r pie chart}
-# Group by storage type and get counts
-storage_counts <- df %>%
+## Pie chart of storage users' type and Radar Information-source Plot
+```{r pie chart and radar plot}
+# Define softer colors
+storage_colors <- c("Not_use" = "#FF9999", "Rent_large" = "#99CCFF", 
+                   "Rent_small" = "#99DDAA", "Self_built" = "#D8B5FF")
+
+# Create data for pie chart
+storage_counts <- as.data.frame(table(df$cold_storage_usage_type))
+colnames(storage_counts) <- c("storage_type", "count")
+storage_counts$percentage <- round(storage_counts$count / sum(storage_counts$count) * 100, 1)
+storage_counts$label <- paste0(storage_counts$storage_type, "\
+", 
+                              storage_counts$count, " (", 
+                              storage_counts$percentage, "%)")
+
+# Create pie chart
+pie_chart <- ggplot(storage_counts, aes(x = "", y = count, fill = storage_type)) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar("y", start = 0) +
+  scale_fill_manual(values = storage_colors, name = "Storage Usage Type") +
+  theme_void() + theme(legend.position = "none") +
+  geom_text_repel(aes(label = label),  nudge_x = 1, size = 5, show.legend = FALSE) +
+  labs(title = "Storage Usage Types")
+
+
+# Create data for radar plot
+# First, calculate the mean of each information source by storage type
+info_columns <- c("peer_info", "gov_info", "market_info", "futures_info", "buyer_info")
+
+radar_data <- df %>%
   group_by(cold_storage_usage_type) %>%
-  summarise(count = n())
+  summarise(across(all_of(info_columns), mean, na.rm = TRUE))
 
-# Create a pie chart using ggplot2
-pie_chart <- ggplot(storage_counts, aes(x = "", y = count, fill = cold_storage_usage_type)) +
-  geom_bar(stat = "identity", width = 1, color="white") +
-  coord_polar(theta = "y") +
+# Convert to long format for plotting
+radar_long <- melt(radar_data, id.vars = "cold_storage_usage_type", 
+                  variable.name = "info_source", value.name = "value")
+
+# Create radar plot
+radar_plot <- ggplot(radar_long, aes(x = info_source, y = value, 
+                                    group = cold_storage_usage_type, 
+                                    color = cold_storage_usage_type)) +
+  geom_line(linewidth = 1) +
+  geom_point(size = 3) +
+  scale_color_manual(values = storage_colors, name = "Storage Usage Type") +
   theme_minimal() +
-  labs(title = "Storage Usage Types") +
-  theme(axis.title.x=element_blank(),
-        axis.title.y=element_blank(),
-        panel.grid=element_blank(),
-        axis.text=element_blank(),
-        axis.ticks=element_blank()) +
-  geom_text(aes(label = paste0(cold_storage_usage_type, ' (', count, ')')),
-            position = position_stack(vjust = 0.5))
+  theme(legend.position = "none",
+        axis.text.x = element_text(face = "bold"),
+        plot.title = element_text(hjust = 0.5)) +
+  labs(title = "Price Information Sources by Storage Type", 
+       x = "", y = "") +
+  coord_polar() +
+  ylim(0, 1)
 
-# Save the plot to a file
-ggsave(here("figures", "pie_chart_storage_use_type.png"), pie_chart, width = 12, height = 8)
-print(pie_chart)
+# Arrange the plots in a grid with the legend at the bottom
+combined_plot <- gridExtra::grid.arrange(
+  gridExtra::arrangeGrob(pie_chart, radar_plot, ncol = 2),
+  heights = c(10, 1)
+)
+
+# Save the combined plot
+ggsave(here("figures","storage_usage_analysis_soft_colors.png"), combined_plot, width = 12, height = 6, dpi = 300)
+
+# Display the combined plot
+combined_plot
 ```
-
+```
 
 ## Table of Summary Statistics
 ```{r Table of Summary Statistics (tex file)}
@@ -216,7 +264,6 @@ latex_table <- paste0(latex_table, "\\hline\
 # Save the LaTeX table to a tex file
 writeLines(latex_table, con = here("tables", "summary_statistics.tex"))
 ```
-
 ```{r Table of Summary Statistics (show in R)}
 
 setwd(here())
@@ -312,77 +359,6 @@ full_table <- rbind(full_table, obs_row)
 # Print the table in the console using kable
 print(kable(full_table, format = "pipe", digits = 2))
 ```
-
-
-## Price-Info Sources
-```{r price info sources}
-# First, let's look at the distribution of storage types
-print(table(df$cold_storage_usage_type))
-
-# Filter and summarize the data for visualization
-# Focus on age, education, vehicle ownership (car/truck), CRRA-adjusted values, relational sales, and contractual sales
-
-# Summarize the data by storage type
-summary_data <- df %>% 
-  group_by(cold_storage_usage_type) %>% 
-  summarise(
-    avg_age = mean(age, na.rm = TRUE),
-    avg_education = mean(education_highest, na.rm = TRUE),
-    car_truck_ownership = mean(car_track, na.rm = TRUE),
-    avg_crra = mean(CRRA_adjusted, na.rm = TRUE),
-    avg_relational_sales = mean(relatiol_sell, na.rm = TRUE),
-    avg_contractual_sales = mean(contract_sell, na.rm = TRUE)
-  )
-
-print(summary_data)
-
-
-# 2. Radar plot for information sources
-info_sources <- df %>%
-  group_by(cold_storage_usage_type) %>%
-  summarise(
-    village_info = mean(villige_info, na.rm = TRUE),
-    gov_info = mean(gov_info, na.rm = TRUE),
-    market_info = mean(market_info, na.rm = TRUE),
-    futures_info = mean(futures_info, na.rm = TRUE),
-    buyer_info = mean(buyer_info, na.rm = TRUE)
-  )
-
-# Prepare data for radar plot
-radar_data <- as.data.frame(info_sources)
-rownames(radar_data) <- radar_data$cold_storage_usage_type
-radar_data <- radar_data[,-1]
-
-# Add max and min rows for radar plot scaling
-max_min <- data.frame(
-  village_info = c(1, 0),
-  gov_info = c(1, 0),
-  market_info = c(1, 0),
-  futures_info = c(1, 0),
-  buyer_info = c(1, 0)
-)
-radar_data <- rbind(max_min, radar_data)
-
-# Create radar plot
-png(here("figures", "radar_storage_info.png"), width = 800, height = 800)
-colors <- c("red", "blue", "green", "purple")
-radarchart(radar_data,
-           pcol = colors,
-           pfcol = scales::alpha(colors, 0.3),
-           plwd = 2,
-           plty = 1,
-           title = "Information Source Usage by Storage Type")
-legend("topright", 
-       legend = unique(df$cold_storage_usage_type),
-       col = colors,
-       lty = 1,
-       lwd = 2,
-       bty = "n")
-```
-```{r, echo=FALSE, out.width="80%"}
-knitr::include_graphics(here("figures", "radar_storage_info.png"))
-```
-
 
 ## Demographics by storage type
 
