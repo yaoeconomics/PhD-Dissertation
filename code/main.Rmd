@@ -82,8 +82,9 @@ pie_chart <- ggplot(storage_counts, aes(x = "", y = count, fill = storage_type))
   geom_bar(stat = "identity", width = 1) +
   coord_polar("y", start = 0) +
   scale_fill_manual(values = storage_colors, name = "Storage Usage Type") +
-  theme_void() + theme(legend.position = "none") +
-  geom_text_repel(aes(label = label),  nudge_x = 1, size = 5, show.legend = FALSE) +
+  theme_void() + theme(legend.position = "none",,
+        plot.title = element_text(hjust = 0.5)) +
+  geom_text_repel(aes(label = label),  nudge_x = 1, size = 4, show.legend = FALSE) +
   labs(title = "Storage Usage Types")
 
 
@@ -103,8 +104,8 @@ radar_long <- melt(radar_data, id.vars = "cold_storage_usage_type",
 radar_plot <- ggplot(radar_long, aes(x = info_source, y = value, 
                                     group = cold_storage_usage_type, 
                                     color = cold_storage_usage_type)) +
-  geom_line(linewidth = 1) +
-  geom_point(size = 3) +
+  geom_line(linewidth = 2) +
+  geom_point(size = 5) +
   scale_color_manual(values = storage_colors, name = "Storage Usage Type") +
   theme_minimal() +
   theme(legend.position = "none",
@@ -122,7 +123,7 @@ combined_plot <- gridExtra::grid.arrange(
 )
 
 # Save the combined plot
-ggsave(here("figures","storage_usage_analysis_soft_colors.png"), combined_plot, width = 12, height = 6, dpi = 300)
+ggsave(here("figures","storage_usage_analysis_soft_colors.png"), combined_plot, width = 12, height = 7)
 
 # Display the combined plot
 combined_plot
@@ -546,10 +547,11 @@ df$week_label <- factor(df$week_label,
 storage_dist <- ggplot(df, aes(x = week_label, fill = cold_storage_usage_type)) +
   geom_bar(position = "dodge") +
   theme(text = element_text(size = 16)) +
-  labs(title = "Distribution of Time to Sell",
+  labs(title = "Distribution of 'Time to Sell'",
        x = "Weeks after Harvest",
        y = "Count") +
-  theme(axis.text.x = element_text(angle = 0)) +
+  theme(axis.text.x = element_text(angle = 0),,
+        plot.title = element_text(hjust = 0.5)) +
   scale_fill_manual(values = c("Not_use" = "#FF9999", "Rent_large"= "#99CCFF", "Rent_small" = "#99DDAA", "Self_built" = "#D8B5FF")) +
   labs(fill = "Storage Type")
 
