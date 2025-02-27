@@ -127,7 +127,6 @@ ggsave(here("figures","storage_usage_analysis_soft_colors.png"), combined_plot, 
 # Display the combined plot
 combined_plot
 ```
-```
 
 ## Table of Summary Statistics
 ```{r Table of Summary Statistics (tex file)}
@@ -363,40 +362,62 @@ print(kable(full_table, format = "pipe", digits = 2))
 ## Demographics by storage type
 
 ```{r Demographics by storage type}
+# Filter and summarize the data for visualization
+# Focus on age, education, vehicle ownership (car/truck), CRRA-adjusted values, relational sales, and contractual sales
+
+# Summarize the data by storage type
+summary_data <- df %>% 
+  group_by(cold_storage_usage_type) %>% 
+  summarise(
+    avg_age = mean(age, na.rm = TRUE),
+    avg_education = mean(education_highest, na.rm = TRUE),
+    car_truck_ownership = mean(car_track, na.rm = TRUE),
+    avg_crra = mean(CRRA_adjusted, na.rm = TRUE),
+    avg_relational_sales = mean(relatiol_sell, na.rm = TRUE),
+    avg_contractual_sales = mean(contract_sell, na.rm = TRUE)
+  )
+
+print(summary_data)
 
 # Define individual plots
 plot_age <- ggplot(summary_data, aes(x = cold_storage_usage_type, y = avg_age, fill = cold_storage_usage_type)) +
   geom_bar(stat = "identity") +
+  scale_fill_manual(values = storage_colors, name = "Storage Usage Type") +
   theme_minimal() +
   labs(title = "Average Age", x = "Storage Type", y = "Age") +
   theme(legend.position = "none")
 
 plot_education <- ggplot(summary_data, aes(x = cold_storage_usage_type, y = avg_education, fill = cold_storage_usage_type)) +
   geom_bar(stat = "identity") +
+  scale_fill_manual(values = storage_colors, name = "Storage Usage Type") +
   theme_minimal() +
   labs(title = "Average Education", x = "Storage Type", y = "Education Level") +
   theme(legend.position = "none")
 
 plot_vehicle <- ggplot(summary_data, aes(x = cold_storage_usage_type, y = car_truck_ownership, fill = cold_storage_usage_type)) +
   geom_bar(stat = "identity") +
+    scale_fill_manual(values = storage_colors, name = "Storage Usage Type") +
   theme_minimal() +
   labs(title = "Vehicle Ownership", x = "Storage Type", y = "Ownership Rate") +
   theme(legend.position = "none")
 
 plot_crra <- ggplot(summary_data, aes(x = cold_storage_usage_type, y = avg_crra, fill = cold_storage_usage_type)) +
   geom_bar(stat = "identity") +
+  scale_fill_manual(values = storage_colors, name = "Storage Usage Type") +
   theme_minimal() +
   labs(title = "CRRA-Adjusted", x = "Storage Type", y = "CRRA Value") +
   theme(legend.position = "none")
 
 plot_relational <- ggplot(summary_data, aes(x = cold_storage_usage_type, y = avg_relational_sales, fill = cold_storage_usage_type)) +
   geom_bar(stat = "identity") +
+  scale_fill_manual(values = storage_colors, name = "Storage Usage Type") +
   theme_minimal() +
   labs(title = "Relational Sales", x = "Storage Type", y = "Sales Rate") +
   theme(legend.position = "none")
 
 plot_contractual <- ggplot(summary_data, aes(x = cold_storage_usage_type, y = avg_contractual_sales, fill = cold_storage_usage_type)) +
   geom_bar(stat = "identity") +
+    scale_fill_manual(values = storage_colors, name = "Storage Usage Type") +
   theme_minimal() +
   labs(title = "Contractual Sales", x = "Storage Type", y = "Sales Rate") +
   theme(legend.position = "none")
@@ -444,17 +465,18 @@ freq_data <- df_clean %>%
   group_by(selling_month, price_dollar_pound, cold_storage_usage_type) %>%
   summarise(count = n(), .groups = 'drop')
 
+
 # Create the improved bubble plot
 p <- ggplot(freq_data, aes(x=selling_month, y=price_dollar_pound, 
                       size=count, color=cold_storage_usage_type)) +
   geom_point(alpha=0.6) +
+  scale_color_manual(values = c("Not_use" = "#FF9999", "Rent_large"= "#99CCFF", "Rent_small" = "#99DDAA", "Self_built" = "#D8B5FF")) +
   scale_size(range = c(3, 15)) +
   labs(title="Apple Selling Price by Month and Storage Type",
        x="Selling Month",
        y="Price (USD/lb)",
-       size="Number of\
-Observations",
-       color="Storage Usage Type") +
+       size="Number of Observations",
+color = "Storage Usage Type") +
   theme_minimal() +
   theme(
     plot.title = element_text(hjust = 0.5, size = 14, face = "bold"),
