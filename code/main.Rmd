@@ -546,16 +546,16 @@ df$week_label <- factor(df$week_label,
 storage_dist <- ggplot(df, aes(x = week_label, fill = cold_storage_usage_type)) +
   geom_bar(position = "dodge") +
   theme(text = element_text(size = 16)) +
-  labs(title = "Distribution of Selling Weeks by Storage Type",
-       x = "Weeks",
+  labs(title = "Distribution of Time to Sell",
+       x = "Weeks after Harvest",
        y = "Count") +
   theme(axis.text.x = element_text(angle = 0)) +
-  scale_fill_brewer(palette = "Set3") +
+  scale_fill_manual(values = c("Not_use" = "#FF9999", "Rent_large"= "#99CCFF", "Rent_small" = "#99DDAA", "Self_built" = "#D8B5FF")) +
   labs(fill = "Storage Type")
 
 # Save the plot
 ggsave(here("figures", "selling_weeks_distribution.png"), storage_dist, width = 12, height = 5, dpi = 300)
-
+storage_dist
 ```
 
 # Binary Storage Decisions: Buyers’ Competitiveness at Harvest
