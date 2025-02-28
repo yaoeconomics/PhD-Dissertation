@@ -731,6 +731,7 @@ stargazer(model_base, model_with_additional,
           dep.var.labels = "Storage Usage (Binary)",
           covariate.labels = c("Fewer Buyers", "More Buyers", "Age", "Education", "Family Leader", "CRRA Adjusted", "Num Buyers", "Subjective Belief"),
           digits = 2, 
+          font.size = "footnotesize", 
           star.cutoffs = c(0.05, 0.01, 0.001)
           )
 
@@ -904,6 +905,7 @@ models <- list(
 tex_table <- capture.output(
   stargazer(models, omit = "town", float = FALSE,
             digits = 2,
+            font.size = "footnotesize", 
             title = "Weibull Survival Models of Market Timing Decisions",
             covariate.labels = c("More Buyers Expected", "Less Buyers Expected",
                                  "Expected Number of Buyers"),
@@ -954,7 +956,9 @@ stargazer(model_full, model_storage, type = "text",
           label = "tab: extended Survival AFT with controls",
           add.lines = list(c("Town Fixed Effects", "Yes", "Yes")),omit = "town",digits = 2,
             title = "Extended Weibull Survival Models with Controls",
-            dep.var.labels = c("Full Sample", "Storage Users"),
+          font.size = "footnotesize", 
+          dep.var.labels = "Time to Sell",
+            column.labels = c("Full Sample", "Storage Users"),
             covariate.labels = c("More Buyers Future", "Less Buyers Future", "Family Village Leader",
                                  "Far to Small Storage", "Far to Large Storage", "Storage Purpose: Marketing",
                                  "Storage Purpose: Bargaining", "Education Level", "Number of Buyers"),
