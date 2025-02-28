@@ -30,6 +30,7 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 # install.packages("reshape2")
 # install.packages("cowplot")
 # install.packages("ggrepel")
+# install.packages("lme4")
 
 
 
@@ -560,12 +561,13 @@ ggsave(here("figures", "selling_weeks_distribution.png"), storage_dist, width = 
 storage_dist
 ```
 
-# Binary Storage Decisions: Buyers’ Competitiveness at Harvest
 
+
+# Binary Storage Decisions: Buyers’ Competitiveness at Harvest
 ```{r logit analysis}
 data <- read_excel(here("data","combined_updated.xlsx"))
 # Ensure necessary libraries for logistic regression and fixed effects are loaded
-# install.packages("lme4")
+
 library(lme4)
 
 # Convert relevant variables to factors or numeric as needed
@@ -620,6 +622,79 @@ stargazer(models_list,
           font.size = "footnotesize",
           add.lines = list(c("Fixed Effects", "Yes", "Yes", "Yes", "Yes")))
 ```
+```{r interaction effect and plotting}
+# Extract coefficient estimates and variance-covariance matrix from model4
+coef_est <- fixef(model4)
+vcov_mat <- vcov(model4)
+
+# For clarity, assign coefficients from Model 4
+# Here:
+# beta1: num_buyers, beta2: subjective_belief_buyer_com, beta3: interaction
+beta1 <- coef_est['num_buyers']
+beta2 <- coef_est['subjective_belief_buyer_com']
+beta3 <- coef_est['num_buyers:subjective_belief_buyer_com']
+
+# For each observation, compute linear predictor and predicted probability
+linpred <- predict(model4, re.form=NA)  
+pred_prob <- 1/(1+exp(-linpred))
+
+# Compute logistic density f(z) and its derivative factor f'(z)
+# f(z) = exp(-z)/(1+exp(-z))^2 = dF/dz
+f_z <- exp(-linpred)/(1+exp(-linpred))^2
+
+# According to Ai and Norton (2003): the cross partial derivative of P wrt x1 and x2 is:
+# d^2P/(dx1 dx2) = f(z)*beta3 + f(z)*(1-2*F(z))*( (beta1 + beta3*x2) * (beta2 + beta3*x1) )
+# Here x1 = num_buyers, x2 = subjective_belief_buyer_com
+x1 <- data$num_buyers
+x2 <- data$subjective_belief_buyer_com
+
+interaction_effect <- f_z * beta3 + f_z * (1 - 2*pred_prob) * ((beta1 + beta3*x2) * (beta2 + beta3*x1))
+
+# We now need to get standard errors for the interaction effect using simulation of the coefficients
+# We'll simulate 1000 draws from the multivariate normal distribution of coefficients
+library(MASS)
+set.seed(1234)
+nsim <- 1000
+sim_coefs <- mvrnorm(n = nsim, mu = coef_est, Sigma = vcov_mat)
+
+# Compute simulated interaction effects for each observation
+sim_interaction <- matrix(NA, nrow=length(x1), ncol=nsim)
+
+for(sim in 1:nsim){
+  sim_beta1 <- sim_coefs[sim, 'num_buyers']
+  sim_beta2 <- sim_coefs[sim, 'subjective_belief_buyer_com']
+  sim_beta3 <- sim_coefs[sim, 'num_buyers:subjective_belief_buyer_com']
+  sim_effect <- f_z * sim_beta3 + f_z * (1 - 2*pred_prob) * ((sim_beta1 + sim_beta3*x2) * (sim_beta2 + sim_beta3*x1))
+  sim_interaction[,sim] <- sim_effect
+}
+
+# Compute standard error as the standard deviation across simulations for each observation
+se_interaction <- apply(sim_interaction, 1, sd)
+
+# Create a data frame with predicted probability, interaction effect, and its standard error
+df_plot <- data.frame(pred_prob = pred_prob, interaction_effect = interaction_effect, se = se_interaction)
+
+# For visualization, we can smooth the relationship using lowess
+smooth_df <- as.data.frame(lowess(df_plot$pred_prob, df_plot$interaction_effect, f = 0.3))
+colnames(smooth_df) <- c('pred_prob', 'interaction_effect')
+
+# Plot: x-axis = predicted probability; y-axis = interaction effect
+p <- ggplot(df_plot, aes(x = pred_prob, y = interaction_effect)) + 
+  geom_point(alpha = 0.5) +
+  geom_errorbar(aes(ymin = interaction_effect - 1.96*se, ymax = interaction_effect + 1.96*se), alpha = 0.2) +
+  geom_line(data = smooth_df, color = '#009933', size = 1) +
+  labs(x = 'Predicted Probability of Storage Usage', y = 'Interaction Effect (Cross Partial Derivative)',
+       title = 'Interaction Effect Variation across Predicted Probabilities') +
+  theme_minimal()
+
+print(p)
+
+# Save the updated plot to a file
+ggsave(filename = here("figures", "Interaction_Effect_across_Predicted Probabilities.png"), plot = p, width = 12, height = 7, dpi = 300)
+
+# Acknowledge that this plot shows how the marginal effect of the interaction term varies by observation
+```
+
 
 # Binary Storage Decisions: Farmers' Expectations on Buyers' Competitiveness
 
