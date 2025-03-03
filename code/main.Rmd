@@ -744,90 +744,221 @@ write.csv(summary_marginal_effects, here("tables", "marginal_effects_expect_3_mo
 ```
 
 ```{r predicted probability from the model}
-# Calculate predicted probabilities with bootstrap standard errors
-library(boot)
+# Get mean values for continuous variables
+mean_age <- mean(data$age, na.rm = TRUE)
+mean_education <- mean(data$education_highest, na.rm = TRUE)
+mean_crra <- mean(data$CRRA_adjusted, na.rm = TRUE)
 
-# Create prediction function for bootstrap
-pred_func <- function(data, indices) {
-  # Fit model on bootstrap sample
-  boot_model <- glm(storage_usage_binary ~ expect_3_months + age + 
-                    education_highest + family_ever_village_leader + 
-                    CRRA_adjusted + factor(town),
-                    data = data[indices,], 
-                    family = binomial)
-  
-  # Create prediction dataset
-  newdata <- expand.grid(
-    expect_3_months = c("no_change", "fewer_buyers", "more_buyers"),
-    age = mean(data$age, na.rm = TRUE),
-    education_highest = mean(data$education_highest, na.rm = TRUE),
-    family_ever_village_leader = as.numeric(names(sort(table(data$family_ever_village_leader), decreasing = TRUE)[1])),
-    CRRA_adjusted = mean(data$CRRA_adjusted, na.rm = TRUE),
-    town = names(sort(table(data$town), decreasing = TRUE)[1])
-  )
-  
-  # Return predictions
-  predict(boot_model, newdata, type = "response")
-}
+# Get unique values for categorical variables
+unique_towns <- unique(data$town)
+unique_family_leader <- unique(data$family_ever_village_leader)
 
-# Perform bootstrap
-set.seed(123)
-boot_results <- boot(data = data, statistic = pred_func, R = 1000)
-
-# Calculate means and standard errors
-pred_means <- colMeans(boot_results$t)
-pred_ses <- apply(boot_results$t, 2, sd)
-
-# Create results dataframe
-results_df <- data.frame(
-  Expected_Buyers = c("No Change", "Fewer Buyers", "More Buyers"),
-  Predicted_Probability = round(pred_means, 3),
-  SE = round(pred_ses, 3)
+# Create a comprehensive prediction dataset covering all combinations
+newdata <- expand.grid(
+  expect_3_months = c("no_change", "fewer_buyers", "more_buyers"),
+  age = mean_age,
+  education_highest = mean_education,
+  family_ever_village_leader = unique_family_leader,
+  CRRA_adjusted = mean_crra,
+  town = unique_towns
 )
 
-# Add 95% confidence intervals
-results_df$CI_Lower <- round(results_df$Predicted_Probability - 1.96 * results_df$SE, 3)
-results_df$CI_Upper <- round(results_df$Predicted_Probability + 1.96 * results_df$SE, 3)
+# Calculate predicted probabilities
+newdata$predicted_prob <- predict(model_base, newdata, type = "response")
 
-# Print results
-print(results_df)
+
+# Calculate average predicted probabilities by expected buyers and family leadership
+avg_probs <- newdata %>%
+  group_by(expect_3_months, family_ever_village_leader) %>%
+  summarize(avg_prob = mean(predicted_prob, na.rm = TRUE),
+            .groups = 'drop')
+
+# Calculate average predicted probabilities by expected buyers and town
+avg_probs_town <- newdata %>%
+  group_by(expect_3_months, town) %>%
+  summarize(avg_prob = mean(predicted_prob, na.rm = TRUE),
+            .groups = 'drop')
+
+# Calculate overall average predicted probabilities by expected buyers
+overall_avg_probs <- newdata %>%
+  group_by(expect_3_months) %>%
+  summarize(avg_prob = mean(predicted_prob, na.rm = TRUE),
+            .groups = 'drop')
+
+# Print the results
+print("Average Predicted Probabilities by Expected Buyers and Family Leadership:")
+print(avg_probs)
+
+print("Average Predicted Probabilities by Expected Buyers and Town:")
+print(avg_probs_town)
+
+print("Overall Average Predicted Probabilities by Expected Buyers:")
+print(overall_avg_probs)
+
+# Calculate the overall sample storage rate
+overall_storage_rate <- mean(data$storage_usage_binary, na.rm = TRUE)
+print(paste("Overall Sample Storage Rate:", overall_storage_rate))
+
+
+# Create a visualization of the overall average probabilities
+plot1 <- ggplot(overall_avg_probs, aes(x = expect_3_months, y = avg_prob)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  geom_hline(yintercept = overall_storage_rate, linetype = "dashed", color = "red") +
+  labs(title = "Average Predicted Probabilities by Expected Buyers",
+       subtitle = paste("Overall Sample Storage Rate:", round(overall_storage_rate, 3)),
+       x = "Expected Buyers",
+       y = "Predicted Probability") +
+  theme_minimal()
+
+# Create a visualization by family leadership status
+plot2 <- ggplot(avg_probs, aes(x = expect_3_months, y = avg_prob, fill = factor(family_ever_village_leader))) +
+  geom_bar(stat = "identity", position = "dodge") +
+  geom_hline(yintercept = overall_storage_rate, linetype = "dashed", color = "red") +
+  labs(title = "Predicted Probabilities by Expected Buyers and Family Leadership",
+       x = "Expected Buyers",
+       y = "Predicted Probability",
+       fill = "Family Leadership") +
+  theme_minimal()
+
+# Create a visualization by town
+plot3 <- ggplot(avg_probs_town, aes(x = expect_3_months, y = avg_prob, fill = town)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  geom_hline(yintercept = overall_storage_rate, linetype = "dashed", color = "red") +
+  labs(title = "Predicted Probabilities by Expected Buyers and Town",
+       x = "Expected Buyers",
+       y = "Predicted Probability",
+       fill = "Town") +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+
+# Save the plots
+ggsave(here("figures","overall_predicted_probs.png"), plot1, width = 8, height = 5)
+ggsave(here("figures","predicted_probs_by_family.png"), plot2, width = 8, height = 5)
+ggsave(here("figures","predicted_probs_by_town.png"), plot3, width = 8, height = 5)
+
+# Display the plots
+print(plot1)
+print(plot2)
+print(plot3)
+```
+
+```{r Difference-from-Baseline Plot}
+# Let's use bootstrap to calculate SE and CI for the overall average predicted probabilities
+
+# Set seed for reproducibility
+set.seed(123)
+
+# Number of bootstrap iterations
+n_boot <- 1000
+
+# Create a matrix to store bootstrap results
+boot_results <- matrix(NA, nrow = n_boot, ncol = 3)
+colnames(boot_results) <- c("no_change", "fewer_buyers", "more_buyers")
+
+# Perform bootstrap
+for (i in 1:n_boot) {
+  # Sample with replacement from the original data
+  boot_indices <- sample(1:nrow(data), size = nrow(data), replace = TRUE)
+  boot_data <- data[boot_indices, ]
+  
+  # Fit the model on the bootstrap sample
+  boot_model <- glm(storage_usage_binary ~ expect_3_months + age + education_highest + 
+                   family_ever_village_leader + CRRA_adjusted + factor(town), 
+                   data = boot_data, family = binomial)
+  
+  # Create prediction dataset with all combinations
+  boot_newdata <- expand.grid(
+    expect_3_months = c("no_change", "fewer_buyers", "more_buyers"),
+    age = mean(boot_data$age, na.rm = TRUE),
+    education_highest = mean(boot_data$education_highest, na.rm = TRUE),
+    family_ever_village_leader = unique(boot_data$family_ever_village_leader),
+    CRRA_adjusted = mean(boot_data$CRRA_adjusted, na.rm = TRUE),
+    town = unique(boot_data$town)
+  )
+  
+  # Calculate predicted probabilities
+  boot_newdata$predicted_prob <- predict(boot_model, boot_newdata, type = "response")
+  
+  # Calculate average predicted probabilities by expected buyers
+  boot_avg_probs <- boot_newdata %>%
+    group_by(expect_3_months) %>%
+    summarize(avg_prob = mean(predicted_prob, na.rm = TRUE),
+              .groups = 'drop')
+  
+  # Store results in the bootstrap matrix
+  boot_results[i, "no_change"] <- boot_avg_probs$avg_prob[boot_avg_probs$expect_3_months == "no_change"]
+  boot_results[i, "fewer_buyers"] <- boot_avg_probs$avg_prob[boot_avg_probs$expect_3_months == "fewer_buyers"]
+  boot_results[i, "more_buyers"] <- boot_avg_probs$avg_prob[boot_avg_probs$expect_3_months == "more_buyers"]
+}
+
+# Calculate mean, SE, and 95% CI for each group
+overall_results <- data.frame(
+  expect_3_months = c("no_change", "fewer_buyers", "more_buyers"),
+  avg_prob = colMeans(boot_results, na.rm = TRUE),
+  se = apply(boot_results, 2, sd, na.rm = TRUE)
+)
+
+overall_results$CI_lower <- overall_results$avg_prob - 1.96 * overall_results$se
+overall_results$CI_upper <- overall_results$avg_prob + 1.96 * overall_results$se
+
+# Print overall_results
+print(overall_results)
+
 
 # Create LaTeX table
 library(xtable)
-latex_table <- xtable(results_df, 
+latex_table <- xtable(overall_results, 
                      caption = "Predicted Probabilities of Storage by Expected Buyers",
                      label = "tab:predicted_probs",
                      digits = 3)
 
-# Save LaTeX table
+
+# Save overall_results to TEX file
 print(latex_table, 
       file = here("tables", "predicted_probabilities.tex"),
       floating = TRUE,
       table.placement = "htbp",
       include.rownames = FALSE)
-```
-
-```{r Difference-from-Baseline Plot}
-# Calculate difference from baseline (No Change) dynamically
-baseline <- results_df$Predicted_Probability[results_df$Expected_Buyers == "No Change"]
-results_df$Difference <- results_df$Predicted_Probability - baseline
-results_df$Diff_CI_Lower <- results_df$CI_Lower - baseline
-results_df$Diff_CI_Upper <- results_df$CI_Upper - baseline
 
 
-# Exclude "No Change" from the graph
-results_df_filtered <- results_df %>% filter(Expected_Buyers != "No Change")
+# Calculate differences from baseline (no_change)
+overall_results$difference <- overall_results$avg_prob - overall_results$avg_prob[overall_results$expect_3_months == "no_change"]
 
-# Create an updated Difference-from-Baseline Plot excluding "No Change"
-plot_filtered <- ggplot(results_df_filtered, aes(x = Expected_Buyers, y = Difference)) +
+# Calculate confidence intervals for the differences
+# For the baseline category, the difference is 0 with 0 SE
+# For other categories, we need to account for covariance
+
+# Extract the bootstrap differences for each iteration
+boot_diff <- matrix(NA, nrow = n_boot, ncol = 3)
+colnames(boot_diff) <- c("no_change", "fewer_buyers", "more_buyers")
+
+# Calculate differences for each bootstrap sample
+for (i in 1:n_boot) {
+  baseline_prob <- boot_results[i, "no_change"]
+  boot_diff[i, "no_change"] <- 0  # Difference from itself is 0
+  boot_diff[i, "fewer_buyers"] <- boot_results[i, "fewer_buyers"] - baseline_prob
+  boot_diff[i, "more_buyers"] <- boot_results[i, "more_buyers"] - baseline_prob
+}
+
+# Calculate SE and CI for differences
+diff_se <- apply(boot_diff, 2, sd, na.rm = TRUE)
+overall_results$diff_se <- diff_se
+overall_results$diff_CI_lower <- overall_results$difference - 1.96 * overall_results$diff_se
+overall_results$diff_CI_upper <- overall_results$difference + 1.96 * overall_results$diff_se
+
+# Filter out the baseline category for the difference plot
+diff_results <- overall_results[overall_results$expect_3_months != "no_change", ]
+
+# Create a Difference-from-Baseline Plot
+diff_plot <- ggplot(diff_results, aes(x = expect_3_months, y = difference)) +
   geom_point(size = 4, color = 'darkblue') +
-  geom_errorbar(aes(ymin = Diff_CI_Lower, ymax = Diff_CI_Upper), width = 0.2, color = 'darkred') +
-  geom_hline(yintercept = 0, linetype = 'dashed', color = 'gray') +
+  geom_errorbar(aes(ymin = diff_CI_lower, ymax = diff_CI_upper), width = 0.2, color = 'darkred') +
+  geom_hline(yintercept = 0, linetype = 'dashed', color = 'black') +
   labs(title = 'Difference-from-Baseline Plot',
        subtitle = 'Predicted Probability Changes Relative to "No Change"',
        x = 'Expected Buyers Category',
        y = 'Difference in Predicted Probability') +
-  theme_minimal(base_size = 14) +
+  theme_minimal() +
   theme(
     plot.title = element_text(face = "bold", hjust = 0.5),
     plot.subtitle = element_text(hjust = 0.5),
@@ -835,11 +966,14 @@ plot_filtered <- ggplot(results_df_filtered, aes(x = Expected_Buyers, y = Differ
     axis.text = element_text(size = 12)
   )
 
-# Save the updated plot to a file
-ggsave(filename = here("figures", "filtered_difference_from_baseline_plot.png"), plot = plot_filtered, width = 8, height = 5, dpi = 300)
+# Save the plot
+ggsave(here("figures","filtered_difference_from_baseline_plot.png"), diff_plot, width = 8, height = 5, dpi = 300)
 
-# Print the updated plot
-print(plot_filtered)
+# Print the difference results
+print(diff_results[, c("expect_3_months", "difference", "diff_se", "diff_CI_lower", "diff_CI_upper")])
+
+# Display the plot
+print(diff_plot)
 ```
 
 ```{r Correlation Matrix of Controls}
