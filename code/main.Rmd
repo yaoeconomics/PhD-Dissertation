@@ -613,14 +613,14 @@ stargazer(models_list,
                              "Education Level",
                              "Family Village Leader",
                              "CRRA Adjusted",
-                             "Num Buyers $\\	imes$ Subjective Belief",
+                             "Num Buyers $\\times$ Subjective Belief",
                              "Constant"),
           dep.var.labels = "Storage Usage (Binary)",
           model.numbers = TRUE,
           single.row = FALSE,
           digits = 2,
           font.size = "footnotesize",
-          add.lines = list(c("Fixed Effects", "Yes", "Yes", "Yes", "Yes")))
+          add.lines = list(c("Town Fixed Effects", "Yes", "Yes", "Yes", "Yes")))
 ```
 ```{r interaction effect and plotting}
 # Extract coefficient estimates and variance-covariance matrix from model4
