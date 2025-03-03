@@ -1,5 +1,6 @@
 \documentclass[12pt]{article}
 \usepackage{graphicx}
+\usepackage{subcaption}
 \usepackage{amsmath,amsfonts,amssymb,geometry}
 \usepackage{natbib}
 \usepackage{dcolumn}
@@ -152,7 +153,7 @@ where $X_i$ represents a vector of control variables including demographic and r
 
 \input{tables/buyer's_competition_logistic_results}
 
-The primary interest here is the effect of farmers' subjective beliefs regarding buyers' competition at harvest on storage decisions. This measure ranges from 1 to 5, where a higher value indicates a stronger belief in intense competition among buyers. The results indicate a strong and statistically significant negative effect of subjective beliefs on storage usage across all models where they are included. Specifically, in Model 2, the coefficient is -0.52 (p < 0.01), increasing in magnitude to -1.55 in Model 3 and -2.60 in Model 4 (both p < 0.01). This suggests that as farmers perceive higher competition among buyers, they are significantly less likely to engage in storage. The strengthening effect in later models, which control for additional interactions, underscores the robustness of this finding.
+The primary interest here is the effect of farmers' subjective beliefs regarding buyers' competition at harvest on storage decisions. This measure ranges from 1 to 5, where a higher value indicates a stronger belief in intense competition among buyers. The results indicate a strong and statistically significant negative effect of subjective beliefs on storage usage across all models where they are included. Specifically, in Model 2, the coefficient is -0.52 (p $<$ 0.01), increasing in magnitude to -1.55 in Model 3 and -2.60 in Model 4 (both p $<$ 0.01). This suggests that as farmers perceive higher competition among buyers, they are significantly less likely to engage in storage. The strengthening effect in later models, which control for additional interactions, underscores the robustness of this finding.
 
 The actual number of buyers at harvest appears to have a minimal effect on storage usage. In Model 1, the coefficient is 0.003 and statistically insignificant, while in Models 3 and 4, the coefficients (0.45 and -0.39, respectively) indicate inconsistent effects. This weak relationship suggests that farmers' storage decisions are more influenced by their perceptions of market conditions rather than the objective number of buyers present.
 
@@ -194,10 +195,40 @@ Conversely, expectations of fewer buyers ($E^f_i$) yield positive but statistica
 These findings reveal an asymmetry in how farmers respond to expected changes in buyers' competitiveness. While the anticipation of more intense buyer competition strongly incentivizes storage, expectations of reduced competition do not significantly deter it. This suggests that farmers are more sensitive to potential price gains from increased buyer competition than to potential risks associated with fewer buyers, emphasizing the role of perceived future market opportunities in shaping storage decisions.
 
 
-Table \ref{tab:predicted_probs} further presents the predicted probabilities of storage usage based on farmers’ expectations regarding buyer numbers in three months. Farmers who expect no change in buyer numbers exhibit a predicted probability of 0.505, while those anticipating fewer buyers have a slightly higher probability of 0.607. Notably, farmers expecting more buyers have a predicted probability of 0.942, indicating a strong inclination toward storage when they anticipate heightened buyer competition. This substantial difference suggests that expectations of intensified competition at harvest play a crucial role in storage decisions. Figure \ref{Figure: Difference-from-Baseline Plot} visualizes these differences, illustrating that the increase in predicted probability for those expecting more buyers is both economically meaningful and statistically significant.
+Table \ref{tab:predicted_probs} further presents the predicted probabilities of storage usage based on farmers’ expectations regarding buyer numbers in three months. Farmers who expect no change in buyer numbers exhibit a predicted probability of 0.201, while those anticipating fewer buyers have a slightly higher probability of 0.249. Notably, farmers expecting more buyers have a predicted probability of 0.562, indicating a strong inclination toward storage when they anticipate heightened buyer competition. This substantial difference suggests that expectations of intensified competition at harvest play a crucial role in storage decisions. Figure \ref{Figure: Difference-from-Baseline Plot} visualizes these differences, illustrating that the increase in predicted probability for those expecting more buyers is both economically meaningful and statistically significant.
 
 
 \input{tables/predicted_probabilities}
+
+
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}{\textwidth}
+        \centering
+        \includegraphics[height=0.28\textheight]{figures/overall_predicted_probs.png}
+        \caption{}
+    \end{subfigure}\\[2mm]
+    
+    \begin{subfigure}{\textwidth}
+        \centering
+        \includegraphics[height=0.28\textheight]{figures/predicted_probs_by_family.png}
+        \caption{}
+    \end{subfigure}\\[2mm]
+
+    \begin{subfigure}{\textwidth}
+        \centering
+        \includegraphics[height=0.28\textheight]{figures/predicted_probs_by_town.png}
+        \caption{}
+    \end{subfigure}
+
+
+    \caption{Predicted Probabilities of Storage Usage by Expected Buyer Movement}
+    \label{fig:three-images}
+\end{figure}
+
+
+
+
 
 \begin{figure}[ht]
     \centering
