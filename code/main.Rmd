@@ -160,8 +160,8 @@ n_storage <- nrow(storage_data)
 
 # Define panel variables and labels with units (update: acres_mu is now acre)
 # Panel A: Farmer Demographics
-panel1_vars <- c("age", "hh_size", "labor_size", "education_highest", "family_ever_village_leader")
-panel1_names <- c("Age (years)", "Household size (persons)", "Labor size (persons)", "Highest education (level)", "Family ever village leader (dummy)")
+panel1_vars <- c("age", "hh_size", "labor_size", "education_highest", "family_ever_village_leader", "liquidity_constraint")
+panel1_names <- c("Age (years)", "Household size (persons)", "Labor size (persons)", "Highest education (level)", "Family ever village leader (dummy)", "Liquidity constrained (dummy)")
 
 # Panel B: Production and Consumption
 panel2_vars <- c("yield_tons", "acres_mu", "bad_ratio", "apple_income", "Income", "labor_cost", "fam_consump")
@@ -264,101 +264,6 @@ latex_table <- paste0(latex_table, "\\hline\
 
 # Save the LaTeX table to a tex file
 writeLines(latex_table, con = here("tables", "summary_statistics.tex"))
-```
-```{r Table of Summary Statistics (show in R)}
-
-setwd(here())
-# Load the data from Excel file; adjust the sheet name if needed
-data <- as.data.frame(read_excel(here("data", "combined_updated.xlsx")))
-
-# Get storage users
-storage_data <- data %>% filter(storage_usage_binary == 1)
-
-# Conversion factor (mu to acre)
-mu_to_acre <- 0.1657
-
-# Function to calculate summary statistics for a vector with potential conversion for 'acres_mu'
-calc_stats_vec <- function(vec, convert = FALSE) {
-  if(convert) {
-    vec <- vec * mu_to_acre
-  }
-  c(mean = round(mean(vec, na.rm = TRUE), 2),
-    sd = round(sd(vec, na.rm = TRUE), 2))
-}
-
-# Function to calculate panel stats given variable names and labels
-calc_panel_stats <- function(data, vars, storage_data, var_labels) {
-  stats_list <- lapply(1:length(vars), function(i) {
-    var <- vars[i]
-    convert <- ifelse(var == "acres_mu", TRUE, FALSE)
-    full_stats <- calc_stats_vec(data[[var]], convert = convert)
-    storage_stats <- calc_stats_vec(storage_data[[var]], convert = convert)
-    c(full_stats, storage_stats)
-  })
-  stats_matrix <- do.call(rbind, stats_list)
-  rownames(stats_matrix) <- var_labels
-  colnames(stats_matrix) <- c("Full Sample Mean", "Full Sample SD", 
-                              "Storage Users Mean", "Storage Users SD")
-  return(stats_matrix)
-}
-
-# Define panel variables and their labels in a list
-panels <- list(
-  "Panel A: Farmer Demographics" = list(
-    vars = c("age", "hh_size", "labor_size", "education_highest", "family_ever_village_leader"),
-    labels = c("Age (years)", "Household size (persons)", "Labor size (persons)",
-               "Highest education (level)", "Family ever village leader (dummy)")
-  ),
-  "Panel B: Production and Consumption" = list(
-    vars = c("yield_tons", "acres_mu", "bad_ratio", "apple_income", "Income", "labor_cost", "fam_consump"),
-    labels = c("Apple yield (tons)", "Land size (acre)", "Bad apple ratio",
-               "Apple income (RMB)", "Total income (RMB)", "Labor cost (RMB)", "Family consumption (RMB)")
-  ),
-  "Panel C: Storage and Risk-Related Factors" = list(
-    vars = c("car_track", "nd_insurance", "p_insurance", "CRRA_adjusted",
-             "storage_in_village", "far_to_small_storage", "far_to_large_storage",
-             "storage_purpose_wider_marketing", "storage_purpose_bargaining_tool"),
-    labels = c("Car/truck ownership (dummy)", "Natural disaster insurance (dummy)",
-               "Price insurance (dummy)", "CRRA adjusted (coef)",
-               "Storage in village (dummy)", "Distance to small storage (km)",
-               "Distance to large storage (km)", "Storage for wider marketing (dummy)",
-               "Storage as bargaining tool (dummy)")
-  ),
-  "Panel D: Marketing" = list(
-    vars = c("highest_price_kg", "ly_good_price_kg", "Wechat_sell", "relatiol_sell", "contract_sell"),
-    labels = c("Highest price per kg (RMB/kg)", "Last year good price per kg (RMB/kg)",
-               "WeChat selling (dummy)", "Relational selling (dummy)", "Contract selling (dummy)")
-  ),
-  "Panel E: Market Competitive Conditions" = list(
-    vars = c("more_buyers_future", "less_buyers_future", "num_buyers", "subjective_belief_buyer_com"),
-    labels = c("Expect more buyers (dummy)", "Expect fewer buyers (dummy)",
-               "Number of buyers (count)", "Subjective buyer competitiveness (score)")
-  )
-)
-
-# Build the full table by combining panel statistics
-table_list <- list()
-panel_names <- names(panels)
-for(panel in panel_names) {
-  panel_info <- panels[[panel]]
-  panel_stats <- calc_panel_stats(data, panel_info$vars, storage_data, panel_info$labels)
-  # Create a matrix with the panel name as a header row (empty columns)
-  header_row <- matrix(rep("", ncol(panel_stats)), nrow = 1)
-  rownames(header_row) <- panel
-  table_list[[panel]] <- rbind(header_row, panel_stats)
-}
-
-# Combine all panels into one table
-full_table <- do.call(rbind, table_list)
-
-# Add the Observations row at the end
-obs_row <- matrix(c(nrow(data), "-", nrow(storage_data), "-"), nrow = 1)
-colnames(obs_row) <- colnames(full_table)
-rownames(obs_row) <- "Observations"
-full_table <- rbind(full_table, obs_row)
-
-# Print the table in the console using kable
-print(kable(full_table, format = "pipe", digits = 2))
 ```
 
 ## Demographics by storage type
@@ -574,6 +479,7 @@ library(lme4)
 data$storage_usage_binary <- as.factor(data$storage_usage_binary)
 data$town <- as.factor(data$town)
 data$family_ever_village_leader <- as.factor(data$family_ever_village_leader)
+data$liquidity_constraint <- as.factor(data$liquidity_constraint)
 data$education_highest <- as.numeric(data$education_highest)
 data$num_buyers <- as.numeric(data$num_buyers)
 data$subjective_belief_buyer_com <- as.numeric(data$subjective_belief_buyer_com)
@@ -581,19 +487,19 @@ data$CRRA_adjusted <- as.numeric(data$CRRA_adjusted)
 data$age <- as.numeric(data$age)
 
 # Model 1: num_buyers only
-model1 <- glmer(storage_usage_binary ~ num_buyers + age + education_highest + family_ever_village_leader + CRRA_adjusted + (1 | town), 
+model1 <- glmer(storage_usage_binary ~ num_buyers + age + education_highest + family_ever_village_leader + CRRA_adjusted + liquidity_constraint +  (1 | town), 
                 data = data, family = binomial)
 
 # Model 2: subjective_belief_buyer_com only
-model2 <- glmer(storage_usage_binary ~ subjective_belief_buyer_com + age + education_highest + family_ever_village_leader + CRRA_adjusted + (1 | town), 
+model2 <- glmer(storage_usage_binary ~ subjective_belief_buyer_com + age + education_highest + family_ever_village_leader + CRRA_adjusted + liquidity_constraint + (1 | town), 
                 data = data, family = binomial)
 
 # Model 3: Both variables
-model3 <- glmer(storage_usage_binary ~ num_buyers + subjective_belief_buyer_com + age + education_highest + family_ever_village_leader + CRRA_adjusted + (1 | town), 
+model3 <- glmer(storage_usage_binary ~ num_buyers + subjective_belief_buyer_com + age + education_highest + family_ever_village_leader + CRRA_adjusted + liquidity_constraint + (1 | town), 
                 data = data, family = binomial)
 
 # Model 4: Both variables with interaction term
-model4 <- glmer(storage_usage_binary ~ num_buyers * subjective_belief_buyer_com + age + education_highest + family_ever_village_leader + CRRA_adjusted + (1 | town), 
+model4 <- glmer(storage_usage_binary ~ num_buyers * subjective_belief_buyer_com + age + education_highest + family_ever_village_leader + CRRA_adjusted + liquidity_constraint + (1 | town), 
                 data = data, family = binomial)
 
 # Extract coefficients and standard errors
@@ -613,6 +519,7 @@ stargazer(models_list,
                              "Education Level",
                              "Family Village Leader",
                              "CRRA Adjusted",
+                             "Liquidity Constrained", 
                              "Num Buyers $\\times$ Subjective Belief",
                              "Constant"),
           dep.var.labels = "Storage Usage (Binary)",
@@ -714,7 +621,7 @@ data <- data %>%
 data$expect_3_months <- factor(data$expect_3_months, levels = c("no_change", "fewer_buyers", "more_buyers"))
 
 # Prepare the formula for the logistic regression
-formula_base <- storage_usage_binary ~ expect_3_months + age + education_highest + family_ever_village_leader + CRRA_adjusted + factor(town)
+formula_base <- storage_usage_binary ~ expect_3_months + age + education_highest + family_ever_village_leader + CRRA_adjusted + liquidity_constraint + factor(town)
 formula_with_additional <- update(formula_base, . ~ . + num_buyers + subjective_belief_buyer_com)
 
 # Run the logistic regressions
@@ -729,7 +636,7 @@ stargazer(model_base, model_with_additional,
           add.lines = list(c("Town Fixed Effects", "Yes", "Yes")),
           out = here("tables", "farmer_expectations_logistic_results.tex"),
           dep.var.labels = "Storage Usage (Binary)",
-          covariate.labels = c("Fewer Buyers", "More Buyers", "Age", "Education", "Family Leader", "CRRA Adjusted", "Num Buyers", "Subjective Belief"),
+          covariate.labels = c("Fewer Buyers", "More Buyers", "Age", "Education", "Family Leader", "CRRA Adjusted", "Liquidity Constrained", "Num Buyers", "Subjective Belief"),
           digits = 2, 
           font.size = "footnotesize", 
           star.cutoffs = c(0.05, 0.01, 0.001)
@@ -752,6 +659,7 @@ mean_crra <- mean(data$CRRA_adjusted, na.rm = TRUE)
 # Get unique values for categorical variables
 unique_towns <- unique(data$town)
 unique_family_leader <- unique(data$family_ever_village_leader)
+unique_liquidity_constraint <- unique(data$liquidity_constraint)
 
 # Create a comprehensive prediction dataset covering all combinations
 newdata <- expand.grid(
@@ -760,6 +668,7 @@ newdata <- expand.grid(
   education_highest = mean_education,
   family_ever_village_leader = unique_family_leader,
   CRRA_adjusted = mean_crra,
+  liquidity_constraint = unique_liquidity_constraint,
   town = unique_towns
 )
 
@@ -863,7 +772,7 @@ for (i in 1:n_boot) {
   
   # Fit the model on the bootstrap sample
   boot_model <- glm(storage_usage_binary ~ expect_3_months + age + education_highest + 
-                   family_ever_village_leader + CRRA_adjusted + factor(town), 
+                   family_ever_village_leader + CRRA_adjusted  + liquidity_constraint + factor(town), 
                    data = boot_data, family = binomial)
   
   # Create prediction dataset with all combinations
@@ -873,6 +782,7 @@ for (i in 1:n_boot) {
     education_highest = mean(boot_data$education_highest, na.rm = TRUE),
     family_ever_village_leader = unique(boot_data$family_ever_village_leader),
     CRRA_adjusted = mean(boot_data$CRRA_adjusted, na.rm = TRUE),
+    liquidity_constraint = unique(boot_data$liquidity_constraint),
     town = unique(boot_data$town)
   )
   
@@ -982,7 +892,7 @@ library(ggcorrplot)
 
 df <- read_excel(here("data","combined_updated.xlsx"))
 # Extract control variables
-control_vars <- df[, c("age", "education_highest", "family_ever_village_leader", "CRRA_adjusted", "num_buyers", "subjective_belief_buyer_com")]
+control_vars <- df[, c("age", "education_highest", "family_ever_village_leader", "CRRA_adjusted", "liquidity_constraint", "num_buyers", "subjective_belief_buyer_com")]
 
 # Calculate correlation matrix
 cor_matrix <- cor(control_vars, use = "complete.obs")
@@ -1074,13 +984,13 @@ if (!exists("full_sample") || !exists("storage_users")) {
 } else {
   # Estimate models
   model_full <- survreg(Surv(time = lower_bound_weeks, time2 = upper_bound_weeks, type = 'interval2') ~ 
-                        more_buyers_future + less_buyers_future + family_ever_village_leader + 
+                        more_buyers_future + less_buyers_future + family_ever_village_leader + liquidity_constraint  +
                         far_to_small_storage + far_to_large_storage + storage_purpose_wider_marketing + 
                         storage_purpose_bargaining_tool + education_highest + num_buyers + 
                         factor(town), data = full_sample, dist = "weibull")
 
   model_storage <- survreg(Surv(time = lower_bound_weeks, time2 = upper_bound_weeks, type = 'interval2') ~ 
-                           more_buyers_future + less_buyers_future + family_ever_village_leader + 
+                           more_buyers_future + less_buyers_future + family_ever_village_leader + liquidity_constraint +
                            far_to_small_storage + far_to_large_storage + storage_purpose_wider_marketing + 
                            storage_purpose_bargaining_tool + education_highest + num_buyers + 
                            factor(town), data = storage_users, dist = "weibull")
@@ -1093,7 +1003,7 @@ stargazer(model_full, model_storage, type = "text",
           font.size = "footnotesize", 
           dep.var.labels = "Time to Sell",
             column.labels = c("Full Sample", "Storage Users"),
-            covariate.labels = c("More Buyers Future", "Less Buyers Future", "Family Village Leader",
+            covariate.labels = c("More Buyers Future", "Less Buyers Future", "Family Village Leader", "Liquidity Constrained",
                                  "Far to Small Storage", "Far to Large Storage", "Storage Purpose: Marketing",
                                  "Storage Purpose: Bargaining", "Education Level", "Number of Buyers"),
             out = here("tables", "Extended_Weibull_Survival_Models_with_Controls.tex"))
