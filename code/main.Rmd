@@ -131,140 +131,293 @@ combined_plot
 ```
 
 ## Table of Summary Statistics
+
+
 ```{r Table of Summary Statistics (tex file)}
-# Define conversion factor from mu to acre
-mu_to_acre <- 0.1657
+# Create a storage user indicator
+data$storage_user <- ifelse(data$cold_storage_usage_type == "Not_use", 0, 1)
 
-# Function to calculate summary statistics with conversion for land size
-calc_stats <- function(data, var, storage_data) {
-  if(var == "acres_mu") {
-    full_mean <- round(mean(data[[var]], na.rm = TRUE) * mu_to_acre,2)
-    full_sd <- round(sd(data[[var]], na.rm = TRUE) * mu_to_acre,2)
-    storage_mean <- round(mean(storage_data[[var]], na.rm = TRUE) * mu_to_acre,2)
-    storage_sd <- round(sd(storage_data[[var]], na.rm = TRUE) * mu_to_acre,2)
-  } else {
-    full_mean <- round(mean(data[[var]], na.rm = TRUE),2)
-    full_sd <- round(sd(data[[var]], na.rm = TRUE),2)
-    storage_mean <- round(mean(storage_data[[var]], na.rm = TRUE),2)
-    storage_sd <- round(sd(storage_data[[var]], na.rm = TRUE),2)
-  }
-  return(c(full_mean, full_sd, storage_mean, storage_sd))
-}
+# Define conversion rates
+RMB_to_USD <- 0.14  # Approximate exchange rate: 1 RMB = 0.14 USD
+kg_to_pound <- 2.20462  # 1 kg = 2.20462 pounds
+mu_to_acre <- 0.1647  # 1 mu = 0.1647 acres
 
-# Subsample for storage usage
-storage_data <- data %>% filter(storage_usage_binary == 1)
-
-# Get number of observations
-n_full <- nrow(data)
+# Identify storage users and non-storage users
+storage_data <- data %>% filter(storage_user == 1)
+non_storage_data <- data %>% filter(storage_user == 0)
 n_storage <- nrow(storage_data)
+n_non_storage <- nrow(non_storage_data)
+n_full <- nrow(data)
 
-# Define panel variables and labels with units (update: acres_mu is now acre)
-# Panel A: Farmer Demographics
-panel1_vars <- c("age", "hh_size", "labor_size", "education_highest", "family_ever_village_leader", "liquidity_constraint")
-panel1_names <- c("Age (years)", "Household size (persons)", "Labor size (persons)", "Highest education (level)", "Family ever village leader (dummy)", "Liquidity constrained (dummy)")
-
-# Panel B: Production and Consumption
-panel2_vars <- c("yield_tons", "acres_mu", "bad_ratio", "apple_income", "Income", "labor_cost", "fam_consump")
-panel2_names <- c("Apple yield (tons)", "Land size (acre)", "Bad apple ratio", "Apple income (RMB)", "Total income (RMB)", "Labor cost (RMB)", "Family consumption (RMB)")
-
-# Panel C: Storage and Risk-Related Factors
-panel3_vars <- c("car_track", "nd_insurance", "p_insurance", "CRRA_adjusted", "storage_in_village",
-                   "far_to_small_storage", "far_to_large_storage", "storage_purpose_wider_marketing",
-                   "storage_purpose_bargaining_tool")
-panel3_names <- c("Car/truck ownership (dummy)", "Natural disaster insurance (dummy)", "Price insurance (dummy)", "CRRA adjusted (coef)", "Storage in village (dummy)", 
-                   "Distance to small storage (km)", "Distance to large storage (km)", "Storage for wider marketing (dummy)", "Storage as bargaining tool (dummy)")
-
-# Panel D: Marketing
-panel4_vars <- c("highest_price_kg", "ly_good_price_kg", "Wechat_sell", "relatiol_sell", "contract_sell")
-panel4_names <- c("Highest price per kg (RMB/kg)", "Last year good price per kg (RMB/kg)", "WeChat selling (dummy)", "Relational selling (dummy)", "Contract selling (dummy)")
-
-# Panel E: Market Competitive Conditions
-panel5_vars <- c("more_buyers_future", "less_buyers_future", "num_buyers", "subjective_belief_buyer_com")
-panel5_names <- c("Expect more buyers (dummy)", "Expect fewer buyers (dummy)", "Number of buyers (count)", "Subjective buyer competitiveness (score)")
-
-# Function to create panel dataframe with stats
-create_panel <- function(vars, names) {
-  panel_stats <- matrix(nrow = length(vars), ncol = 4)
-  for(i in 1:length(vars)) {
-    panel_stats[i,] <- calc_stats(data, vars[i], storage_data)
+# Create a function to calculate summary statistics with t-tests
+calc_stats_with_ttest <- function(var, storage_data, non_storage_data, convert_type = "none") {
+  # Calculate means and SDs with appropriate conversions
+  if(convert_type == "mu_to_acre") {
+    # Convert mu to acres
+    storage_mean <- mean(storage_data[[var]], na.rm = TRUE) * mu_to_acre
+    storage_sd <- sd(storage_data[[var]], na.rm = TRUE) * mu_to_acre
+    non_storage_mean <- mean(non_storage_data[[var]], na.rm = TRUE) * mu_to_acre
+    non_storage_sd <- sd(non_storage_data[[var]], na.rm = TRUE) * mu_to_acre
+  } else if(convert_type == "RMB_to_USD") {
+    # Convert RMB to USD
+    storage_mean <- mean(storage_data[[var]], na.rm = TRUE) * RMB_to_USD
+    storage_sd <- sd(storage_data[[var]], na.rm = TRUE) * RMB_to_USD
+    non_storage_mean <- mean(non_storage_data[[var]], na.rm = TRUE) * RMB_to_USD
+    non_storage_sd <- sd(non_storage_data[[var]], na.rm = TRUE) * RMB_to_USD
+  } else if(convert_type == "RMB_kg_to_USD_lb") {
+    # Convert RMB/kg to USD/pound
+    storage_mean <- mean(storage_data[[var]], na.rm = TRUE) * RMB_to_USD / kg_to_pound
+    storage_sd <- sd(storage_data[[var]], na.rm = TRUE) * RMB_to_USD / kg_to_pound
+    non_storage_mean <- mean(non_storage_data[[var]], na.rm = TRUE) * RMB_to_USD / kg_to_pound
+    non_storage_sd <- sd(non_storage_data[[var]], na.rm = TRUE) * RMB_to_USD / kg_to_pound
+  } else {
+    # No conversion needed
+    storage_mean <- mean(storage_data[[var]], na.rm = TRUE)
+    storage_sd <- sd(storage_data[[var]], na.rm = TRUE)
+    non_storage_mean <- mean(non_storage_data[[var]], na.rm = TRUE)
+    non_storage_sd <- sd(non_storage_data[[var]], na.rm = TRUE)
   }
-  panel_df <- data.frame(
-    Variable = names,
-    Full_Mean = panel_stats[,1],
-    Full_SD = panel_stats[,2],
-    Storage_Mean = panel_stats[,3],
-    Storage_SD = panel_stats[,4]
-  )
-  return(panel_df)
+  
+  # Perform t-test with appropriate conversions
+  t_test_result <- tryCatch({
+    if(convert_type == "mu_to_acre") {
+      t.test(storage_data[[var]] * mu_to_acre, non_storage_data[[var]] * mu_to_acre)
+    } else if(convert_type == "RMB_to_USD") {
+      t.test(storage_data[[var]] * RMB_to_USD, non_storage_data[[var]] * RMB_to_USD)
+    } else if(convert_type == "RMB_kg_to_USD_lb") {
+      t.test(storage_data[[var]] * RMB_to_USD / kg_to_pound, non_storage_data[[var]] * RMB_to_USD / kg_to_pound)
+    } else {
+      t.test(storage_data[[var]], non_storage_data[[var]])
+    }
+  }, error = function(e) {
+    # Return NA if t-test fails
+    return(list(p.value = NA, statistic = NA))
+  })
+  
+  # Get p-value and t-statistic
+  p_value <- t_test_result$p.value
+  t_stat <- t_test_result$statistic
+  
+  # Add significance stars
+  sig_stars <- ""
+  if(!is.na(p_value)) {
+    if(p_value < 0.01) sig_stars <- "***"
+    else if(p_value < 0.05) sig_stars <- "**"
+    else if(p_value < 0.1) sig_stars <- "*"
+  }
+  
+  return(list(
+    storage_mean = storage_mean,
+    storage_sd = storage_sd,
+    non_storage_mean = non_storage_mean,
+    non_storage_sd = non_storage_sd,
+    t_stat = t_stat,
+    p_value = p_value,
+    sig_stars = sig_stars
+  ))
 }
 
-panel1 <- create_panel(panel1_vars, panel1_names)
-panel2 <- create_panel(panel2_vars, panel2_names)
-panel3 <- create_panel(panel3_vars, panel3_names)
-panel4 <- create_panel(panel4_vars, panel4_names)
-panel5 <- create_panel(panel5_vars, panel5_names)
+# Create a dataframe with variable names, labels, and conversion types
+variables <- data.frame(
+  var_name = c(
+    # Panel A: Farmer Demographics
+    "age", "hh_size", "labor_size", "education_highest", "family_ever_village_leader","liquidity_constraint",
+    # Panel B: Production and Consumption
+    "yield_tons", "acres_mu", "bad_ratio", "apple_income", "Income", "labor_cost", "fam_consump",
+    # Panel C: Storage and Risk-Related Factors
+    "car_track", "nd_insurance", "p_insurance", "CRRA_adjusted", "storage_in_village", 
+    "far_to_small_storage", "far_to_large_storage", "storage_purpose_wider_marketing", "storage_purpose_bargaining_tool",
+    # Panel D: Marketing
+    "highest_price_kg", "ly_good_price_kg", "Wechat_sell", "relatiol_sell", "contract_sell",
+    # Panel E: Market Competitive Conditions
+    "more_buyers_future", "less_buyers_future", "num_buyers", "subjective_belief_buyer_com"
+  ),
+  var_label = c(
+    # Panel A: Farmer Demographics
+    "Age (years)", "Household size (persons)", "Labor size (persons)", "Highest education (level)", 
+    "Family ever village leader (0/1)", "Liquidity constrained (0/1)",
+    # Panel B: Production and Consumption
+    "Apple yield (tons)", "Land size (acre)", "Bad apple ratio", "Apple income (USD)", 
+    "Total income (USD)", "Labor cost (USD)", "Family consumption (USD)",
+    # Panel C: Storage and Risk-Related Factors
+    "Car/truck ownership (0/1)", "Natural disaster insurance (0/1)", "Price insurance (0/1)", 
+    "CRRA adjusted (coef)", "Storage in village (0/1)", "Far to small storage (0/1)", 
+    "Far to large storage (0/1)", "Storage for wider marketing (0/1)", "Storage as bargaining tool (0/1)",
+    # Panel D: Marketing
+    "Highest price per pound (USD/lb)", "Good price per pound (USD/lb)", 
+    "WeChat selling (0/1)", "Relational selling (0/1)", "Contract selling (0/1)",
+    # Panel E: Market Competitive Conditions
+    "Expect more buyers (0/1)", "Expect fewer buyers (0/1)", 
+    "Number of buyers at harvest (count)", "Subjective buyer competitiveness (1/5)"
+  ),
+  panel = c(
+    rep("Panel A: Farmer Demographics", 6),
+    rep("Panel B: Production and Consumption", 7),
+    rep("Panel C: Storage and Risk-Related Factors", 9),
+    rep("Panel D: Marketing", 5),
+    rep("Panel E: Market Competitive Conditions", 4)
+  ),
+  convert_type = c(
+    # Panel A: Farmer Demographics
+    rep("none", 6),
+    # Panel B: Production and Consumption
+    "none", "mu_to_acre", "none", "RMB_to_USD", "RMB_to_USD", "RMB_to_USD", "RMB_to_USD",
+    # Panel C: Storage and Risk-Related Factors
+    rep("none", 9),
+    # Panel D: Marketing
+    "RMB_kg_to_USD_lb", "RMB_kg_to_USD_lb", rep("none", 3),
+    # Panel E: Market Competitive Conditions
+    rep("none", 4)
+  )
+)
 
-# Build LaTeX table string
-latex_table <- "\\begin{table}[htbp]
-\\centering
-\\caption{Summary Statistics}
-\\label{tab: summary statistics}
-\\begin{tabular}{lcccc}
-\\hline
-& \\multicolumn{2}{c}{Full Sample} & \\multicolumn{2}{c}{Storage Users} \\\\
-\\cline{2-3} \\cline{4-5}
-Variable & Mean & SD & Mean & SD \\\\
-\\hline
-\\multicolumn{5}{l}{\\textbf{Panel A: Farmer Demographics}} \\\\
+# Create an empty dataframe to store results
+results <- data.frame(
+  Panel = character(),
+  Variable = character(),
+  Storage_Mean = numeric(),
+  Storage_SD = numeric(),
+  Non_Storage_Mean = numeric(),
+  Non_Storage_SD = numeric(),
+  T_Stat = numeric(),
+  P_Value = numeric(),
+  Sig_Stars = character(),
+  stringsAsFactors = FALSE
+)
+
+# Calculate statistics for each variable
+for(i in 1:nrow(variables)) {
+  var <- variables$var_name[i]
+  
+  # Skip if variable doesn't exist in the dataset
+  if(!var %in% colnames(data)) {
+    cat("Variable not found:", var, "\
+")
+    next
+  }
+  
+  # Calculate statistics
+  stats <- calc_stats_with_ttest(
+    var, storage_data, non_storage_data, 
+    convert_type = variables$convert_type[i]
+  )
+  
+  # Add to results dataframe
+  results <- rbind(results, data.frame(
+    Panel = variables$panel[i],
+    Variable = variables$var_label[i],
+    Storage_Mean = stats$storage_mean,
+    Storage_SD = stats$storage_sd,
+    Non_Storage_Mean = stats$non_storage_mean,
+    Non_Storage_SD = stats$non_storage_sd,
+    T_Stat = stats$t_stat,
+    P_Value = stats$p_value,
+    Sig_Stars = stats$sig_stars,
+    stringsAsFactors = FALSE
+  ))
+}
+
+
+# Create a summary table without pack_rows to avoid header mismatch
+results_table <- results %>%
+  mutate(
+    Storage_Mean_Formatted = sprintf("%.2f", Storage_Mean),
+    Storage_SD_Formatted = sprintf("%.2f", Storage_SD),
+    Non_Storage_Mean_Formatted = sprintf("%.2f", Non_Storage_Mean),
+    Non_Storage_SD_Formatted = sprintf("%.2f", Non_Storage_SD),
+    T_Stat_Formatted = paste0(sprintf("%.2f", T_Stat), Sig_Stars)
+  ) %>%
+  select(Panel, Variable, Storage_Mean_Formatted, Storage_SD_Formatted, 
+         Non_Storage_Mean_Formatted, Non_Storage_SD_Formatted, T_Stat_Formatted)
+
+print(results_table)
+
+
+
+# Format the results for LaTeX output
+results_latex <- results %>%
+  mutate(
+    Storage_Mean_Stars = sprintf("%.2f", Storage_Mean),
+    Storage_SD = sprintf("(%.2f)", Storage_SD),
+    Non_Storage_Mean = sprintf("%.2f", Non_Storage_Mean),
+    Non_Storage_SD = sprintf("(%.2f)", Non_Storage_SD),
+    T_Stat = paste0(sprintf("%.2f", T_Stat), Sig_Stars)
+  ) %>%
+  select(Panel, Variable, Storage_Mean_Stars, Storage_SD, Non_Storage_Mean, Non_Storage_SD, T_Stat)
+
+# Group by panel
+panels <- unique(results_latex$Panel)
+
+# Create the LaTeX file
+latex_output <- "\\begin{table}[H]\
+\\centering\
+\\caption{Summary Statistics by Storage Usage}\
+\\resizebox{\\textwidth}{!}{%\
 "
 
-add_panel_to_latex <- function(panel, latex_table) {
-  for(i in 1:nrow(panel)) {
-    latex_table <- paste0(latex_table, "\
-", panel$Variable[i], " & ",
-                            sprintf("%.2f", panel$Full_Mean[i]), " & ",
-                            sprintf("%.2f", panel$Full_SD[i]), " & ",
-                            sprintf("%.2f", panel$Storage_Mean[i]), " & ",
-                            sprintf("%.2f", panel$Storage_SD[i]), " \\\\ ")
+latex_output <- paste0(latex_output, "\\begin{tabular}{lccccc}\
+\\toprule\
+")
+latex_output <- paste0(latex_output, " & \\multicolumn{2}{c}{Storage Users} & \\multicolumn{2}{c}{Non-Storage Users} & Difference \\\\\
+")
+latex_output <- paste0(latex_output, "\\cmidrule(lr){2-3} \\cmidrule(lr){4-5}\
+")
+latex_output <- paste0(latex_output, "Variable & Mean & SD & Mean & SD & t-statistic \\\\\
+\\midrule\
+")
+
+# Add each panel with its variables
+for(panel in panels) {
+  panel_data <- results_latex %>% filter(Panel == panel)
+  
+  # Add panel header
+  latex_output <- paste0(latex_output, "\\multicolumn{6}{l}{\\textbf{", panel, "}} \\\\\
+")
+  
+  # Add variables for this panel
+  for(i in 1:nrow(panel_data)) {
+    latex_output <- paste0(latex_output, 
+                          panel_data$Variable[i], " & ", 
+                          panel_data$Storage_Mean_Stars[i], " & ", 
+                          panel_data$Storage_SD[i], " & ", 
+                          panel_data$Non_Storage_Mean[i], " & ", 
+                          panel_data$Non_Storage_SD[i], " & ", 
+                          panel_data$T_Stat[i], " \\\\\
+")
   }
-  return(latex_table)
+  
+  # Add a small space after each panel except the last one
+  if(panel != panels[length(panels)]) {
+    latex_output <- paste0(latex_output, "\\addlinespace\
+")
+  }
 }
 
-latex_table <- add_panel_to_latex(panel1, latex_table)
-latex_table <- paste0(latex_table, "\
+# Add footer
+latex_output <- paste0(latex_output, "\\hline\
 \\hline\
-\\multicolumn{5}{l}{\\textbf{Panel B: Production and Consumption}} \\\\
-")
-latex_table <- add_panel_to_latex(panel2, latex_table)
-latex_table <- paste0(latex_table, "\
-\\hline\
-\\multicolumn{5}{l}{\\textbf{Panel C: Storage and Risk-Related Factors}} \\\\
-")
-latex_table <- add_panel_to_latex(panel3, latex_table)
-latex_table <- paste0(latex_table, "\
-\\hline\
-\\multicolumn{5}{l}{\\textbf{Panel D: Marketing}} \\\\
-")
-latex_table <- add_panel_to_latex(panel4, latex_table)
-latex_table <- paste0(latex_table, "\
-\\hline\
-\\multicolumn{5}{l}{\\textbf{Panel E: Market Competitive Conditions}} \\\\
-")
-latex_table <- add_panel_to_latex(panel5, latex_table)
-
-# Add observations row
-latex_table <- paste0(latex_table, "\
-\\hline\
-Observations & ", n_full, " & - & ", n_storage, " & - \\\\
+Observations & 200 & & 349 & & 549 \\\\\
+\\bottomrule\
 ")
 
-latex_table <- paste0(latex_table, "\\hline\
-\\end{tabular}\
-\\end{table}")
 
-# Save the LaTeX table to a tex file
-writeLines(latex_table, con = here("tables", "summary_statistics.tex"))
+latex_output <- paste0(latex_output, "\\end{tabular}% \n",
+"} % End of resizebox \n",
+"\\begin{tablenotes} \n",
+"\\item \\textit{Notes:} The table presents means and standard deviations (in parentheses) for each variable by group. ",
+"T-statistics from two-sample t-tests are reported to indicate statistical significance of differences between groups. ",
+"Significance levels are denoted by asterisks: * p$<$0.1, ** p$<$0.05, *** p$<$0.01. ",
+"In addition, monetary values have been converted from Chinese Yuan (RMB) to US Dollars (USD), ",
+"land area from mu to acres, and apple prices from RMB/kg to USD/pound using appropriate conversion rates. \n",
+"\\end{tablenotes} \n",
+"\\end{table}"
+)
+
+
+# Write to file
+writeLines(latex_output, con = here("tables", "summary_statistics.tex"))
 ```
+
 
 ## Demographics by storage type
 
