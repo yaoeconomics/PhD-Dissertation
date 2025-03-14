@@ -683,6 +683,74 @@ stargazer(models_list,
           font.size = "footnotesize",
           add.lines = list(c("Town Fixed Effects", "Yes", "Yes", "Yes", "Yes")))
 ```
+
+```{r Table of Marginal Effects}
+# Calculate average marginal effects by using Model 3 
+marg_effects <- margins(model3)
+
+# Summary of marginal effects
+summary_marg <- summary(marg_effects)
+
+# Create a data frame with the marginal effects for the main predictors
+me_table <- data.frame(
+  Variable = summary_marg$factor,
+  AME = summary_marg$AME,
+  SE = summary_marg$SE,
+  z_value = summary_marg$z,
+  p_value = summary_marg$p
+)
+
+# Add significance stars
+me_table$Significance <- ifelse(me_table$p_value < 0.01, "***",
+                           ifelse(me_table$p_value < 0.05, "**",
+                           ifelse(me_table$p_value < 0.1, "*", "")))
+
+# Format numbers to 3 decimal places
+me_table$AME <- sprintf("%.3f", me_table$AME)
+me_table$SE <- sprintf("%.3f", me_table$SE)
+me_table$z_value <- sprintf("%.3f", me_table$z_value)
+me_table$p_value <- sprintf("%.3f", me_table$p_value)
+
+# Combine AME and SE for display
+me_table$`AME (SE)` <- paste0(me_table$AME, " (", me_table$SE, ")")
+
+# Final table for display
+final_table <- me_table[, c("Variable", "AME (SE)", "z_value", "p_value", "Significance")]
+
+
+# Keep only Variable and AME (SE) columns, and append significance to AME (SE)
+final_table$`AME (SE)` <- paste0(final_table$`AME (SE)`, " ", final_table$Significance)
+final_table <- final_table[, c("Variable", "AME (SE)")]
+
+# Rename variables
+variable_names <- c("num_buyers" = "Number of Buyers at harvest",
+  "subjective_belief_buyer_com" = "Subjective Belief on Buyer Competition",
+                    "age" = "Age",
+                    "education_highest" = "Highest Education",
+                    "family_ever_village_leader1" = "Family Ever Village Leader",
+                    "CRRA_adjusted" = "CRRA Adjusted",
+                    "liquidity_constraint1" = "Liquidity Constrained")
+
+final_table$Variable <- variable_names[final_table$Variable]
+
+# Define the desired order
+variable_order <- c("Number of Buyers at harvest", "Subjective Belief on Buyer Competition", "Age", "Highest Education", 
+                    "Family Ever Village Leader", "CRRA Adjusted", "Liquidity Constrained")
+
+# Reorder the rows based on the specified variable order
+final_table <- final_table[match(variable_order, final_table$Variable), ]
+
+
+# Using stargazer to produce LaTeX code from our data frame
+stargazer(final_table, summary = FALSE, header = FALSE, rownames = FALSE,
+          type = "text",
+          out = here("tables", "buyer's_competition_logistic_results_AME.tex"),
+          title = "Average Marginal Effects from Logistic Regression (Model 3)",
+          label = "tab:marginal_effects_model3",
+          align = TRUE, 
+          notes = "Note: *p<0.1; **p<0.05; ***p<0.01")
+```
+
 ```{r interaction effect and plotting}
 # Extract coefficient estimates and variance-covariance matrix from model4
 coef_est <- fixef(model4)
@@ -786,6 +854,7 @@ model_with_additional <- glm(formula_with_additional, data = data, family = bino
 stargazer(model_base, model_with_additional, 
           type = "text",
           omit = "town",
+          title = "Logit Analysis: Farmers' Expectations on Buyer Competition in Three Months",
           label = "tab: binary storage ~ farmer's expectation on movement",
           add.lines = list(c("Town Fixed Effects", "Yes", "Yes")),
           out = here("tables", "farmer_expectations_logistic_results.tex"),
@@ -803,6 +872,80 @@ summary_marginal_effects <- summary(marginal_effects)
 # Save marginal effects to a file
 write.csv(summary_marginal_effects, here("tables", "marginal_effects_expect_3_months.csv"))
 ```
+
+
+```{r Table of Marginal Effects}
+# Calculate average marginal effects by using Model 3 
+marg_effects <- margins(model_with_additional)
+
+# Summary of marginal effects
+summary_marg <- summary(marg_effects)
+
+# Create a data frame with the marginal effects for the main predictors
+me_table <- data.frame(
+  Variable = summary_marg$factor,
+  AME = summary_marg$AME,
+  SE = summary_marg$SE,
+  z_value = summary_marg$z,
+  p_value = summary_marg$p
+)
+
+# Add significance stars
+me_table$Significance <- ifelse(me_table$p_value < 0.01, "***",
+                           ifelse(me_table$p_value < 0.05, "**",
+                           ifelse(me_table$p_value < 0.1, "*", "")))
+
+# Format numbers to 3 decimal places
+me_table$AME <- sprintf("%.3f", me_table$AME)
+me_table$SE <- sprintf("%.3f", me_table$SE)
+me_table$z_value <- sprintf("%.3f", me_table$z_value)
+me_table$p_value <- sprintf("%.3f", me_table$p_value)
+
+# Combine AME and SE for display
+me_table$`AME (SE)` <- paste0(me_table$AME, " (", me_table$SE, ")")
+
+# Final table for display
+final_table <- me_table[, c("Variable", "AME (SE)", "z_value", "p_value", "Significance")]
+
+
+# Keep only Variable and AME (SE) columns, and append significance to AME (SE)
+final_table$`AME (SE)` <- paste0(final_table$`AME (SE)`, " ", final_table$Significance)
+final_table <- final_table[, c("Variable", "AME (SE)")]
+
+
+# Rename variables
+variable_names <- c("num_buyers" = "Number of Buyers at harvest",
+  "subjective_belief_buyer_com" = "Subjective Belief on Buyer Competition",
+                    "age" = "Age",
+                    "education_highest" = "Highest Education",
+                    "family_ever_village_leader" = "Family Ever Village Leader",
+                    "CRRA_adjusted" = "CRRA Adjusted",
+                    "liquidity_constraint" = "Liquidity Constrained",
+                    "expect_3_monthsfewer_buyers" = "Expect Fewer Buyers",
+                    "expect_3_monthsmore_buyers" = "Expect More Buyers"
+  )
+
+final_table$Variable <- variable_names[final_table$Variable]
+
+# Define the desired order
+variable_order <- c("Expect Fewer Buyers", "Expect More Buyers", "Number of Buyers at harvest", "Subjective Belief on Buyer Competition", "Age", "Highest Education", 
+                    "Family Ever Village Leader", "CRRA Adjusted", "Liquidity Constrained")
+
+# Reorder the rows based on the specified variable order
+final_table <- final_table[match(variable_order, final_table$Variable), ]
+
+
+# Using stargazer to produce LaTeX code from our data frame
+stargazer(final_table, summary = FALSE, header = FALSE, rownames = FALSE,
+          type = "text",
+          out = here("tables", "farmer_expectations_logistic_results_AME.tex"),
+          title = "Average Marginal Effects: Farmers' Expectations on Buyer Competition in Three Months",
+          label = "tab: binary storage ~ farmer's expectation on movement (AME)",
+          align = TRUE, 
+          notes = "Note: *p<0.1; **p<0.05; ***p<0.01")
+```
+
+
 
 ```{r predicted probability from the model}
 # Get mean values for continuous variables
