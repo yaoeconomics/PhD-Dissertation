@@ -747,8 +747,9 @@ stargazer(final_table, summary = FALSE, header = FALSE, rownames = FALSE,
           out = here("tables", "buyer's_competition_logistic_results_AME.tex"),
           title = "Average Marginal Effects from Logistic Regression (Model 3)",
           label = "tab:marginal_effects_model3",
-          align = TRUE, 
-          notes = "Note: *p<0.1; **p<0.05; ***p<0.01")
+          align = FALSE, 
+          font.size = "footnotesize",
+          notes = "Note: *p$<$0.1; **p$<$0.05; ***p$<$0.01")
 ```
 
 ```{r interaction effect and plotting}
@@ -941,8 +942,9 @@ stargazer(final_table, summary = FALSE, header = FALSE, rownames = FALSE,
           out = here("tables", "farmer_expectations_logistic_results_AME.tex"),
           title = "Average Marginal Effects: Farmers' Expectations on Buyer Competition in Three Months",
           label = "tab: binary storage ~ farmer's expectation on movement (AME)",
-          align = TRUE, 
-          notes = "Note: *p<0.1; **p<0.05; ***p<0.01")
+          align = FALSE, 
+          font.size = "footnotesize",
+          notes = "Note: *p$<$0.1; **p$<$0.05; ***p$<$0.01")
 ```
 
 
