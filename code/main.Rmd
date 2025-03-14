@@ -351,6 +351,7 @@ panels <- unique(results_latex$Panel)
 # Create the LaTeX file
 latex_output <- "\\begin{table}[H]\
 \\centering\
+\\label{tab: summary statistics}\
 \\caption{Summary Statistics by Storage Usage}\
 \\resizebox{\\textwidth}{!}{%\
 "
