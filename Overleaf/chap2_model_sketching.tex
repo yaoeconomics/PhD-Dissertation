@@ -49,191 +49,197 @@
 \newpage
 
 
-\section{Farmers' Marketing Plan: Two-Period Dynamic Maximization Problem}
+\section{Two-Period Storage Model with Buyer Competition}
 
-A risk-averse farmer is maximizing his expected utility on the revenue under the given harvest ($q$) over two trading periods by choosing the share of the harvest stored in the first trading period and sold later ($s$), ranging from 0 to 1. The farmer observes the first-period price first and then decides how much to store; the storage cost is captured by a discount factor. The farmer is maximizing the sum of the expected utility of two periods. This setting would give us an interior solution.
+In many agricultural contexts, farmers must decide whether to sell their harvested crop immediately or store it for a future sales period, with storage often incurring an opportunity cost or physical cost. Farm-gate prices may differ across periods due to time-varying market competitive conditions even under a stable downstream demand.
 
-\subsection{Problem Setup}
+This theoretical framework focuses on how the farmer uses storage as a strategic tool in response to inter-temporal buyer competitiveness changes and how their storage decisions vary across other parameters, like risk aversion and composite storage cost.
 
-Given:
+\subsection{Interpreting the Storage Decision \boldmath{\(s\)}}
+
+Let \(s\in [0,1]\) denote how much of the harvest is allocated to the second period, then:
+\[
+(1-s)\,q 
+\quad\text{is sold in period 1, and}\quad 
+s\,q 
+\quad\text{is sold in period 2.}
+\]
+Alternatively, if the farmer (or each farmer in a population) can only choose \emph{all-or-nothing} storage, then \(s\) can be seen as the probability (or fraction of farmers) adopting the ``store'' strategy. In expectation, both interpretations yield the same mathematical form.
+
+\subsection{Model Setup}
+
 \begin{itemize}
-    \item $q$: Total harvest quantity (fixed and known)
-    \item $p_1$: Price in the first trading period (observed)
-    \item $p_2$: Price in the second trading period (stochastic)
-    \item $s$: Share of harvest stored for the second period ($0 \leq s \leq 1$)
-    \item $\delta$: Discount factor (storage cost)
-    \item $U(x) = \frac{x^{1 - \gamma}}{1 - \gamma}$: the Constant Relative Risk Aversion (CRRA) utility function with $\gamma > 0, \gamma \neq 1$
-    \item when $\gamma=1$, the period utility function is $ln(x)$
+    \item \(q\): Total harvest (fixed).
+    \item \(p_1\): First-period price (observed, deterministic).
+    \item \(p_2\): Second-period price (random).
+    \item \(\theta\): Buyer-competition intensity in period~2. A larger \(\theta\) implies a higher distribution of \(p_2\).
+    \item \(\delta \in (0,1]\): Discount/storage factor (closer to 1 means cheaper storage or more patience).
+    \item \(\gamma\): CRRA parameter; typically \(0< \gamma \le 1\) for risk aversion or \(\gamma<0\) for slight risk-loving.
 \end{itemize}
 
-Revenue Equations:
-\begin{align*}
-    R_1 &= \left(1 - s\right) \cdot q \cdot p_1 \\
-    R_2 &= s \cdot q \cdot p_2
-\end{align*}
-
-Expected Utility Function:
-\begin{align}
-    \max_{0 \leq s \leq 1} \left[ U(\left(1 - s\right) \cdot q \cdot p_1) + \delta \cdot E\left[U(s \cdot q \cdot p_2)\right] \right]
-\end{align}
-
-Using the CRRA utility function $U(x) = \frac{x^{1 - \gamma}}{1 - \gamma}$, the objective function becomes:
-\begin{align*}
-    \max_{0 \leq s \leq 1} \left[ \frac{(\left(1 - s\right) \cdot q \cdot p_1)^{1 - \gamma}}{1 - \gamma} + \delta \cdot E\left[\frac{(s \cdot q \cdot p_2)^{1 - \gamma}}{1 - \gamma}\right] \right]
-\end{align*}
-
-Factoring out constants $\frac{q^{1 - \gamma}}{1 - \gamma}$, the problem reduces to:
-\begin{align}
-    \max_{0 \leq s \leq 1} \left[ \left(1 - s\right)^{1 - \gamma} p_1^{1 - \gamma} + \delta \cdot s^{1 - \gamma} E[p_2^{1 - \gamma}] \right]
-\end{align}
-
-\subsection{Kuhn-Tucker Conditions}
-
-Let's define the Lagrangian for the problem:
-\begin{equation}
-  L(s, \lambda_1, \lambda_2) = \left(1 - s\right)^{1 - \gamma} p_1^{1 - \gamma} + \delta s^{1 - \gamma} E[p_2^{1 - \gamma}] + \lambda_1 (-s) + \lambda_2 \left(s - 1\right)  
-\end{equation}
-
-where $\lambda_1$ and $\lambda_2$ are the Kuhn-Tucker multipliers for the constraints $ s \geq 0 $ and $ s \leq 1 $ respectively.
-
-The Kuhn-Tucker conditions are:
-1. Stationarity:
+Period-1 revenue: \((1-s)\,q\,p_1\). 
+Period-2 revenue: \(s\,q\,p_2\). 
+We model a CRRA utility function:
 \[
-\frac{\partial L}{\partial s} = -\left(1 - \gamma\right) \left(1 - s\right)^{-\gamma} p_1^{1 - \gamma} + \delta \left(1 - \gamma\right) s^{-\gamma} E[p_2^{1 - \gamma}] - \lambda_1 + \lambda_2 = 0
+U(x) 
+\;=\; 
+\frac{x^{\,1-\gamma}}{\,1-\gamma\,},
+\]
+with \(\gamma \neq 1\). (When \(\gamma=1\), this becomes \(\ln x\).) For \(\gamma>0\), \(U\) is strictly concave (risk-averse). For \(\gamma<0\), \(U\) is convex (risk-loving).
+
+The farmer's problem is:
+\[
+\max_{\,0 \,\le s \,\le 1\,}
+\Bigl\{
+U\bigl((1-s)\,q\,p_1\bigr)
+\;+\;
+\delta\,\mathbb{E}_\theta\bigl[\,U(s\,q\,p_2)\bigr]
+\Bigr\}.
+\]
+By factoring out constants (like \(q^{\,1-\gamma}\)), the objective function reduces to
+\[
+\max_{\,0 \le s \le 1\,}
+(1-s)^{\,1-\gamma}\,p_1^{\,1-\gamma}
+\;+\;
+\delta\,s^{\,1-\gamma}\,\mathbb{E}_\theta\bigl[p_2^{\,1-\gamma}\bigr].
 \]
 
-2. Primal feasibility:
+\subsection{Solving the Farmer's Problem}
+
+\subsubsection{Case 1: \(\gamma>0\) (Risk-Averse) \quad Usually \boldmath{\(\gamma \le 1\)}}
+
+Here, \((1-s)^{1-\gamma}\) and \(s^{1-\gamma}\) are concave in \(s\). Their sum is thus concave, ensuring a standard \emph{interior} solution (unless parameters push us to the boundary). The first-order condition for an interior optimum \(0<s<1\) is:
 \[
-s \geq 0
+-(1-\gamma)\,(1-s)^{-\gamma}\,p_1^{\,1-\gamma}
+\;+\;
+\delta\,(1-\gamma)\,s^{-\gamma}\,\mathbb{E}_\theta\bigl[p_2^{\,1-\gamma}\bigr]
+\;=\;0.
 \]
+Divide by \((1-\gamma)\):
 \[
-s \leq 1
+(1-s)^{-\gamma}\,p_1^{\,1-\gamma}
+\;=\;
+\delta\,s^{-\gamma}\,\mathbb{E}_\theta\bigl[p_2^{\,1-\gamma}\bigr].
 \]
-
-3. Dual feasibility:
+Rearrange:
 \[
-\lambda_1 \geq 0
+\left(\frac{s}{\,1-s\,}\right)^{\!\gamma}
+\;=\;
+\frac{\delta\,\mathbb{E}_\theta[p_2^{\,1-\gamma}]}{\,p_1^{\,1-\gamma}\,}
+\;=:\;\kappa(\theta).
 \]
+Then the solution is
 \[
-\lambda_2 \geq 0
+s^*(\theta)
+\;=\;
+\frac{\kappa(\theta)^{\,1/\gamma}}
+     {\,1 + \kappa(\theta)^{\,1/\gamma}\,},
+\quad\text{where}\quad
+\kappa(\theta)
+\;=\;
+\frac{\delta\;\mathbb{E}_\theta\bigl[p_2^{\,1-\gamma}\bigr]}{p_1^{\,1-\gamma}}.
 \]
-
-4. Complementary slackness:
+Because \(f(s)\) is strictly concave for \(\gamma>0\), this critical point is a global maximum \emph{unless} it ``pushes'' outside \([0,1]\). In extreme cases:
 \[
-\lambda_1 s = 0
+\kappa(\theta)\to 0 \;\Longrightarrow\; s^*\to 0,
+\quad
+\kappa(\theta)\to \infty \;\Longrightarrow\; s^*\to 1.
 \]
+Hence, if \(\delta\) or \(\mathbb{E}_\theta[p_2^{1-\gamma}]\) are extremely large (and \(p_1\) small), we get $s^*\approx 1$; if they are very small, we get $s^*\approx 0$. However, these extreme cases are nearly impossible in most agricultural supply chains. 
+
+\subsubsection{Case 2: \(\gamma<0\) (Slight Risk-Loving)}
+
+If \(\gamma<0\), then \((1-\gamma)>1\) and the function \((1-s)^{1-\gamma} + s^{1-\gamma}\) is \emph{convex} in \(s\). Any stationary point in \((0,1)\) would be a \emph{minimum}, not a maximum. The global maximum then lies at a boundary: either $s=0$ or $s=1$. Specifically, the farmer compares:
 \[
-\lambda_2 (s - 1) = 0
+f(0)\;=\;p_1^{\,1-\gamma}
+\quad\text{vs.}\quad
+f(1)\;=\;\delta\,\mathbb{E}_\theta\bigl[p_2^{\,1-\gamma}\bigr].
 \]
+\begin{itemize}
+    \item If $p_1^{\,1-\gamma} > \delta\,\mathbb{E}_\theta[p_2^{\,1-\gamma}]$, then $s^*=0$ (sell all now).
+    \item Otherwise, $s^*=1$ (store all for the second period).
+\end{itemize}
 
-\subsubsection*{Case 1: \(0 < s < 1\)}
-
-If \(0 < s < 1\), then \(\lambda_1 = 0\) and \(\lambda_2 = 0\). The stationarity condition simplifies to:
-\[
--(1 - \gamma) (1 - s)^{-\gamma} p_1^{1 - \gamma} + \delta (1 - \gamma) s^{-\gamma} E[p_2^{1 - \gamma}] = 0
-\]
-
-Solving for \( s \):
-\[
-(1 - s)^{-\gamma} p_1^{1 - \gamma} = \delta s^{-\gamma} E[p_2^{1 - \gamma}]
-\]
-\[
-\left( \frac{1 - s}{s} \right)^{-\gamma} = \frac{p_1^{1 - \gamma}}{\delta E[p_2^{1 - \gamma}]}
-\]
-\[
-\frac{1 - s}{s} = \left( \frac{p_1^{1 - \gamma}}{\delta E[p_2^{1 - \gamma}]} \right)^{\frac{1}{\gamma}}
-\]
-\[
-1 - s = s \left( \frac{p_1^{1 - \gamma}}{\delta E[p_2^{1 - \gamma}]} \right)^{\frac{1}{\gamma}}
-\]
-\[
-1 = s \left( 1 + \left( \frac{p_1^{1 - \gamma}}{\delta E[p_2^{1 - \gamma}]} \right)^{\frac{1}{\gamma}} \right)
-\]
-
-\begin{equation}
-    s = \frac{1}{1 + \left( \frac{p_1^{1 - \gamma}}{\delta E[p_2^{1 - \gamma}]} \right)^{\frac{1}{\gamma}}}
-\end{equation}
-
-
-
-
-\subsubsection*{Case 2: \( s = 0 \)}
-
-If \( s = 0 \), then the stationarity condition becomes:
-\[
--(1 - \gamma) p_1^{1 - \gamma} + \lambda_1 = 0
-\]
-\[
-\lambda_1 = (1 - \gamma) p_1^{1 - \gamma}
-\]
-Since \(\lambda_1 \geq 0\), this implies \((1 - \gamma) p_1^{1 - \gamma} \geq 0\). For \(\gamma > 1\), this condition holds.
-
-\subsubsection*{Case 3: \( s = 1 \)}
-
-If \( s = 1 \), then the stationarity condition becomes:
-\[
-\delta\left(1 - \gamma\right) E[p_2^{1 - \gamma}] + \lambda_2 = 0
-\]
-\[
-\lambda_2 = -\delta \left(1 - \gamma\right) E[p_2^{1 - \gamma}]
-\]
-Since \(\lambda_2 \geq 0\), this implies \(-\delta \left(1 - \gamma\right) E[p_2^{1 - \gamma}] \geq 0\). For \(0 < \gamma < 1\), this condition holds.
-
-
-\subsubsection*{Summary}
-The optimal share of the harvest to store for the second period ($ s^* $) is:
-\begin{equation}
-    \textcolor{red}{s^* = 
-    \begin{cases} 
-        0 & \text{if } \gamma > 1 \\
-        \frac{1}{1 + \left( \frac{p_1^{1 - \gamma}}{\delta E[p_2^{1 - \gamma}]} \right)^{\frac{1}{\gamma}}} & \text{if } 0 < \gamma < 1 \\
-        1 & \text{if } \gamma < 0 
-    \end{cases}}
-    \label{Eq: KT solution of farmer's max problem}
-\end{equation}
-
-
-This solution ensures that the farmer's optimal storage decision respects the boundary constraints and maximizes the expected utility given their risk aversion level.
-
+Although negative \(\gamma\) is less common in practice, it can occur if farmers exhibit risk-loving behavior. Even if $\gamma$ is only ``slightly'' negative, the curvature is enough to make partial storage suboptimal. 
 
 \subsection{Comparative Statics}
 
-\subsubsection{Effect of harvest-period price}
+Below, we focus on the \(0 < \gamma \le 1\) range relevant to typical smallholder contexts. We also keep in mind that if $\gamma<0$, we jump to a corner.
 
-Let $A = \left( \frac{p_1^{1 - \gamma}}{\delta E[p_2^{1 - \gamma}]} \right)^{\frac{1}{\gamma}}$.
+\paragraph{Discount Factor \boldmath{$\delta$}.}
+Since $\kappa(\theta)$ is directly proportional to $\delta$, an increase in $\delta$ raises $\kappa(\theta)$. For $\gamma>0$, that shifts $s^*(\theta)$ \emph{up}, meaning the farmer stores more when storage is less costly or they are more patient. If $\gamma<0$, a higher $\delta$, a lower storage cost, makes the ``storing all'' corner more likely to dominate.
 
-\begin{align*}
-    s^* = \frac{1}{1 + A}
-\end{align*}
+\paragraph{First-Period Price \boldmath{$p_1$}.}
+In $\kappa(\theta)$, $p_1^{\,1-\gamma}$ appears in the denominator:
+\[
+\kappa(\theta) 
+\;=\; 
+\frac{\delta\,\mathbb{E}_\theta[p_2^{\,1-\gamma}]}{\,p_1^{\,1-\gamma}\,}.
+\]
+If $0<\gamma<1$, then $1-\gamma>0$ and an increase in $p_1$ makes $p_1^{\,1-\gamma}$ \emph{larger}, so $\kappa(\theta)$ \emph{falls} and $s^*(\theta)$ decreases. Thus, a higher $p_1$ leads the risk-averse farmer to sell more immediately. If $\gamma<0$, we revert to comparing $p_1^{1-\gamma}$ vs.\ $\delta\,\mathbb{E}[p_2^{\,1-\gamma}]$; a bigger $p_1$ can quickly tip the balance to the $s=0$ corner.
 
-To find $\frac{\partial s^*}{\partial p_1}$:
-\begin{align*}
-    \frac{\partial A}{\partial p_1} &= \left( \frac{1 - \gamma}{\gamma} \right) \left( \frac{p_1^{1 - \gamma}}{\delta E[p_2^{1 - \gamma}]} \right)^{\frac{1}{\gamma} - 1} \cdot \frac{p_1^{-\gamma}}{\delta E[p_2^{1 - \gamma}]} \\
-    \frac{\partial s^*}{\partial p_1} &= -\frac{1}{(1 + A)^2} \cdot \frac{\partial A}{\partial p_1} \\
-    &= -\frac{(1 - \gamma)}{\gamma (1 + A)^2} \left( \frac{p_1^{1 - \gamma}}{\delta E[p_2^{1 - \gamma}]} \right)^{\frac{1}{\gamma} - 1} \cdot \frac{p_1^{-\gamma}}{\delta E[p_2^{1 - \gamma}]}
-\end{align*}
+\paragraph{Second-Period Price Environment and \boldmath{$\theta$}.}
+An improvement in the distribution of $p_2$ means $\mathbb{E}_\theta[p_2^{\,1-\gamma}]$ rises. That raises $\kappa(\theta)$, pushing $s^*(\theta)$ up for risk-averse farmers. For negative $\gamma$, it becomes more likely that the $s=1$ corner dominates. We specifically let $\theta$ capture buyer competition: a higher $\theta$ implies more intense bidding, boosting future prices in expectation. Thus, as $\theta$ grows, storing becomes more attractive, raising $s^*$ (for $\gamma>0$) or nudging the farmer toward $s=1$ (for $\gamma<0$).
 
-For $\gamma > 1$, $\frac{\partial s^*}{\partial p_1}$ is negative. For $0 < \gamma < 1$, $\frac{\partial s^*}{\partial p_1}$ is positive. In other words, when the farmer is risk averse, the higher the first-period price is, the lower the share he or she will store.
 
-\subsubsection{Effect of second-period price}
+\subsection{Numerical Illustration}
 
-To find $\frac{\partial s^*}{\partial E[p_2^{1 - \gamma}]}$:
-\begin{align*}
-    \frac{\partial A}{\partial E[p_2^{1 - \gamma}]} &= -\frac{1}{\gamma} \left( \frac{p_1^{1 - \gamma}}{\delta E[p_2^{1 - \gamma}]} \right)^{\frac{1}{\gamma} - 1} \cdot \frac{p_1^{1 - \gamma}}{\delta E[p_2^{1 - \gamma}]^2} \\
-    \frac{\partial s^*}{\partial E[p_2^{1 - \gamma}]} &= \frac{1}{\gamma (1 + A)^2} \left( \frac{p_1^{1 - \gamma}}{\delta E[p_2^{1 - \gamma}]} \right)^{\frac{1}{\gamma} - 1} \cdot \frac{p_1^{1 - \gamma}}{\delta E[p_2^{1 - \gamma}]^2}
-\end{align*}
+To illustrate our model clearly, let's assume prices are fixed at $p_1=6$ and expected future price $p_2=8$. I first analyze how the optimal share stored ($s^*$) varies with the risk aversion parameter $\gamma$ when $\delta=0.95$ (small storage cost), and then show how $s^*$ changes as the discount factor $\delta$ varies for different risk aversion levels.
 
-Higher $E[p_2^{1 - \gamma}]$ generally encourages storing more for the second period, which is intuitive because it means a higher second-period revenue if he or she stores more and sells the produce later.
+\subsubsection{Impact of Risk Aversion on Storage Decision}
 
-\subsubsection{Effect of storage cost}
+Figure~\ref{fig:gamma} depicts how the optimal storage share ($s^*$) depends on the risk aversion parameter ($\gamma$). When $\gamma$ increases, farmers become more risk-averse. Given our parameters, more risk-averse farmers tend to store less to secure immediate certain income, avoiding exposure to future price uncertainty. When $\gamma$ is negative (slightly risk-loving), the model suggests a corner solution: farmers either store all or nothing, depending on expected returns.
 
-To find $\frac{\partial s^*}{\partial \delta}$:
-\begin{align*}
-    \frac{\partial A}{\partial \delta} &= -\frac{1}{\gamma} \left( \frac{p_1^{1 - \gamma}}{\delta E[p_2^{1 - \gamma}]} \right)^{\frac{1}{\gamma} - 1} \cdot \frac{p_1^{1 - \gamma}}{\delta^2 E[p_2^{1 - \gamma}]} \\
-    \frac{\partial s^*}{\partial \delta} &= \frac{1}{\gamma (1 + A)^2} \left( \frac{p_1^{1 - \gamma}}{\delta E[p_2^{1 - \gamma}]} \right)^{\frac{1}{\gamma} - 1} \cdot \frac{p_1^{1 - \gamma}}{\delta^2 E[p_2^{1 - \gamma}]}
-\end{align*}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{s_vs_gamma.png}
+    \caption{Optimal share of harvest stored ($s^*$) as risk aversion parameter ($\gamma$) varies, with $p_1=6$, $\mathbb{E}[p_2]=8$, and $\delta=0.95$. A higher $\gamma$ indicates greater risk aversion.}
+    \label{fig:gamma}
+\end{figure}
 
-Higher $\delta$ (lower storage cost) encourages storing more for the second period.
+\textbf{Key insights:}
+\begin{itemize}
+    \item For $0<\gamma\leq1$, as risk aversion rises, farmers store less due to uncertainty avoidance.
+    \item If $\gamma$ becomes negative (risk-loving), optimal solutions shift abruptly to corner solutions: farmers adopt a strategy of complete storage or immediate sale, driven purely by expected returns.
+\end{itemize}
+
+\subsubsection{Impact of Discount Factor on Storage Decision}
+
+Figure~\ref{fig:delta} explores how variations in the discount factor ($\delta$) impact the storage decision under three different risk aversion levels: low ($\gamma=0.1$), moderate ($\gamma=0.3$), and high ($\gamma=0.8$).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{s_vs_delta.png}
+    \caption{Optimal share of harvest stored ($s^*$) as the discount factor ($\delta$) varies from 0 (high storage cost/impatience) to 1 (no additional storage cost). Three curves represent different risk aversion levels: low ($\gamma=0.1$, yellow), moderate ($\gamma=0.3$, orange), and high ($\gamma=0.8$, red).}
+    \label{fig:delta}
+\end{figure}
+
+\textbf{Detailed observations:}
+\begin{itemize}
+    \item As the discount factor ($\delta$) increases, storage becomes less costly (or farmers become more patient), raising the incentive to store for future sales. Consequently, the optimal stored share ($s^*$) consistently increases.
+    \item Comparing different risk aversion levels, the lowest risk aversion curve ($\gamma=0.1$, yellow) lies above the more risk-averse ones. Less risk-averse farmers store more since they are more comfortable bearing future price uncertainty.
+    \item Conversely, highly risk-averse farmers ($\gamma=0.8$, red) prefer immediate and certain income. Thus, they store less overall, and their stored share only substantially increases at high discount factors (low storage costs).
+\end{itemize}
+
+\subsubsection{Role of Buyer Competition ($\theta$)}
+
+In our extended model, the parameter $\theta$ represents buyer competition intensity in period two. Increasing $\theta$ shifts the expected future price upward, enhancing incentives to store. In terms of Figure~\ref{fig:delta}, increasing buyer competition would shift all curves upward, making storage more attractive at all discount factor levels. Similarly, higher buyer competition would raise the curves in Figure~\ref{fig:gamma}, leading farmers to store a larger share at every level of risk aversion.
+
+These numerical illustrations concretely demonstrate the complex interplay of risk preferences, storage costs, and market expectations in shaping optimal storage decisions.
+
+
+
+\subsection{Summary}
+
+This two-period framework illustrates how storage decisions arise from balancing immediate versus (discounted) future revenues under uncertainty in market competitive conditions.  
+\begin{itemize}
+    \item If $0<\gamma\le1$ (standard risk aversion for smallholders), typically one finds an \emph{interior} solution $s^*(\theta)$ unless parameters are extreme---in which case $s^*$ might approach 0 or 1 as the best corner. 
+    \item If $\gamma<0$ (mild risk-loving), the farmer goes to an \emph{all-or-nothing} corner: either sell immediately or store everything, depending on which expected payoff is larger.
+    \item Strong buyer competition ($\theta$ high) elevates second-period prices, causing $s^*$ to increase (or favoring the $s=1$ corner under slight risk-loving). 
+    \item A higher discount factor $\delta$ also raises $s^*$ by lowering the effective cost of waiting.
+    \item A higher first-period price $p_1$ typically \emph{reduces} $s^*$ when $0<\gamma<1$, aligning with the intuition that farmers sell more now if the current price is very good.
+\end{itemize}
+
 
 
 \subsection{Graphical Analysis}
@@ -362,7 +368,7 @@ Simplify to avoid fraction within a fraction:
 \begin{enumerate}
     \item \textbf{Cartel Solution:} Cartel solution is NOT an NE for any static game, but it may be NE behavior in any single play of an infinite-horizon repeated game. (by Folk Theorem)
     
-    \item \textbf{Why Cournot, instead of Bertrand?} Analogy to \cite{kreps1983quantity}, we can infer that when traders simultaneously and independently receive "downstream orders" for subsequent distribution, and we assume that the capacity level (the quantity of the downstream orders) are public information and traders compete in Bertrand-like price competition, with the supply allocated in Bertrand fashion where the provision that one cannot satisfy more supply than one's order from downstream in the first stage: \\
+    \item \textbf{Why Cournot, instead of Bertrand?} Analogy to \cite{kreps1983quantity}, I can infer that when traders simultaneously and independently receive "downstream orders" for subsequent distribution, and I assume that the capacity level (the quantity of the downstream orders) are public information and traders compete in Bertrand-like price competition, with the supply allocated in Bertrand fashion where the provision that one cannot satisfy more supply than one's order from downstream in the first stage: \\
     "Capacity introduced + Bertrand" $\Longleftrightarrow$ "Cournot".
 
     \item \textbf{Supply Elasticity:} the village supply to this model should be elastic in both periods, but differ in two periods because farmers have the "outside" selling options differently. 
@@ -424,10 +430,10 @@ Thus, the farm-gate price that these middlemen offer to farmers becomes an incre
 
 
 \section{Challenges Needed to Solve}
-Therefore, we may combine the two settings above, by plugging the farm-gate price expressions in either Eq(\ref{Eq: optimal procure price, general case}) or Eq(\ref{Eq: optimal procure price, linear supply case}) back into the optimal share of the harvest to store in Eq(\ref{Eq: KT solution of farmer's max problem}). Therefore, the farmers' storage decisions could depend on their risk aversion, the discount factor (composite storage cost), and the market-structure elements. 
+Therefore, I may combine the two settings above, by plugging the farm-gate price expressions in either Eq(\ref{Eq: optimal procure price, general case}) or Eq(\ref{Eq: optimal procure price, linear supply case}) back into the optimal share of the harvest to store in Eq(\ref{Eq: KT solution of farmer's max problem}). Therefore, the farmers' storage decisions could depend on their risk aversion, the discount factor (composite storage cost), and the market-structure elements. 
 
 
-However, there exists a severe issue of inconsistency: in the derivation of the procurement price from the Cournot oligopsonistic setting, I implicitly assume an inverse supply function in each trading period. However, the farmers' maximization problem would actually alter the quantity of local supply hence change the farm-gate price we derive from the traders' perspective. 
+However, there exists a severe issue of inconsistency: in the derivation of the procurement price from the Cournot oligopsonistic setting, I implicitly assume an inverse supply function in each trading period. However, the farmers' maximization problem would actually alter the quantity of local supply hence change the farm-gate price I derive from the traders' perspective. 
 
 
 
