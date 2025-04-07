@@ -1,0 +1,100 @@
+---
+title: "theoritical_model_main"
+author: "Yao Ma"
+date: "2025-04-07"
+output: html_document
+---
+
+```{r}
+# install.packages("ggplot2")
+
+library(ggplot2)
+library(here)
+
+p1    <- 6
+p2    <- 8
+delta <- 1
+
+optimal_s <- function(gamma, p1, p2, delta) {
+  ratio <- (delta * (p2^(1 - gamma))) / (p1^(1 - gamma))
+  top   <- ratio^(1 / gamma)
+  top / (1 + top)
+}
+
+gamma_seq <- seq(0.01, 0.99, length.out = 200)
+s_seq     <- sapply(gamma_seq, optimal_s, p1 = p1, p2 = p2, delta = delta)
+
+df_gamma <- data.frame(
+  gamma = gamma_seq,
+  s     = s_seq
+)
+
+ggplot(df_gamma, aes(x = gamma, y = s)) +
+  geom_line(linewidth = 1) +
+  labs(
+    title    = "Optimal Share Stored vs. Risk Aversion",
+    x        = expression(paste("Risk Aversion ", gamma)),
+    y        = "Optimal Share Stored (s)"
+  ) +
+  # Using theme_bw for a white background with a grid, plus bigger base text
+  theme_bw(base_size = 14) +
+  # We ensure a black panel border
+  theme(
+    panel.border = element_rect(colour = "black", fill = NA, size = 1)
+  )
+
+ggsave(here("model_figures", "s_vs_gamma.png"), width = 7, height = 5)
+
+```
+
+
+
+
+```{r}
+p1 <- 6
+p2 <- 8
+
+optimal_s <- function(gamma, p1, p2, delta) {
+  ratio <- (delta * (p2^(1 - gamma))) / (p1^(1 - gamma))
+  top   <- ratio^(1 / gamma)
+  top / (1 + top)
+}
+
+# Three gamma levels
+gamma_values <- c(0.1, 0.3, 0.8)
+
+# Create data over delta in [0,1]
+delta_seq <- seq(0.5, 1, length.out = 200)
+
+df_delta <- expand.grid(
+  gamma = gamma_values,
+  delta = delta_seq
+)
+
+df_delta$s <- mapply(optimal_s, df_delta$gamma, 
+                     p1 = p1, p2 = p2, delta = df_delta$delta)
+
+df_delta$gamma <- factor(df_delta$gamma)
+
+ggplot(df_delta, aes(x = delta, y = s, color = gamma)) +
+  geom_line(size = 1) +
+  scale_color_manual(
+    values = c("0.1" = "yellow", "0.3" = "orange", "0.8" = "red"),
+    name   = expression(paste("Risk Aversion ", gamma))
+  ) +
+  labs(
+    title = "Optimal Share Stored vs. Discount Factor",
+    x     = expression(delta),
+    y     = "Optimal Share Stored (s)"
+  ) +
+  theme_bw(base_size = 14) +
+  theme(
+    panel.border = element_rect(colour = "black", fill = NA, size = 1)
+  )
+
+
+ggsave(here("model_figures", "s_vs_delta.png"), width = 7, height = 5)
+```
+
+
+
