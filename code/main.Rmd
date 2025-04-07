@@ -142,7 +142,7 @@ RMB_to_USD <- 0.14  # Approximate exchange rate: 1 RMB = 0.14 USD
 kg_to_pound <- 2.20462  # 1 kg = 2.20462 pounds
 mu_to_acre <- 0.1647  # 1 mu = 0.1647 acres
 
-# Identify storage users and non-storage users
+# Identify storage users and non-users
 storage_data <- data %>% filter(storage_user == 1)
 non_storage_data <- data %>% filter(storage_user == 0)
 n_storage <- nrow(storage_data)
@@ -359,7 +359,7 @@ latex_output <- "\\begin{table}[H]\
 latex_output <- paste0(latex_output, "\\begin{tabular}{lccccc}\
 \\toprule\
 ")
-latex_output <- paste0(latex_output, " & \\multicolumn{2}{c}{Storage Users} & \\multicolumn{2}{c}{Non-Storage Users} & Difference \\\\\
+latex_output <- paste0(latex_output, " & \\multicolumn{2}{c}{Storage Users} & \\multicolumn{2}{c}{Non-Users} & Difference \\\\\
 ")
 latex_output <- paste0(latex_output, "\\cmidrule(lr){2-3} \\cmidrule(lr){4-5}\
 ")
