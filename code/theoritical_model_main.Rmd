@@ -47,9 +47,6 @@ ggsave(here("model_figures", "s_vs_gamma.png"), width = 7, height = 5)
 
 ```
 
-
-
-
 ```{r}
 p1 <- 6
 p2 <- 8
@@ -96,5 +93,185 @@ ggplot(df_delta, aes(x = delta, y = s, color = gamma)) +
 ggsave(here("model_figures", "s_vs_delta.png"), width = 7, height = 5)
 ```
 
+```{r 3D graphics}
+# Load libraries
+library(plotly)
+library(dplyr)
+
+# Define axes
+gamma_seq <- seq(0.01, 2, length.out = 50)
+delta_seq <- seq(0.01, 1, length.out = 50)
+p2_vals <- c(0.5, 1.0, 1.5, 2.0)
+
+# Expand full grid
+grid <- expand.grid(
+  delta = delta_seq,
+  gamma = gamma_seq,
+  P2 = p2_vals
+)
+
+# Compute storage share s*
+grid <- grid %>%
+  mutate(
+    mu = P2^(1 - gamma),
+    kappa = (delta * mu)^(1 / gamma),
+    s_star = kappa / (1 + kappa)
+  )
+
+# Function to compute s* on a mesh grid
+compute_surface <- function(p2_val) {
+  subgrid <- grid %>% filter(P2 == p2_val)
+
+  # Reshape into matrices for surface plot
+  z_matrix <- matrix(subgrid$s_star, 
+                     nrow = length(delta_seq), 
+                     ncol = length(gamma_seq), 
+                     byrow = TRUE)
+  # z_matrix is constructed using matrix() in R. By default, matrix() fills column-wise, but in your expand.grid(), the ordering assumes row-wise (first delta, then gamma), causing the axes to be flipped.
+  
+  plot_ly(
+    x = ~delta_seq,
+    y = ~gamma_seq,
+    z = ~z_matrix,
+    type = "surface"
+  ) %>%
+    layout(
+      title = paste("Optimal Storage Share (P₂ =", p2_val, ")"),
+      scene = list(
+        xaxis = list(title = "Discount Factor (δ)"),
+        yaxis = list(title = "Risk Aversion (γ)"),
+        zaxis = list(title = "Storage Share (s*)", range = c(0, 1))
+      )
+    )
+}
+
+# Generate all 3D plots
+plots <- lapply(p2_vals, compute_surface)
+
+# Display interactive 3D plots
+plots[[4]]
+# Then run: plots[[2]], plots[[3]], plots[[4]] as needed
+
+
+```
+
+```{r}
+# Let's try using plotly directly for the interactive slider
+library(plotly)
+library(dplyr)
+
+# Define axes
+gamma_seq <- seq(0.01, 2, length.out = 50)
+delta_seq <- seq(0.01, 1, length.out = 50)
+p2_vals <- seq(0.8, 2.3, by = 0.1)  # More granular values for slider
+
+# Create a list to store all the surface data
+surface_data <- list()
+
+# Compute s* for each P2 value
+for (i in seq_along(p2_vals)) {
+  p2_val <- p2_vals[i]
+  
+  # Create grid for this P2 value
+  grid <- expand.grid(
+    delta = delta_seq,
+    gamma = gamma_seq
+  ) %>%
+  mutate(
+    P2 = p2_val,
+    mu = P2^(1 - gamma),
+    kappa = (delta * mu)^(1 / gamma),
+    s_star = kappa / (1 + kappa)
+  )
+  
+  # Reshape into matrix
+  z_matrix <- matrix(grid$s_star, 
+                     nrow = length(delta_seq), 
+                     ncol = length(gamma_seq),
+                     byrow = TRUE)
+  
+  # Store the surface data
+  surface_data[[i]] <- list(
+    z = z_matrix,
+    visible = (i == 1)  # Only the first surface is visible initially
+  )
+}
+
+# Create steps for slider
+steps <- lapply(seq_along(p2_vals), function(i) {
+  step <- list(
+    method = "update",
+    args = list(
+      list(visible = rep(FALSE, length(p2_vals))),
+      list(title = paste("Optimal Storage Share (P₂ =", p2_vals[i], ")"))
+    ),
+    label = as.character(p2_vals[i])
+  )
+  # Set the current surface to visible
+  step$args[[1]]$visible[i] <- TRUE
+  return(step)
+})
+
+# Create the base plot
+p <- plot_ly()
+
+# Add all surfaces to the plot
+for (i in seq_along(surface_data)) {
+  p <- add_surface(p,
+                  z = surface_data[[i]]$z,
+                  x = delta_seq,
+                  y = gamma_seq,
+                  visible = surface_data[[i]]$visible,
+                  colorscale = "Viridis",
+                  showscale = TRUE)
+}
+
+# Add slider
+p <- p %>% layout(
+title = paste("Optimal Storage Share (P₂ =", p2_vals[1], ")"),
+  scene = list(
+    xaxis = list(
+      title = "Discount Factor (δ)",
+      nticks = 10,
+      tickmode = "linear",
+      tick0 = 0,
+      dtick = 0.1
+    ),
+    yaxis = list(
+      title = "Risk Aversion (γ)",
+      nticks = 10,
+      tickmode = "linear",
+      tick0 = 0,
+      dtick = 0.2
+    ),
+    zaxis = list(
+      title = "Storage Share (s*)",
+      range = c(0, 1),
+      nticks = 5,
+      tickmode = "linear",
+      tick0 = 0,
+      dtick = 0.2
+    ),
+    aspectratio = list(x = 1, y = 1, z = 0.8)
+  ),
+  sliders = list(list(
+    active = 0,
+    currentvalue = list(prefix = "P₂: "),
+    steps = steps
+  ))
+)
+
+# Display the plot
+p
+```
+
+
+
+```{r}
+
+
+
+
+```
 
 
