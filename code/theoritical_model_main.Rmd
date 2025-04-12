@@ -93,7 +93,7 @@ ggplot(df_delta, aes(x = delta, y = s, color = gamma)) +
 ggsave(here("model_figures", "s_vs_delta.png"), width = 7, height = 5)
 ```
 
-```{r 3D graphics}
+```{r 3D graphics: Risk Aversion ONLY}
 # Load libraries
 library(plotly)
 library(dplyr)
@@ -155,7 +155,7 @@ plots[[4]]
 
 ```
 
-```{r}
+```{r Advanced 3D graphics: Risk Aversion ONLY}
 # Let's try using plotly directly for the interactive slider
 library(plotly)
 library(dplyr)
@@ -265,13 +265,273 @@ title = paste("Optimal Storage Share (P₂ =", p2_vals[1], ")"),
 p
 ```
 
-
-
 ```{r}
+library(plotly)  
+library(dplyr)  
+  
+# Define axes for the fine grid (for surface calculations) and for the displayed ticks  
+fine_gamma_seq <- seq(0.01, 2, length.out = 50)  
+fine_delta_seq <- seq(0.01, 1, length.out = 50)  
+tick_delta_seq <- seq(0.01, 1, by = 0.1)  
+tick_gamma_seq <- seq(0.01, 2, by = 0.2)  
+  
+# Function to compute the surface for a given p2 value  
+compute_surface_plot <- function(p2_val) {  
+    
+  # Create grid for calculations  
+  grid <- expand.grid(delta = fine_delta_seq, gamma = fine_gamma_seq) %>%   
+    mutate(  
+      P2 = p2_val,  
+      mu = P2^(1 - gamma),  
+      kappa = (delta * mu)^(1/gamma),  
+      s_star = kappa / (1 + kappa)  
+    )  
+    
+  # Reshape s_star values into a matrix  
+  z_matrix <- matrix(grid$s_star,  
+                     nrow = length(fine_delta_seq),  
+                     ncol = length(fine_gamma_seq),  
+                     byrow = TRUE)  
+    
+  # Create the surface plot for this p2 value  
+  plot_ly() %>% add_surface(x = fine_delta_seq,  
+                             y = fine_gamma_seq,  
+                             z = z_matrix,  
+                             colorscale = "Viridis",  
+                             showscale = TRUE) %>%  
+    layout(  
+      title = paste("Optimal Storage Share (P₂ =", p2_val, ")"),  
+      scene = list(  
+        xaxis = list(title = "Discount Factor (δ)",  
+                     tickmode = "linear", tick0 = 0, dtick = 0.1),  
+        yaxis = list(title = "Risk Aversion (γ)",  
+                     tickmode = "linear", tick0 = 0, dtick = 0.2),  
+        zaxis = list(title = "Storage Share (s*)",  
+                     range = c(0, 1),  
+                     tickmode = "linear", tick0 = 0, dtick = 0.1)  
+      )  
+    )  
+}  
+  
+# p2 values to plot  
+p2_values <- c(0.8, 1.0, 1.5, 2.0)  
+  
+# Generate the four plots  
+plots <- lapply(p2_values, compute_surface_plot)  
+  
+# Combine them in a 2x2 grid using subplot  
+combined_plot <- subplot(plots, nrows = 2, margin = 0.05, titleX = TRUE, titleY = TRUE)  
+  
+# Adjust overall layout, including title  
+combined_plot <- combined_plot %>% layout(title = "Optimal Storage Share for Various P₂ Values")  
+  
+# Display the combined plot  
+combined_plot  
+
+```
 
 
 
 
+```{r 3D graphics: from Risk Loving to risk Aversion}
+library(ggplot2)
+library(plotly)
+library(dplyr)
+library(tidyr)
+
+# Define grid
+gamma_vals <- seq(-0.99, 2, length.out = 100)
+delta_vals <- seq(0.01, 1, length.out = 100)
+p2_values <- c(0.5, 1.0, 1.5, 2.0)
+
+# Prepare dataframe
+expand_grid_data <- expand.grid(gamma = gamma_vals, delta = delta_vals, P2 = p2_values)
+
+# Compute s*
+expand_grid_data <- expand_grid_data %>%
+  rowwise() %>%
+  mutate(
+    mu = P2^(1 - gamma),
+    s_star = case_when(
+      gamma > 0 ~ {
+        kappa <- (delta * mu)^(1 / gamma)
+        kappa / (1 + kappa)
+      },
+      abs(gamma) < 1e-3 ~ 0.5,
+      TRUE ~ {
+        u0 <- 1^(1 - gamma) / (1 - gamma)
+        u1 <- delta * P2^(1 - gamma) / (1 - gamma)
+        ifelse(u0 > u1, 0, 1)
+      }
+    ),
+    s_star = pmin(pmax(s_star, 0), 1)
+  ) %>%
+  ungroup()
+
+
+
+
+
+
+# Function to compute s* on a mesh grid
+compute_surface <- function(p2_val) {
+  subgrid <- expand_grid_data %>% filter(P2 == p2_val)
+
+  # Reshape into matrices for surface plot
+  z_matrix <- matrix(subgrid$s_star, 
+                     nrow = length(delta_vals), 
+                     ncol = length(gamma_vals), 
+                     byrow = TRUE)
+  # z_matrix is constructed using matrix() in R. By default, matrix() fills column-wise, but in your expand.grid(), the ordering assumes row-wise (first delta, then gamma), causing the axes to be flipped.
+  
+  plot_ly(
+    x = ~delta_vals,
+    y = ~gamma_vals,
+    z = ~z_matrix,
+    type = "surface"
+  ) %>%
+    layout(
+      title = paste("Optimal Storage Share (P₂ =", p2_val, ")"),
+      scene = list(
+        xaxis = list(title = "Discount Factor (δ)"),
+        yaxis = list(title = "Risk Aversion (γ)"),
+        zaxis = list(title = "Storage Share (s*)", range = c(0, 1))
+      )
+    )
+}
+
+# Generate all 3D plots
+plots <- lapply(p2_values, compute_surface)
+
+# Display interactive 3D plots
+plots[[4]]
+# Then run: plots[[2]], plots[[3]], plots[[4]] as needed
+plots[[3]]
+plots[[2]]
+plots[[1]]
+```
+
+```{r Advanced 3D graphics: from Risk Loving to risk Aversion}
+# Let's try using plotly directly for the interactive slider
+library(plotly)
+library(dplyr)
+
+# Define axes
+gamma_seq <- seq(-0.99, 2, length.out = 100)
+delta_seq <- seq(0.01, 1, length.out = 100)
+p2_vals <- seq(0.7, 2.2, by = 0.1)  # More granular values for slider
+
+# Create a list to store all the surface data
+surface_data <- list()
+
+# Compute s* for each P2 value
+for (i in seq_along(p2_vals)) {
+  p2_val <- p2_vals[i]
+  
+  # Create grid for this P2 value
+  grid <- expand.grid(
+    delta = delta_seq,
+    gamma = gamma_seq
+  ) %>%
+    rowwise() %>%
+    mutate(
+    P2 = p2_val,
+    mu = P2^(1 - gamma),
+    s_star = case_when(
+      gamma > 0 ~ {
+        kappa <- (delta * mu)^(1 / gamma)
+        kappa / (1 + kappa)
+      },
+      abs(gamma) < 1e-3 ~ 0.5,
+      TRUE ~ {
+        u0 <- 1^(1 - gamma) / (1 - gamma)
+        u1 <- delta * P2^(1 - gamma) / (1 - gamma)
+        ifelse(u0 > u1, 0, 1)
+      }
+    ),
+    s_star = pmin(pmax(s_star, 0), 1)
+  ) %>%
+  ungroup()
+  
+  # Reshape into matrix
+  z_matrix <- matrix(grid$s_star, 
+                     nrow = length(delta_seq), 
+                     ncol = length(gamma_seq),
+                     byrow = TRUE)
+  
+  # Store the surface data
+  surface_data[[i]] <- list(
+    z = z_matrix,
+    visible = (i == 1)  # Only the first surface is visible initially
+  )
+}
+
+# Create steps for slider
+steps <- lapply(seq_along(p2_vals), function(i) {
+  step <- list(
+    method = "update",
+    args = list(
+      list(visible = rep(FALSE, length(p2_vals))),
+      list(title = paste("Optimal Storage Share (P₂ =", p2_vals[i], ")"))
+    ),
+    label = as.character(p2_vals[i])
+  )
+  # Set the current surface to visible
+  step$args[[1]]$visible[i] <- TRUE
+  return(step)
+})
+
+# Create the base plot
+p <- plot_ly()
+
+# Add all surfaces to the plot
+for (i in seq_along(surface_data)) {
+  p <- add_surface(p,
+                  z = surface_data[[i]]$z,
+                  x = delta_seq,
+                  y = gamma_seq,
+                  visible = surface_data[[i]]$visible,
+                  colorscale = "Viridis",
+                  showscale = TRUE)
+}
+
+# Add slider
+p <- p %>% layout(
+title = paste("Optimal Storage Share (P₂ =", p2_vals[1], ")"),
+  scene = list(
+    xaxis = list(
+      title = "Discount Factor (δ)",
+      nticks = 10,
+      tickmode = "linear",
+      tick0 = 0,
+      dtick = 0.1
+    ),
+    yaxis = list(
+      title = "Risk Aversion (γ)",
+      nticks = 10,
+      tickmode = "linear",
+      tick0 = 0,
+      dtick = 0.2
+    ),
+    zaxis = list(
+      title = "Storage Share (s*)",
+      range = c(0, 1),
+      nticks = 5,
+      tickmode = "linear",
+      tick0 = 0,
+      dtick = 0.2
+    ),
+    aspectratio = list(x = 1, y = 1, z = 0.8)
+  ),
+  sliders = list(list(
+    active = 0,
+    currentvalue = list(prefix = "P₂: "),
+    steps = steps
+  ))
+)
+
+# Display the plot
+p
 ```
 
 
