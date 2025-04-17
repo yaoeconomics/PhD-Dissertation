@@ -51,185 +51,6 @@
 % ------------------------------------------ %
 % ------------------------------------------ %
 % ------------------------------------------ %
-\section{Base Model: A Two-Period Storage Decision Model}
-
-I study a farmer's intertemporal selling decision over two trading periods under uncertainty and risk-sensitive preferences. The objective is to characterize how much of the harvest should be stored for the second period, and how this decision depends on price expectations, time preferences, and the farmer's risk aversion.
-
-\subsection{Setup}
-
-The farmer harvests one unit of output and chooses the share \( s \in [0,1] \) to store for the second period. The rest, \( 1 - s \), is sold in the first period. I normalize the first-period price to 1 without loss of generality, so the second-period price \( P_2 \) is measured relative to this benchmark.
-
-Let \( \delta \in (0,1) \) denote the discount factor reflecting the cost of storage or the farmer’s time preference. The farmer's preferences are described by a constant relative risk aversion (CRRA) utility function:
-
-\[
-U(x) = 
-\begin{cases}
-\frac{x^{1 - \gamma}}{1 - \gamma}, & \gamma \neq 1 \\
-\ln x, & \gamma = 1
-\end{cases}
-\]
-The parameter \( \gamma \in \mathbb{R} \) governs the curvature of utility here. The farmer maximizes expected utility from revenue across two periods hence:
-
-\[
-\max_{s \in [0,1]}  U(1 - s) + \delta \cdot \mathbb{E} \left[ U(s \cdot P_2) \right] 
-\]
-
-\subsection{Case 1: Risk-Averse}
-Under risk aversion, \( U(x) \) is strictly concave. The problem becomes:
-
-\[
-\max_{s \in [0,1]}  \frac{(1 - s)^{1 - \gamma}}{1 - \gamma} + \delta \cdot \mathbb{E} \left[ \frac{(s \cdot P_2)^{1 - \gamma}}{1 - \gamma} \right] 
-\]
-Factoring out constants, the problem simplifies to:
-
-\[
-\max_{s \in [0,1]}  (1 - s)^{1 - \gamma} + \delta \cdot s^{1 - \gamma} \cdot \mathbb{E}[P_2^{1 - \gamma}] 
-\]
-Define \( \mu \equiv \mathbb{E}[P_2^{1 - \gamma}] \). Then the objective function becomes:
-
-\[
-f(s) = (1 - s)^{1 - \gamma} + \delta \cdot \mu \cdot s^{1 - \gamma}
-\]
-This is a concave function over \( s \in [0,1] \).
-
-\paragraph{Kuhn–Tucker Conditions:}
-Let \( \lambda_1 \geq 0 \) and \( \lambda_2 \geq 0 \) be the multipliers on the constraints \( s \geq 0 \) and \( s \leq 1 \), respectively. The Lagrangian is:
-
-\[
-\mathcal{L}(s, \lambda_1, \lambda_2) = (1 - s)^{1 - \gamma} + \delta \cdot \mu \cdot s^{1 - \gamma} + \lambda_1 s + \lambda_2 (1 - s)
-\]
-The Kuhn–Tucker conditions are:
-
-\begin{align*}
-\text{(i)} \quad & f'(s) + \lambda_1 - \lambda_2 = 0 \\
-\text{(ii)} \quad & \lambda_1 \geq 0,\quad \lambda_1 \cdot s = 0 \\
-\text{(iii)} \quad & \lambda_2 \geq 0,\quad \lambda_2 \cdot (1 - s) = 0 \\
-\text{(iv)} \quad & 0 \leq s \leq 1
-\end{align*}
-The derivative of the objective is:
-
-\[
-f'(s) = - (1 - \gamma)(1 - s)^{-\gamma} + \delta \cdot \mu \cdot (1 - \gamma) s^{-\gamma}
-\]
-Setting \( f'(s) = 0 \) and solving for \( s \) gives the interior solution:
-
-\[
-\left( \frac{s}{1 - s} \right)^\gamma = \delta \cdot \mu
-\quad \Longrightarrow \quad
-s^* = \frac{(\delta \cdot \mu)^{1/\gamma}}{1 + (\delta \cdot \mu)^{1/\gamma}}
-\]
-This solution lies in \( (0,1) \) if \( \delta \cdot \mu \in (0, \infty) \). When \( \delta \cdot \mu \to 0 \), \( s^* \to 0 \); when \( \delta \cdot \mu \to \infty \), \( s^* \to 1 \). Hence, corner solutions are possible even under risk aversion.
-
-\subsection{Case 2: Risk-Neutral}
-
-When the utility function is linear, the problem becomes:
-
-\[
-\max_{s \in [0,1]} \; (1 - s) + \delta \cdot s \cdot \mathbb{E}[P_2]
-\]
-This is a linear function in \( s \). The slope is:
-\[
-f'(s) = -1 + \delta \cdot \mathbb{E}[P_2]
-\]
-The optimal decision is:
-\[
-s^* =
-\begin{cases}
-0 & \text{if } \delta \cdot \mathbb{E}[P_2] < 1 \\
-1 & \text{if } \delta \cdot \mathbb{E}[P_2] > 1 \\
-\text{any } s \in [0,1] & \text{if } \delta \cdot \mathbb{E}[P_2] = 1
-\end{cases}
-\]
-
-\subsection{Case 3: Risk-Loving}
-
-With convex utility, the objective function is also convex. Any interior point that satisfies the first-order condition is a minimum, not a maximum. Therefore, the optimum lies at one of the boundaries.
-
-Let's compare the utility at \( s = 0 \) and \( s = 1 \):
-
-\[
-U(1) \quad \text{vs.} \quad \delta \cdot \mathbb{E}[U(P_2)]
-\quad \Rightarrow \quad
-1^{1 - \gamma} \quad \text{vs.} \quad \delta \cdot \mathbb{E}[P_2^{1 - \gamma}]
-\]
-This yields:
-
-\[
-s^* =
-\begin{cases}
-0 & \text{if } \delta \cdot \mathbb{E}[P_2^{1 - \gamma}] < 1 \\
-1 & \text{if } \delta \cdot \mathbb{E}[P_2^{1 - \gamma}] > 1 \\
-\text{any } s \in [0,1] & \text{if } \delta \cdot \mathbb{E}[P_2^{1 - \gamma}] = 1
-\end{cases}
-\]
-
-\subsection{Summary}
-
-Let \( \mu = \mathbb{E}[P_2^{1 - \gamma}] \). The optimal storage share is:
-
-\[
-s^* =
-\begin{cases}
-\displaystyle \frac{(\delta \cdot \mu)^{1/\gamma}}{1 + (\delta \cdot \mu)^{1/\gamma}}, & \gamma > 0 \\
-\text{any } s \in [0,1], & \gamma = 0 \text{ and } \delta \cdot \mathbb{E}[P_2] = 1 \\
-0, & \gamma < 0 \text{ and } \delta \cdot \mu < 1 \\
-1, & \gamma < 0 \text{ and } \delta \cdot \mu > 1
-\end{cases}
-\]
-This expression captures both interior and corner solutions depending on the values of the risk aversion coefficient, the discount factor, and the expected second-period price.
-
-
-
-
-\section{Buyer Competitiveness and Price Formation}
-
-Let's allow the second-period price to depend on a market structure parameter \( \theta \in [0,1] \), which captures the degree of buyer-side competitiveness. A higher value of \( \theta \) indicates more competition among buyers, resulting in higher prices received by the farmer. A lower value of \( \theta \) reflects greater market power among buyers, potentially reducing the price through oligopsonistic behavior.
-
-\subsection{Price Formation under Buyer Competition}
-
-Let the second-period price be given by:
-\[
-P_2(\theta) = \bar{p}_2 \cdot \phi(\theta),
-\]
-where \( \bar{p}_2 > 0 \) is a base or frictionless price, and \( \phi(\theta) \in (0,1] \) is an increasing function of \( \theta \) capturing the effect of buyer competition on the realized price. For example, I may assume \( \phi(\theta) = \theta^\eta \) for some \( \eta \in (0,1] \), reflecting diminishing marginal gains from competition. 
-
-As \( \theta \to 0 \), the market is highly concentrated (e.g., monopsony), and prices are suppressed. As \( \theta \to 1 \), prices approach the perfectly competitive benchmark \( \bar{p}_2 \).
-
-\subsection{Modified Objective Function}
-
-The farmer’s problem now becomes:
-\[
-\max_{s \in [0,1]} \left\{ U(1 - s) + \delta \cdot \mathbb{E} \left[ U\left( s \cdot \bar{p}_2 \cdot \phi(\theta) \right) \right] \right\}
-\]
-Define:
-
-\[
-\mu(\theta) \equiv \mathbb{E} \left[ \left( \bar{p}_2 \cdot \phi(\theta) \right)^{1 - \gamma} \right] = \bar{p}_2^{1 - \gamma} \cdot \mathbb{E} \left[ \phi(\theta)^{1 - \gamma} \right]
-\]
-Then the problem reduces to the earlier form, but now with a \( \theta \)-dependent moment:
-
-\[
-\max_{s \in [0,1]} \left\{ (1 - s)^{1 - \gamma} + \delta \cdot s^{1 - \gamma} \cdot \mu(\theta) \right\}
-\]
-The optimal storage share is given by:
-
-\[
-s^*(\theta) = 
-\begin{cases}
-\displaystyle \frac{\left( \delta \cdot \mu(\theta) \right)^{1/\gamma}}{1 + \left( \delta \cdot \mu(\theta) \right)^{1/\gamma}}, & \gamma > 0 \\
-\text{corner solution based on } \delta \cdot \bar{p}_2 \cdot \phi(\theta), & \gamma \leq 0
-\end{cases}
-\]
-The function \( \mu(\theta) \) is increasing in \( \theta \) for \( \gamma > 0 \), since \( \phi(\theta)^{1 - \gamma} \) is increasing in \( \theta \). As buyer competition intensifies, the expected price improves and the farmer finds it more attractive to store the harvest. 
-
-Thus, \( \frac{\partial s^*}{\partial \theta} > 0 \), holding all else constant. This implies that policies or market changes that reduce buyer concentration—such as easing entry restrictions or enhancing transportation infrastructure—can increase the farmer’s incentive to store and sell in later periods.
-
-
-
-
-
-
-
 
 
 
@@ -392,8 +213,175 @@ p = a + \frac{n(MR - a)}{n+1}
 Thus, the farm-gate price that these middlemen offer to farmers becomes an increasing function of the number of traders showing up ($n$), their marginal value product ($MR$), and the farmers' reservation price ($a$).
 
 
-\section{Challenges Needed to Solve}
-Therefore, I may combine the two settings above together. However, there exists a severe issue of inconsistency: in the derivation of the procurement price from the Cournot oligopsonistic setting, I implicitly assume an inverse supply function in each trading period. However, the farmers' maximization problem would actually alter the quantity of local supply hence change the farm-gate price I derive from the traders' perspective. 
+% ------------------------------------------ %
+% ------------------------------------------ %
+% ------------------------------------------ %
+\newpage
+\section{Theoretical Framework}
+
+\subsection{Basic Model Setup}
+
+
+\begin{table}[H]
+\centering
+\caption{Economic Environment at Harvest}
+\begin{tabular}{lll}
+\toprule
+\textbf{Item} & \textbf{Symbol (units)} & \textbf{Status at Harvest} \\
+\midrule
+Harvest quantity & $q$ & known, fixed and normalized to 1 \\
+First-period price & $p_1$ & \textbf{observed} \\
+Buyer power now & $\theta_1 = \frac{1 - p_1}{p_1}$ & \textbf{unobserved} (inferred from $p_1$) \\
+Buyer-power change & $a$ & \textbf{random} \\
+Second-period buyer power & $\theta_2 = \theta_1 + a$ & unknown \\
+Price function & $p_t = \frac{1}{1 + \theta_t}$, $t=1,2$ & derived \\
+Discount factor & $\delta \in (0,1]$ & observed \\
+CRRA risk aversion & $\gamma \geq 0$ & observed \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+
+Consider a representative farmer who produces a fixed quantity \( q \) of Fuji apples. The farmer must decide, at the moment of harvest, what proportion \( s \in [0,1] \) of this harvest to store for sale in the subsequent trading period, while the remainder, \(1 - s\), is sold immediately at the observed price \(p_1\).
+
+The farmer's intertemporal revenue is therefore given by:
+\begin{align}
+    R_1 &= (1 - s) q p_1, \\
+    R_2 &= s q p_2,
+\end{align}
+where \( p_t \) denotes the price in trading period \( t \).
+
+\subsection{Market Structure and Price Formation}
+
+Prices are determined by the prevailing buyer power \( \theta_t \) in each period, according to the inverse relationship:
+\begin{equation}
+    p_t = \frac{1}{1 + \theta_t}, \quad t = 1, 2.
+\end{equation}
+
+At the time of the harvest, the farmer observes only the first-period price \( p_1 \), from which he implicitly infers current buyer power:
+\begin{equation}
+    \theta_1 = \frac{1 - p_1}{p_1}.
+\end{equation}
+
+However, the second-period buyer power \( \theta_2 \) remains uncertain and evolves according to:
+\begin{equation}
+    \theta_2 = \theta_1 + a,
+\end{equation}
+where \( a \) is a stochastic variable capturing intertemporal shifts in buyer power.
+
+Thus, the second-period price \( p_2 \), conditional on the observed price \( p_1 \) and the random shift \( a \), is:
+\begin{equation}
+    p_2(a) = \frac{p_1}{1 + a p_1}.
+\end{equation}
+
+\subsection{Preferences and Objective Function}
+
+Farmers maximize expected discounted utility over two periods. I adopt the Constant Relative Risk Aversion (CRRA) utility function:
+\begin{equation}
+    U(x) = \begin{cases}
+        \frac{x^{1 - \gamma}}{1 - \gamma}, & \gamma \neq 1, \\
+        \ln(x), & \gamma = 1,
+    \end{cases}
+\end{equation}
+where \( \gamma \geq 0 \) denotes the degree of relative risk aversion.
+
+Given this preference structure, the farmer’s optimization problem becomes:
+\begin{equation}
+\label{eq:objective}
+    \max_{s \in [0,1]} \left[U\big((1 - s) q p_1\big) + \delta \mathbb{E}_a\big[U\big(s q p_2(a)\big)\big]\right],
+\end{equation}
+where \(\delta \in (0,1]\) is the subjective discount factor.
+
+\subsection{Analytical Characterization of Optimal Storage}
+The farmer’s optimization problem (\ref{eq:objective}) yields the first-order condition (FOC) for an interior solution \( 0 < s < 1 \):
+\begin{equation}
+    -(1 - s)^{-\gamma}(q p_1)^{1 - \gamma} + \delta s^{-\gamma}\left(q p_1\right)^{1 - \gamma} M(\gamma, p_1) = 0.
+\end{equation}
+Simplifying and rearranging, I obtain the optimal storage share explicitly as:
+\begin{equation}
+\label{eq:s_star}
+    s^*(\gamma, \delta, p_1) = \frac{\left[\delta M(\gamma, p_1)\right]^{1/\gamma}}{1 + \left[\delta M(\gamma, p_1)\right]^{1/\gamma}}.
+\end{equation}
+where
+\begin{equation}
+\label{eq:M_definition}
+    M(\gamma, p_1) \equiv \mathbb{E}_a\big[(1 + a p_1)^{\gamma - 1}\big].
+\end{equation}
+
+This result clearly delineates how optimal storage depends on risk aversion (\(\gamma\)), discounting (\(\delta\)), observed initial price (\(p_1\)), and the stochastic evolution of buyer power (captured by \(M(\gamma, p_1)\)).
+
+Corner solutions emerge under boundary conditions:
+\begin{itemize}
+    \item \(s^* = 0\): immediate sale is optimal if \(\delta M(\gamma, p_1) \leq 0\) or is sufficiently low.
+    \item \(s^* = 1\): full storage occurs only if \(\delta M(\gamma, p_1)\) is exceptionally high.
+\end{itemize}
+
+\subsection{Distributional Assumption for Intertemporal Buyer Power}
+
+Given empirical insights from Fuji-apple smallholders in Central China, I model \(a\) as a truncated normal distribution:
+\begin{equation}
+    a \sim \text{TruncatedNormal}(\mu, \sigma^2; a_{\text{min}}, a_{\text{max}}),
+\end{equation}
+with baseline parameters:
+\begin{equation}
+    \mu = -0.15, \quad \sigma = 0.10, \quad a_{\text{min}} = -0.40, \quad a_{\text{max}} = 0.25.
+\end{equation}
+These parameters reflect realistic expectations among smallholder farmers regarding seasonal shifts in buyer competition and market access.
+
+\subsection{Simulation}
+
+To explore how smallholder farmers' optimal storage decisions respond to uncertainty in buyer power, I simulate $a \sim \mathrm{TN}(\mu, \sigma^2; [-0.4, 0.25])$, where $\mu \in \{-0.15, -0.05, 0, 0.15\}$ captures different beliefs about the direction of buyer power change (e.g., improved competition vs. increased collusion), and $\sigma \in \{0.05, 0.15\}$ captures the degree of perceived uncertainty. For each combination of $(\mu, \sigma)$, we generate 200{,}000 Monte Carlo draws of $a$.
+
+We simulate optimal storage shares $s^*$ on a grid of discount factors $\delta \in [0.5, 1]$ and risk aversion parameters $\gamma \in [0, 0.5]$. For $\gamma > 0$, the interior solution is characterized by
+\[
+s^* = \frac{\left[\delta \cdot \mathbb{E}_a[(1 + a p_1)^{\gamma - 1}]\right]^{1/\gamma}}{1 + \left[\delta \cdot \mathbb{E}_a[(1 + a p_1)^{\gamma - 1}]\right]^{1/\gamma}},
+\]
+where $\mathbb{E}_a[(1 + a p_1)^{\gamma - 1}]$ captures the curvature-adjusted expectation of the second-period price. For the risk-neutral case $\gamma = 0$, the farmer maximizes expected revenue, and the optimal storage decision is a corner solution:
+\[
+s^*(\gamma = 0) = 
+\begin{cases}
+1, & \delta \cdot \mathbb{E}_a\left[\frac{1}{1 + a p_1}\right] > 1 \\
+0, & \delta \cdot \mathbb{E}_a\left[\frac{1}{1 + a p_1}\right] < 1 \\
+\text{any in } [0,1], & \text{if equality holds}
+\end{cases}.
+\]
+
+The results, visualized in a series of $3$D surface plots (Figure~\ref{Figure: 3D optimal storage share}), show that storage shares increase with the discount factor and decrease with the level of risk aversion in general. When $\mu$ is negative (improved future competition), farmers store more. Greater variance in $a$ amplifies the response to $\gamma$: risk-neutral or mildly risk-averse farmers may still store aggressively due to upside potential, whereas highly risk-averse farmers reduce storage under uncertainty.
+
+
+\begin{figure}[pht]
+\centering
+\includegraphics[width=\textwidth]{figures/first_p_0.5_s_optimal.png}
+\caption{Optimal Storage Share 3D Visualizations}
+\label{Figure: 3D optimal storage share}
+\end{figure}
+
+
+
+\subsection{Economic Interpretation}
+
+\subsubsection{Effect of Mean Buyer Power Change ($\mu$)}
+A negative $\mu$ implies a decline in buyer power over time—interpreted as more competition or trader entry—leading to higher expected second-period prices and increased storage. Conversely, a positive $\mu$ (increasing buyer power) discourages storage.
+
+
+\subsubsection{Effect of Volatility ($\sigma$)}
+Higher variance $\sigma$ increases uncertainty. For risk-neutral farmers, this has no effect. But for risk-averse farmers, greater uncertainty reduces the appeal of storing due to the risk of low future prices.
+
+\subsubsection{Policy Implications}
+\begin{itemize}
+    \item \textit{Storage Subsidies or Better Storage Technologies}: Low $\delta$ implies farmers are unwilling to delay sales despite good future prices because of the high composite storage cost. Storage subsidies or better Storage technologies would incentivize farmers to adopt storage as an inter-temporal bargaining tool against middlemen.
+    \item \textit{Uncertainty management}: Lowering price uncertainty (e.g., through market information platforms or forward contracts) would encourage storage, especially among risk-averse farmers.
+\end{itemize}
+
+In summary, the model captures how farmers’ storage behavior responds to intertemporal price expectations, risk preferences, and market volatility. These dynamics have clear implications for rural storage infrastructure, credit access, and trader regulation.
+
+
+
+
+
+
+
 
 
 
@@ -405,12 +393,6 @@ Therefore, I may combine the two settings above together. However, there exists 
 \appendix
 \section{Previous Try}
 \subsection{Numerical Illustration}
-To illustrate our model clearly, let's assume prices are fixed at $p_1=6$ and expected future price $p_2=8$. I first analyze how the optimal share stored ($s^*$) varies with the risk aversion parameter $\gamma$ when $\delta=0.95$ (small storage cost), and then show how $s^*$ changes as the discount factor $\delta$ varies for different risk aversion levels.
-
-\paragraph{Impact of Risk Aversion on Storage Decision}
-Figure depicts how the optimal storage share ($s^*$) depends on the risk aversion parameter ($\gamma$) when $0<\gamma\leq1$. When $\gamma$ increases, farmers become more risk-averse. Given our parameters, more risk-averse farmers tend to store less to secure immediate certain income, avoiding exposure to future price uncertainty.
-
-
 \paragraph{Impact of Storage Cost on Storage Decision}
 Keeping the prices constant at the same values, Figure explores the impact of varying the discount factor (\( \delta \)) on the optimal storage decision. This graph features three curves, each representing different levels of risk aversion: low ($\gamma=0.1$), moderate ($\gamma=0.3$), and high ($\gamma=0.8$).
 
@@ -419,18 +401,14 @@ As the discount factor ($\delta$) increases, storage becomes less costly (or far
 When the storage cost is reasonably small ($\delta \ge 0.75$), comparing different risk aversion levels, the lowest risk aversion curve ($\gamma=0.1$, yellow) lies above the more risk-averse ones. Less risk-averse farmers store more since they are more comfortable bearing future price uncertainty. Conversely, highly risk-averse farmers ($\gamma=0.8$, red) prefer immediate and certain income.
 
 
-\paragraph{Role of Buyer Competition}
-In our model, the parameter $\theta$ represents buyer competition intensity in period two. Increasing $\theta$ shifts the expected future price upward, enhancing incentives to store. In terms of Figure, higher second-period buyer competition would shift all curves upward, making storage more attractive at all discount factor levels. Similarly, higher buyer competition would raise the curve in Figure, leading farmers to store a larger share at every level of risk aversion.
-
-
 
 
 \subsection{Linking the Model to Empirical Evidence}
 The adoption of a constant relative risk aversion (CRRA) utility form here is motivated by two primary considerations. First, empirical evidence consistently shows that individuals' relative risk aversion remains constant across varying levels of wealth \citep{chiappori2011relative}, and the CRRA coefficient, being unitless, facilitates meaningful international comparisons of risk preferences \citep{hardaker2000some}. Second, recent empirical studies conducted in regions closely aligned with my own field sites reinforce this theoretical choice. For example, \cite{jin2024losses} find that apple growers in their surveyed area—which substantially overlaps with my fieldwork locations—exhibit consistent risk-averse behaviors, estimating their CRRA coefficients within the interval of approximately [0.437, 0.575).
 
-My own empirical data, gathered from apple growers in Yanchang County, Central China, indicate an average CRRA coefficient of about 0.3 among the sampled farmers. Referring to the numerical analysis presented above, the optimal storage decisions of these farmers align closely with the orange curve illustrated in Figure.
+My own empirical data, gathered from apple growers in Yanchang County, Central China, indicate an average CRRA coefficient of about 0.3 among the sampled farmers. 
 
-Additionally, within my full sample of 549 apple growers, 200 households (approximately 36.4\%) chose to store all of their produce. Assuming that these farmers are identical and my theoretical model above accurately represents their behavioral tendencies, the observed storage rate of roughly 36.4\% corresponds to an inferred discount factor ($\delta$) of approximately 0.65. Consequently, this suggests that the combined storage costs—including storage fees, transportation, and deterioration—average around 0.35 per unit of stored produce.
+Additionally, within my full sample of 549 apple growers, 200 households (approximately 36.4\%) chose to store all of their produce.
 
 
 \newpage
