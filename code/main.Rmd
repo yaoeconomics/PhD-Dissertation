@@ -939,8 +939,8 @@ final_table <- final_table[match(variable_order, final_table$Variable), ]
 # Using stargazer to produce LaTeX code from our data frame
 stargazer(final_table, summary = FALSE, header = FALSE, rownames = FALSE,
           type = "text",
-          out = here("tables", "farmer_expectations_logistic_results_AME.tex"),
           title = "Average Marginal Effects: Farmers' Expectations on Buyer Competition in Three Months",
+          out = here("tables", "farmer_expectations_logistic_results_AME.tex"),
           label = "tab: binary storage ~ farmer's expectation on movement (AME)",
           align = FALSE, 
           font.size = "footnotesize",
@@ -1015,7 +1015,7 @@ plot1 <- ggplot(overall_avg_probs, aes(x = expect_3_months, y = avg_prob)) +
   labs(title = "Average Predicted Probabilities by Expected Buyers",
        subtitle = paste("Overall Sample Storage Rate:", round(overall_storage_rate, 3)),
        x = "Expected Buyers",
-       y = "Predicted Probability") +
+       y = "Predicted Probability of Storage") +
   theme_minimal()
 
 # Create a visualization by family leadership status
@@ -1024,7 +1024,7 @@ plot2 <- ggplot(avg_probs, aes(x = expect_3_months, y = avg_prob, fill = factor(
   geom_hline(yintercept = overall_storage_rate, linetype = "dashed", color = "red") +
   labs(title = "Predicted Probabilities by Expected Buyers and Family Leadership",
        x = "Expected Buyers",
-       y = "Predicted Probability",
+       y = "Predicted Probability of Storage",
        fill = "Family Leadership") +
   theme_minimal()
 
@@ -1034,7 +1034,7 @@ plot3 <- ggplot(avg_probs_town, aes(x = expect_3_months, y = avg_prob, fill = to
   geom_hline(yintercept = overall_storage_rate, linetype = "dashed", color = "red") +
   labs(title = "Predicted Probabilities by Expected Buyers and Town",
        x = "Expected Buyers",
-       y = "Predicted Probability",
+       y = "Predicted Probability of Storage",
        fill = "Town") +
   theme_minimal() +
   theme(legend.position = "bottom")
@@ -1166,7 +1166,7 @@ diff_plot <- ggplot(diff_results, aes(x = expect_3_months, y = difference)) +
   labs(title = 'Difference-from-Baseline Plot',
        subtitle = 'Predicted Probability Changes Relative to "No Change"',
        x = 'Expected Buyers Category',
-       y = 'Difference in Predicted Probability') +
+       y = 'Difference in Predicted Probability of Storage') +
   theme_minimal() +
   theme(
     plot.title = element_text(face = "bold", hjust = 0.5),
