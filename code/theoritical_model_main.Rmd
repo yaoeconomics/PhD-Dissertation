@@ -306,21 +306,111 @@ for (sigma in sigma_list) {
 
 ```
 
-```{r buyer power: interactive 3D graphics Shinyapp}
+```{r}
+# Required packages
+library(plot3D)
+library(viridis)
+
+# Helper: compute alpha and beta from mean and variance
+get_beta_params <- function(mu, sigma2) {
+  tmp <- mu * (1 - mu) / sigma2 - 1
+  alpha <- mu * tmp
+  beta <- (1 - mu) * tmp
+  return(list(alpha = alpha, beta = beta))
+}
+
+# Parameters
+theta1 <- 0.6
+delta <- 0.9
+gamma_seq <- seq(0, 0.5, length.out = 60)
+kappa_seq <- seq(0.8, 1.0, length.out = 60)
+mu_list <- c(0.4, 0.5, 0.6, 0.7)       # mean of θ₂
+sigma_list <- c(0.05, 0.15)            # variance levels
+n_draws <- 200000
+
+# Color map
+color_palette <- viridis(100)
+
+# Layout
+par(mfrow = c(2, 4), mar = c(2, 2, 3, 2))  # compact margins
+
+# Loop over all combinations
+for (sigma in sigma_list) {
+  for (mu in mu_list) {
+    # Get beta distribution parameters
+    beta_params <- get_beta_params(mu, sigma^2)
+    alpha <- beta_params$alpha
+    beta <- beta_params$beta
+
+    # Simulate θ₂
+    set.seed(123)
+    theta2 <- rbeta(n_draws, alpha, beta)
+    one_plus_theta2 <- 1 + theta2
+
+    # Precompute expectations
+    E_inv_1_plus_theta2 <- mean(1 / one_plus_theta2)
+    
+    # Storage matrix
+    s_mat <- matrix(NA, nrow = length(gamma_seq), ncol = length(kappa_seq))
+
+    for (i in seq_along(gamma_seq)) {
+      gamma <- gamma_seq[i]
+      denom <- (1 + theta1)^(gamma - 1)
+      if (gamma == 0) {
+        for (j in seq_along(kappa_seq)) {
+          kappa <- kappa_seq[j]
+          lhs <- delta * kappa * E_inv_1_plus_theta2
+          rhs <- 1 / (1 + theta1)
+          if (lhs > rhs) {
+            s_mat[i, j] <- 1
+          } else if (lhs < rhs) {
+            s_mat[i, j] <- 0
+          } else {
+            s_mat[i, j] <- 0.5
+          }
+        }
+      } else {
+        M <- mean(one_plus_theta2^(gamma - 1))
+        for (j in seq_along(kappa_seq)) {
+          kappa <- kappa_seq[j]
+          inner <- delta * kappa^(1 - gamma) * (M / denom)
+          s_mat[i, j] <- 1 / (1 + inner^(-1 / gamma))
+        }
+      }
+    }
+
+    # 3D plot
+    persp3D(
+      x = gamma_seq, y = kappa_seq, z = s_mat,
+      theta = 45, phi = 20, expand = 0.6,
+      colvar = s_mat, col = color_palette,
+      ticktype = "detailed",
+      xlab = "γ", ylab = "κ", zlab = "s*",
+      zlim = c(0, 1),
+      main = paste0("μ = ", mu, ", σ = ", sigma)
+    )
+  }
+}
+
+
+```
+
+
+```{r second-period buyer power: interactive 3D graphics Shinyapp}
 # Load required libraries
 library(shiny)
 library(plotly)
-library(truncnorm)
+library(VGAM)  # for beta parameterization
 
 # UI
 ui <- fluidPage(
-  titlePanel("Optimal Storage Share s* with Stochastic Buyer Power (a)"),
+  titlePanel("Optimal Storage Share s* with Beta-Distributed Buyer Power (θ₂)"),
   
   sidebarLayout(
     sidebarPanel(
-      sliderInput("mu", "Mean of a (μ):", min = -0.2, max = 0.2, value = -0.05, step = 0.01),
-      sliderInput("sigma", "Standard Deviation of a (σ):", min = 0.01, max = 0.2, value = 0.1, step = 0.01),
-      helpText("Note: p1 is fixed at 1. Risk aversion γ ∈ [0, 0.5], discount factor δ ∈ [0.5, 1].")
+      sliderInput("mu", "Mean of θ₂ (μ):", min = 0.2, max = 0.8, value = 0.5, step = 0.05),
+      sliderInput("sigma", "Standard Deviation of θ₂ (σ):", min = 0.01, max = 0.2, value = 0.1, step = 0.01),
+      helpText("θ₁ is fixed at 0.6. δ = 0.9. γ ∈ [0, 0.5]. κ ∈ [0.8, 1].")
     ),
     
     mainPanel(
@@ -332,33 +422,54 @@ ui <- fluidPage(
 # Server
 server <- function(input, output) {
   output$s_plot <- renderPlotly({
-    # Economic parameters
-    p1 <- 1
+    # Parameters
+    theta1 <- 0.6
+    delta <- 0.9
     gamma_seq <- seq(0, 0.5, length.out = 50)
-    delta_seq <- seq(0.5, 1.0, length.out = 50)
-    lower <- -0.4
-    upper <- 0.25
-    n_draws <- 100000
-
-    # Draw a ~ Truncated Normal
-    a <- rtruncnorm(n_draws, a = lower, b = upper, mean = input$mu, sd = input$sigma)
-    one_plus_ap1 <- 1 + a * p1
-
-    # Matrix to hold s*
-    s_matrix <- matrix(NA, nrow = length(delta_seq), ncol = length(gamma_seq))
-
+    kappa_seq <- seq(0.8, 1.0, length.out = 50)
+    grid_gamma <- rep(gamma_seq, each = length(kappa_seq))
+    grid_kappa <- rep(kappa_seq, times = length(gamma_seq))
+    
+    # Beta distribution parameters from mean and variance
+    mu <- input$mu
+    sigma2 <- input$sigma^2
+    tmp <- mu * (1 - mu) / sigma2 - 1
+    alpha <- mu * tmp
+    beta <- (1 - mu) * tmp
+    
+    # Simulate theta_2
+    set.seed(123)
+    theta2 <- rbeta(10000, alpha, beta)
+    one_plus_theta2 <- 1 + theta2
+    
+    # Pre-compute expectations
+    E_inv_1_plus_theta2 <- mean(1 / one_plus_theta2)
+    
+    # Initialize result matrix
+    s_matrix <- matrix(NA, nrow = length(kappa_seq), ncol = length(gamma_seq))
+    
     for (i in seq_along(gamma_seq)) {
       gamma <- gamma_seq[i]
+      denom <- (1 + theta1)^(gamma - 1)
       if (gamma == 0) {
-        psi <- mean(1 / one_plus_ap1)
-        delta_thresh <- 1 / psi
-        s_matrix[, i] <- ifelse(delta_seq < delta_thresh, 0, 1)
+        for (j in seq_along(kappa_seq)) {
+          kappa <- kappa_seq[j]
+          lhs <- delta * kappa * E_inv_1_plus_theta2
+          rhs <- 1 / (1 + theta1)
+          if (lhs > rhs) {
+            s_matrix[j, i] <- 1
+          } else if (lhs < rhs) {
+            s_matrix[j, i] <- 0
+          } else {
+            s_matrix[j, i] <- 0.5
+          }
+        }
       } else {
-        M <- mean(one_plus_ap1^(gamma - 1))
-        for (j in seq_along(delta_seq)) {
-          delta <- delta_seq[j]
-          kappa <- (delta * M)^(1 / gamma)
-          s_matrix[j, i] <- kappa / (1 + kappa)
+        M <- mean(one_plus_theta2^(gamma - 1))
+        for (j in seq_along(kappa_seq)) {
+          kappa <- kappa_seq[j]
+          inner <- delta * kappa^(1 - gamma) * (M / denom)
+          s_matrix[j, i] <- 1 / (1 + inner^(-1 / gamma))
         }
       }
     }
@@ -366,7 +477,7 @@ server <- function(input, output) {
     # Create 3D plot
     plot_ly(
       x = gamma_seq,
-      y = delta_seq,
+      y = kappa_seq,
       z = ~s_matrix,
       type = "surface",
       colors = colorRamp(c("#56B1F7", "#132B43"))
@@ -375,7 +486,7 @@ server <- function(input, output) {
         title = paste0("Optimal Storage s* (μ = ", input$mu, ", σ = ", input$sigma, ")"),
         scene = list(
           xaxis = list(title = "Risk aversion (γ)"),
-          yaxis = list(title = "Discount factor (δ)"),
+          yaxis = list(title = "Storage efficiency (κ)"),
           zaxis = list(title = "Storage share (s*)", range = c(0, 1))
         )
       )
@@ -386,92 +497,3 @@ server <- function(input, output) {
 shinyApp(ui = ui, server = server)
 
 ```
-
-```{r}
-library(shiny)
-library(plotly)
-library(truncnorm)
-
-# UI
-ui <- fluidPage(
-  titlePanel("Optimal Storage Share s* with Stochastic Buyer Power (a)"),
-
-  sidebarLayout(
-    sidebarPanel(
-      sliderInput("p1", "First-period price (p₁):", min = 0.5, max = 1.0, value = 1.0, step = 0.05),
-      sliderInput("mu", "Mean of a (μ):", min = -0.4, max = 0.25, value = -0.05, step = 0.01),
-      sliderInput("sigma", "Standard Deviation of a (σ):", min = 0.01, max = 0.2, value = 0.1, step = 0.01),
-      helpText("Note: Risk aversion γ ∈ [0, 0.5], discount factor δ ∈ [0.5, 1].")
-    ),
-
-    mainPanel(
-      plotlyOutput("s_plot", height = "750px")
-    )
-  )
-)
-
-# Server
-server <- function(input, output) {
-  output$s_plot <- renderPlotly({
-    # Grids
-    gamma_seq <- seq(0, 0.5, length.out = 50)
-    delta_seq <- seq(0.5, 1.0, length.out = 50)
-    lower <- -0.4
-    upper <- 0.25
-    n_draws <- 100000
-
-    # Draw a ~ Truncated Normal
-    a <- rtruncnorm(n_draws, a = lower, b = upper, mean = input$mu, sd = input$sigma)
-    one_plus_ap1 <- 1 + a * input$p1
-
-    # Matrix to hold s*
-    s_matrix <- matrix(NA, ncol = length(gamma_seq), nrow = length(delta_seq))
-
-    for (i in seq_along(gamma_seq)) {
-      gamma <- gamma_seq[i]
-      if (gamma == 0) {
-        psi <- mean(1 / one_plus_ap1)
-        delta_thresh <- 1 / psi
-        s_matrix[, i] <- ifelse(delta_seq < delta_thresh, 0, 1)
-      } else {
-        M <- mean(one_plus_ap1^(gamma - 1))
-        for (j in seq_along(delta_seq)) {
-          delta <- delta_seq[j]
-          kappa <- (delta * M)^(1 / gamma)
-          s_matrix[j, i] <- kappa / (1 + kappa)
-        }
-      }
-    }
-
-    # Create 3D plot
-    plot_ly(
-      x = gamma_seq,
-      y = delta_seq,
-      z = ~s_matrix,
-      type = "surface",
-      colors = colorRamp(c("#56B1F7", "#132B43"))
-    ) %>%
-      layout(
-        title = paste0("Optimal Storage s* (p₁ = ", input$p1,
-                       ", μ = ", input$mu,
-                       ", σ = ", input$sigma, ")"),
-        uirevision = "keep",
-        scene = list(
-          xaxis = list(title = "Risk aversion (γ)"),
-          yaxis = list(title = "Discount factor (δ)"),
-          zaxis = list(title = "Storage share (s*)", range = c(0, 1)),
-          camera = list(
-                eye = list(x = 2, y = -2, z = 1.5))
-        )
-      )
-  })
-}
-
-
-shinyApp(ui = ui, server = server)
-
-
-```
-
-
-

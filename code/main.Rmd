@@ -6,10 +6,13 @@ output:
   html_document: 
   mathjax: default
 ---
+
 ```{r setup}
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 ```
+
 # Loading the Data
+
 ```{r Packages and Loading the Data}
 # install.packages("readxl")
 # install.packages("dplyr")
@@ -63,7 +66,9 @@ data <- read_excel("data/combined_updated.xlsx")
 ```
 
 # Descriptive Statistics
+
 ## Pie chart of storage users' type and Radar Information-source Plot
+
 ```{r pie chart and radar plot}
 # Define softer colors
 storage_colors <- c("Not_use" = "#FF9999", "Rent_large" = "#99CCFF", 
@@ -131,7 +136,6 @@ combined_plot
 ```
 
 ## Table of Summary Statistics
-
 
 ```{r Table of Summary Statistics (tex file)}
 # Create a storage user indicator
@@ -419,7 +423,6 @@ latex_output <- paste0(latex_output, "\\end{tabular}% \n",
 writeLines(latex_output, con = here("tables", "summary_statistics.tex"))
 ```
 
-
 ## Demographics by storage type
 
 ```{r Demographics by storage type}
@@ -540,10 +543,13 @@ p <- ggplot(freq_data, aes(x=selling_month, y=price_dollar_pound,
 color = "Storage Usage Type") +
   theme_minimal() +
   theme(
-    plot.title = element_text(hjust = 0.5, size = 14, face = "bold"),
+    plot.title = element_text(hjust = 0.5, size = 20, face = "bold"),
     legend.position="right",
-    axis.text = element_text(size = 10),
-    axis.title = element_text(size = 12)
+    legend.title = element_text(size = 20),
+    legend.text = element_text(size = 18),
+    axis.text = element_text(size = 18),
+    axis.title = element_text(size = 20),
+    panel.border = element_rect(color = "black", fill = NA, size = 1)
   )
 
 # Save the plot
@@ -620,9 +626,8 @@ ggsave(here("figures", "selling_weeks_distribution.png"), storage_dist, width = 
 storage_dist
 ```
 
-
-
 # Binary Storage Decisions: Buyers’ Competitiveness at Harvest
+
 ```{r logit analysis}
 data <- read_excel(here("data","combined_updated.xlsx"))
 # Ensure necessary libraries for logistic regression and fixed effects are loaded
@@ -825,7 +830,6 @@ ggsave(filename = here("figures", "Interaction_Effect_across_Predicted Probabili
 # Acknowledge that this plot shows how the marginal effect of the interaction term varies by observation
 ```
 
-
 # Binary Storage Decisions: Farmers' Expectations on Buyers' Competitiveness
 
 ```{r}
@@ -873,7 +877,6 @@ summary_marginal_effects <- summary(marginal_effects)
 # Save marginal effects to a file
 write.csv(summary_marginal_effects, here("tables", "marginal_effects_expect_3_months.csv"))
 ```
-
 
 ```{r Table of Marginal Effects}
 # Calculate average marginal effects by using Model 3 
@@ -946,8 +949,6 @@ stargazer(final_table, summary = FALSE, header = FALSE, rownames = FALSE,
           font.size = "footnotesize",
           notes = "Note: *p$<$0.1; **p$<$0.05; ***p$<$0.01")
 ```
-
-
 
 ```{r predicted probability from the model}
 # Get mean values for continuous variables
@@ -1169,14 +1170,15 @@ diff_plot <- ggplot(diff_results, aes(x = expect_3_months, y = difference)) +
        y = 'Difference in Predicted Probability of Storage') +
   theme_minimal() +
   theme(
-    plot.title = element_text(face = "bold", hjust = 0.5),
+    plot.title = element_text(face = "bold", hjust = 0.5, size = 20),
     plot.subtitle = element_text(hjust = 0.5),
     axis.title = element_text(face = "bold"),
-    axis.text = element_text(size = 12)
+    axis.text = element_text(size = 18),
+    panel.border = element_rect(color = "black", fill = NA, size = 1)
   )
 
 # Save the plot
-ggsave(here("figures","filtered_difference_from_baseline_plot.png"), diff_plot, width = 8, height = 5, dpi = 300)
+ggsave(here("figures","filtered_difference_from_baseline_plot.png"), diff_plot, width = 8, height = 8, dpi = 300)
 
 # Print the difference results
 print(diff_results[, c("expect_3_months", "difference", "diff_se", "diff_CI_lower", "diff_CI_upper")])
@@ -1308,3 +1310,54 @@ stargazer(model_full, model_storage, type = "text",
             out = here("tables", "Extended_Weibull_Survival_Models_with_Controls.tex"))
 }
 ```
+
+
+
+# Buyer Count Distribution
+```{r}
+data_df <- df
+
+# Ensure data_df exists; if not, load again
+if(!exists('data_df')) {
+  library(readxl)
+  data_df <- read_excel('combined_updated.xlsx')
+}
+
+# Calculate max for x-axis breaks
+max_buyers <- max(data_df$num_buyers, na.rm = TRUE)
+
+# Build the plot
+buyer_count <- ggplot(data_df, aes(x = num_buyers)) +
+  geom_histogram(binwidth = 1, color = 'white', fill = '#3182bd', alpha = 0.85) +
+  geom_text(stat = 'bin', binwidth = 1, aes(label = ..count..), vjust = -0.3, size = 3.2, color = '#333333') +
+  scale_x_continuous(breaks = seq(0, max_buyers, by = 1)) +
+  labs(
+    title = 'Distribution of Buyer Presence at Harvest',
+    subtitle = 'Number of buyers observed by farmers during apple harvest',
+    x = 'Number of Buyers',
+    y = 'Frequency (farms)'
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(face='bold', size = 16, color = '#222222'),
+    plot.subtitle = element_text(size = 12, color = '#555555'),
+    axis.text = element_text(color = '#444444'),
+    axis.title = element_text(face = 'bold'),
+    panel.grid.major.y = element_line(color = '#dddddd'),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor = element_blank()
+  )
+
+# Display
+print(buyer_count)
+
+# Show quick peek at num_buyers column
+print(head(data_df[['num_buyers']]))
+
+# Save the plot
+ggsave(filename = here("figures", "buyer_count_distribution.png"), plot = buyer_count, width = 6, height = 4, dpi = 300)
+```
+
+
+
+
