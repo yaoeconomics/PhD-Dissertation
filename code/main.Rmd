@@ -1350,8 +1350,8 @@ stack_plot <- ggplot(summary_df, aes(x = factor(num_buyers, levels = sort(unique
     y = 'Number of Farmers') +
   theme_minimal(base_size = 12) +
   theme(
-    plot.title = element_text(size=12),
-    axis.title = element_text(size=10),
+    plot.title = element_text(size=10),
+    axis.title = element_text(size=8),
     legend.title = element_text(size=8),
     legend.text = element_text(size=8)
   )
