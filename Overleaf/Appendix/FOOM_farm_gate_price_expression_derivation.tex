@@ -1,0 +1,100 @@
+\section{Derivation of Farm Price under the FOOM Framework} \label{Appendix: Derivation of Farm Price under the FOOM Framework}
+
+This appendix provides a rigorous derivation of the farm-gate price expression under the Flexible-Oligopoly-Oligopsony Model (FOOM), assuming perfect competition downstream and constant marginal cost.
+
+\subsection{Model Setup}
+
+Consider a market in which buyers procure a cash crop from farmers. Let \( p_f \) denote the farmgate price paid to farmers, \( p_r \) represent the downstream retail price, and \( c \) be the constant marginal cost incurred by buyers in marketing or processing. Buyers face an upward-sloping farm supply curve described by \( Q_f(p_f) \), characterized by price elasticity of farm supply \( \varepsilon \):
+
+\begin{equation}
+\varepsilon = \frac{p_f}{Q_f(p_f)} \frac{dQ_f}{dp_f}.
+\end{equation}
+
+Let \( \theta \geq 0 \) denote the oligopsony conduct parameter, capturing the degree of buyer market power, where \( \theta = 0 \) indicates perfect competition, and \( \theta = 1 \) indicates pure monopsony.
+
+\subsection{Buyer's Optimization Problem}
+
+Buyers maximize profits by selecting the quantity \( Q_f \) to purchase from farmers:
+
+\begin{equation}
+\max_{Q_f} \Pi = (p_r - c)Q_f - p_f(Q_f)Q_f.
+\end{equation}
+
+
+To obtain the optimal procurement quantity, we take the first derivative of the profit function \(\Pi\) with respect to the procurement quantity \(Q_f\):
+
+\[
+\frac{d\Pi}{dQ_f} = (p_r - c) - \frac{d}{dQ_f}\left[p_f(Q_f)Q_f\right].
+\]
+
+Applying the product rule, the derivative of the total procurement cost term \(p_f(Q_f)Q_f\) is:
+
+\[
+\frac{d}{dQ_f}\left[p_f(Q_f)Q_f\right] = p_f(Q_f) + Q_f \frac{dp_f(Q_f)}{dQ_f}.
+\]
+
+Thus, we have the first-order condition:
+
+\[
+\frac{d\Pi}{dQ_f} = (p_r - c) - \left[p_f(Q_f) + Q_f \frac{dp_f(Q_f)}{dQ_f}\right] = 0.
+\]
+
+
+
+To explicitly capture the degree of buyer market power (oligopsony), let's introduce the conduct parameter \(\theta\), which measures how much the buyer internalizes the impact of its procurement decision on the farmgate price \(p_f(Q_f)\):
+\begin{itemize}
+    \item \(\theta = 0\) indicates perfect competition (no market power).
+    \item \(\theta = 1\) indicates pure monopsony (full internalization).
+    \item Intermediate values \(0 < \theta < 1\) indicate oligopsony or partial market power.
+\end{itemize}
+
+Thus, the generalized first-order condition with market power becomes:
+
+\[
+(p_r - c) - p_f(Q_f) - \theta Q_f \frac{dp_f(Q_f)}{dQ_f} = 0.
+\]
+
+Therefore, rearranging this expression clearly, under oligopsony, the first-order condition incorporating buyer market power is:
+
+\begin{equation}
+p_r - c = p_f + \theta \frac{dp_f}{dQ_f}Q_f.
+\end{equation}
+
+This condition equates buyers' marginal revenue (net downstream price minus marketing cost) to their perceived marginal procurement cost, which includes the strategic effect of increased purchases on the farmgate price (see \cite{sexton2000industrialization}, \cite{rogers_rich_1994assessing}, or other FOOM models).
+
+\subsection{Deriving the Farmgate Price Expression}
+
+Expressing the derivative \( dp_f/dQ_f \) in terms of elasticity of supply \( \varepsilon \), we have:
+
+\begin{equation}
+\frac{dQ_f}{dp_f} = \varepsilon \frac{Q_f}{p_f} \quad \Rightarrow \quad \frac{dp_f}{dQ_f} = \frac{p_f}{\varepsilon Q_f}.
+\end{equation}
+
+Substituting this into the first-order condition gives:
+
+\begin{equation}
+p_r - c = p_f + \theta \left(\frac{p_f}{\varepsilon Q_f}\right)Q_f = p_f\left(1 + \frac{\theta}{\varepsilon}\right).
+\end{equation}
+
+Thus, we obtain the general FOOM pricing relation:
+
+\begin{equation}
+p_f = \frac{p_r - c}{1 + \frac{\theta}{\varepsilon}}.
+\end{equation}
+
+\subsection{Normalized Expression}
+
+By normalizing the downstream net price \( p_r - c \) to unity, \( p_r - c = 1 \), the farmgate price simplifies neatly to:
+
+\begin{equation}
+p_f = \frac{\varepsilon}{\varepsilon + \theta}.
+\end{equation}
+
+\subsection{Economic Interpretation}
+
+The resulting expression reveals intuitive insights:
+
+\begin{itemize}
+    \item Higher buyer market power \( \theta \) depresses the farmgate price \( p_f \).
+    \item Greater elasticity of farm supply \( \varepsilon \) mitigates the downward pressure on the farm price caused by oligopsony power.
+\end{itemize}

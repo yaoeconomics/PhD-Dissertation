@@ -1,0 +1,40 @@
+Thank you for the clarification. Incorporating the correction to the expression for the interior optimal storage share under risk aversion, we revise the analysis accordingly. The correct expression is:
+
+\begin{equation}
+s^\* = \left(1 + \left\[ \delta \cdot \kappa^{1 - \gamma} \cdot
+\frac{\mathbb{E}\left\[ \left(1 + \theta\_1 + \Delta\_\theta \right)^{\gamma -1} \right]}
+{\left(1 + \theta\_1\right)^{\gamma -1}} \right]^{-1/\gamma} \right)^{-1}.
+\label{Eq: interior solution under risk averse}
+\end{equation}
+
+Letting the bracketed term again be denoted $\Lambda$, the storage share is now:
+
+$$
+s^* = \left(1 + \Lambda^{-1/\gamma} \right)^{-1},
+\quad \text{where} \quad
+\Lambda = \delta \cdot \kappa^{1 - \gamma} \cdot 
+\frac{\mathbb{E}\left[ \left(1 + \theta_1 + \Delta_\theta \right)^{\gamma -1} \right]}
+{\left(1 + \theta_1\right)^{\gamma -1}}.
+$$
+
+We now reassess the comparative statics with this corrected specification.
+
+
+
+
+
+The effect of initial buyer power $\theta_1$ is also mediated through both the numerator and denominator of the expectation ratio. Since both $(1 + \theta_1 + \Delta_\theta)^{\gamma - 1}$ and $(1 + \theta_1)^{\gamma - 1}$ are decreasing in $\theta_1$, but the former declines more slowly due to the convexity of the function, the ratio decreases. Therefore:
+
+$$
+\frac{\partial \Lambda}{\partial \theta_1} < 0 \Rightarrow \frac{ds^*}{d\theta_1} < 0,
+$$
+
+indicating that higher first-period buyer power, which reduces immediate price, still makes future sales relatively less attractive due to increased effective discounting from worse expected future prices.
+
+
+
+
+
+
+
+In summary, under the corrected formulation of the optimal storage share, $s^*$ decreases in the mean and variance of buyer power shocks, in first-period buyer power, and in the degree of risk aversion, while increasing in storage efficiency and time patience. These results reinforce the core intuition: storage is attractive when future revenues are relatively stable, well-compensated, and efficiently realized.
