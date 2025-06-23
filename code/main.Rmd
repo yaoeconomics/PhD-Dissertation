@@ -1339,8 +1339,8 @@ buyer_count <- ggplot(data_df, aes(x = num_buyers)) +
   ) +
   theme_minimal(base_size = 12) +
   theme(
-    plot.title = element_text(face='bold', size = 16, color = '#222222'),
-    plot.subtitle = element_text(size = 12, color = '#555555'),
+    plot.title = element_text(face='bold', size = 12, color = '#222222'),
+    plot.subtitle = element_text(size = 10, color = '#555555'),
     axis.text = element_text(color = '#444444'),
     axis.title = element_text(face = 'bold'),
     panel.grid.major.y = element_line(color = '#dddddd'),
@@ -1355,7 +1355,7 @@ print(buyer_count)
 print(head(data_df[['num_buyers']]))
 
 # Save the plot
-ggsave(filename = here("figures", "buyer_count_distribution.png"), plot = buyer_count, width = 6, height = 4, dpi = 300)
+ggsave(filename = here("figures", "buyer_count_distribution.png"), plot = buyer_count, width = 6, height = 3, dpi = 300)
 ```
 
 
