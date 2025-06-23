@@ -174,7 +174,7 @@ These complications drive me to employ numerical analysis, specifically, the Mon
 
 
 
-\section{Numerical Analysis}
+\section{Numerical Analysis} \label{Section: Base Model Numerical Analysis}
 \noindent To examine how risk preferences and storage efficiency shape farmers’ intertemporal marketing decisions under buyer power uncertainty, I numerically solve for the optimal storage share $s^*$ across a range of parameter values. This section describes the simulation design and computational procedure employed to approximate the farmer’s decision problem under Constant Relative Risk Aversion (CRRA) utility.
 
 
@@ -318,12 +318,7 @@ Therefore, a farmer’s optimization problem in Equation~\ref{eq:final objective
 \end{equation}
 where the first expression on the right-hand side reflects the utility from storing $s$ share of production to the second period in the monopsonistic case, and the second term represents the utility in the case of perfect competition among buyers.
 
-
-
-
-
-\subsubsection{Analytical Insight}
-\noindent Differentiating Equation~\ref{eq:Bertrand objective} with respect to $s$ gives the marginal utility gain from reallocating one unit of output from immediate sale to storage:
+Differentiating Equation~\ref{eq:Bertrand objective} with respect to $s$ gives the marginal utility gain from reallocating one unit of output from immediate sale to storage:
 
 \begin{equation}
 g(\cdot) = \frac{d\psi}{ds} = \rho U^{\prime}(\pi_L(s)) \cdot (-p_1 + \kappa \cdot 0.5) + (1 - \rho) U^{\prime}(\pi_H(s)) \cdot (-p_1 + \kappa)
@@ -400,16 +395,12 @@ Therefore, a farmer's maximization problem under the case of Cournot competition
 \end{equation}
 where $N_1$ is observed at harvest and $N_2$ is a stochastic element. To solve this maximization problem, a numerical simulation is needed.
 
-Let's model the second-period buyer count $N_2$ as a discrete Poisson-distributed random variable truncated to the interval $[0,9]$. I considered four different Poisson means, $\mu \in \{8, 4, 3, 1\}$, each representing different expectations about future market thickness. For each case, I simulated 5,000 realizations of $N_2$ and constructed a 2×4 panel plot in Figure~\ref{Fig: 3D Cournot}. The top row of the panel displays the probability mass functions (PMFs) of the Poisson distributions, offering a visual representation of how buyer count uncertainty is distributed under each mean. The bottom row presents 3D surface plots of the optimal storage share $s^*$ as a function of risk aversion $\gamma \in [0,10]$ and storage efficiency $\kappa \in [0.6, 1.0]$ as our baseline model. The CRRA utility framework was applied, and a closed-form solution was used when $\gamma = 0$. The results show that $s^*$ increases with both higher storage efficiency and lower risk aversion. Moreover, when the expected number of second-period buyers is low (e.g., $\mu = 1$), farmers optimally store less—particularly if they are risk averse—due to the weak and uncertain market prospects.
 
-To further explore the effects of expectations about second-period buyer power under different levels of risk aversion, I fixed storage efficiency at $\kappa = 0.9$ and first-period buyer count at $N_1 = 3$. I varied the expected second-period buyer count $\mathbb{E}[N_2]$ from 1 to 8 in increments of 1 by simulating truncated Poisson distributions. For each expected value, I computed the farmer’s optimal storage share $s^*$ under five levels of risk aversion: $\gamma \in \{0, 0.5, 2, 4, 7\}$.
+Let's model the second-period buyer count $N_2$ as a discrete Poisson-distributed random variable truncated to the interval $[0,9]$, capturing uncertainty in buyer presence.  I fix storage efficiency at $\kappa = 0.9$ and first-period buyer count at $N_1 = 3$ as the baseline.\footnote{I set $N_1=3$ here because in my fieldwork surveys, the mean of first-period buyer count is 3.34 and the median is 3.} As in Section~\ref{Section: Base Model Numerical Analysis}, farmers are assumed to have constant relative risk aversion (CRRA) preferences.
 
-The resulting line plot in Figure~\ref{Fig: Cournot sensitivity} overlays the five curves of $s^*(\mathbb{E}[N_2])$, each representing a different risk aversion level. To visually distinguish them, darker lines correspond to higher risk aversion. A vertical dashed line is added at $\mathbb{E}[N_2] = N_1$ to indicate the benchmark where both periods have symmetric market conditions. For all $\gamma$, $s^*$ increases as the expected second-period buyer count rises, reflecting improving market prospects. More risk-averse farmers (higher $\gamma$) are generally less willing to store unless second-period conditions are significantly better than the present.
+Four different Poisson means, $\mu \in \{8, 4, 3, 1\}$, are considered, each representing different expectations about second-period market thickness. For each case, I simulated 5,000 realizations of $N_2$ and constructed a 2×4 panel plot in Figure~\ref{Fig: 3D Cournot}. The top row of the panel displays the probability mass functions (PMFs) of the Poisson distributions, offering a visual representation of how buyer count uncertainty is distributed under each mean. The bottom row presents 3D surface plots of the optimal storage share $s^*$ as a function of risk aversion $\gamma \in [0,10]$ and storage efficiency $\kappa \in [0.6, 1.0]$ as our baseline model. The CRRA utility framework was applied, and a closed-form solution was used when $\gamma = 0$. The results show that $s^*$ increases with both higher storage efficiency and lower risk aversion. Moreover, when the expected number of second-period buyers is low (e.g., $\mu = 1$), farmers optimally store less—particularly if they are risk averse—due to the weak and uncertain market prospects.
 
-
-
-
-\begin{figure}[pht]
+\begin{figure}[htp]
     \centering
     \begin{subfigure}{\textwidth}
         \centering
@@ -418,7 +409,7 @@ The resulting line plot in Figure~\ref{Fig: Cournot sensitivity} overlays the fi
         \label{Fig: 3D Cournot}
     \end{subfigure}
     
-    \vspace{2mm} % Reduced vertical gap between subfigures
+    \vspace{10mm} % Reduced vertical gap between subfigures
     
     \begin{subfigure}{\textwidth}
         \centering
@@ -426,9 +417,15 @@ The resulting line plot in Figure~\ref{Fig: Cournot sensitivity} overlays the fi
         \caption{Sensitivity to Expected Second-Period Buyer Presence}
         \label{Fig: Cournot sensitivity}
     \end{subfigure}
+
+    \caption{Numerical Analysis under Cournot Competition}
 \end{figure}
 
+To further explore the effects of expectations about second-period buyer power under different levels of risk aversion, I varied the expected second-period buyer count $\mathbb{E}[N_2]$ from 1 to 8 in increments of 1 by simulating truncated Poisson distributions. For each expected value, I computed the farmer’s optimal storage share $s^*$ under five levels of risk aversion: $\gamma \in \{0, 0.5, 2, 4, 7\}$.
 
+The resulting line plot in Figure~\ref{Fig: Cournot sensitivity} overlays the five curves of $s^*(\mathbb{E}[N_2])$, each representing a different risk aversion level. To visually distinguish them, darker lines correspond to higher risk aversion. A vertical dashed line is added at $\mathbb{E}[N_2] = N_1$ to indicate the benchmark where both periods have symmetric market conditions. For all $\gamma$, $s^*$ increases as the expected second-period buyer count rises, reflecting improving market prospects. More risk-averse farmers (higher $\gamma$) are generally less willing to store unless second-period conditions are significantly better than the present.
+
+A key insight is that even under a low composite storage cost ($\kappa=0.9$) and a relatively competitive market structure at harvest ($N_1=3$), farmers would consider storage as an option only when the expected number of buyers visiting during the second period is at least doubled ($\mathbb{E}[N_2]\geq 6$), which is a direct result from the Jensen's Inequality when we derive the expectation of second-period price. In other words, only a very strong optimistic expectation of future buyer presence would lead a farmer to use storage to arbitrage across two periods, even for those risk-neutral farmers. 
 
 
 
@@ -436,7 +433,9 @@ The resulting line plot in Figure~\ref{Fig: Cournot sensitivity} overlays the fi
 
 \subsection{Connected to Fieldwork}
 
-\begin{figure}[pht]
+
+
+\begin{figure}[hpt]
 \centering
 \includegraphics[width=\textwidth]{figures/buyer_count_distribution.png}
 \caption{Distribution of Observed Buyer Presence at Harvest}
@@ -453,13 +452,13 @@ The resulting line plot in Figure~\ref{Fig: Cournot sensitivity} overlays the fi
 
 \section{Further Extensions}
 
-\subsection{Other Models of Risk Aversion}
+\subsection{Other Models of Risk Preference}
 \noindent According to \cite{o2018modeling}, "Real-world risk aversion is clearly not as straightforward as expected utility suggests. Additional sources of risk aversion (or risk-seeking) need to be used instead of, or in conjunction with, diminishing marginal utility of wealth." Individuals assess options involving both gains and losses, the "kink" in the value function between losses and gains induces risk aversion. Therefore, future researchers may extend my model by exploring the Loss Aversion models \citep{kahneman1979prospect}, in addition to the expected utility theorem. The approach developed by \cite{kHoszegi2006model, kHoszegi2007reference, kHoszegi2009reference} in addressing loss aversion with an endogenous reference point aims to mitigate this degree of freedom by asserting that the reference point is entirely determined by one's expectations about outcomes. Despite this, there has been limited progress in adapting alternative models to dynamic settings, with a notable exception of \cite{kHoszegi2009reference}, who define loss aversion concerning changes in beliefs regarding both current and future consumption.
 
 
 
 \subsection{Collective-Action Dilemma: Storage "Treadmill"}
-\noindent Another important observation from the fieldwork is that increasing storage adoption among farmers in a village would discourage traders from visiting there. If the majority of farmers in a village adopt storage, middlemen may redirect their focus to other villages where farmers have not yet embraced this technology. This spillover effect could stem from middlemen favoring farmers with less bargaining power, as they could negotiate lower prices for the crops they purchase. This leaves farmers without storage in this well-equipped village facing less competitive market conditions and creates in essence an escalating incentive within the village to obtain storage. However, the higher the adoption rate in this village, the lower the marginal benefit of storage adoption is as the less likely the traders would visit there. Therefore, this creates a storage "treadmill" similar to the technology treadmill envisioned by Willard Cochrane \citep{levins1996treadmill, cochrane1958farm}. Further analysis could discuss this collective-action dilemma and try to introduce a parameter into the current model to capture it.
+\noindent Another important observation from the fieldwork is that increasing storage adoption among farmers in a village may discourage buyers from visiting there. If the majority of farmers in a village adopt storage, middlemen may redirect their focus to other villages where farmers have not yet embraced this technology. This spillover effect could stem from middlemen favoring farmers with less bargaining power, as they could negotiate lower prices for the crops they purchase. This leaves farmers without storage in this well-equipped village facing less competitive market conditions and creates in essence an escalating incentive within the village to obtain storage. However, the higher the adoption rate in this village, the lower the marginal benefit of storage adoption is as the less likely the traders would visit there. Therefore, this creates a storage "treadmill" similar to the technology treadmill envisioned by Willard Cochrane \citep{levins1996treadmill, cochrane1958farm}. Further analysis could discuss this collective-action dilemma and try to introduce a parameter into the current model to capture it.
 
 
 \subsection{Non-linear Storage Cost}
