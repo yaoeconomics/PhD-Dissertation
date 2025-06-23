@@ -385,24 +385,56 @@ Since the second-order condition ensures $\partial g / \partial s = \frac{d^2\ps
 
 
 \subsection{Cournot Competition}
-\noindent In contrast, under Cournot competition, each buyer chooses the quantity to purchase simultaneously, assuming that other buyers’ quantities are fixed. The resulting equilibrium reflects strategic quantity-setting behavior. In this setup, buyer power is no longer from buyer collusion, but a function of the number of active buyers.
+\noindent In contrast, under Cournot competition, each buyer chooses the quantity to purchase simultaneously, assuming that other buyers’ quantities are fixed. The resulting equilibrium reflects strategic quantity-setting behavior. In this setup, price is no longer polarized, but a smoother function of the number of active buyers.
 
 Given this relationship, and maintaining the same linear demand structure used in Section~\ref{Section: Middlemen Market Structure and Farm-Gate Price Formation}, the resulting equilibrium price in each period $t$ under Cournot competition is:
 \begin{equation}
     p_t = \frac{N_t}{N_t + 1}, \quad t = 1,2.
 \end{equation}
-where $N_t$ is within the range of positive integers, and hence the bound of $p_t$ is $[0.5, 1)$. This expression captures the inverse relation between market structure conditions and farm-gate prices: as $N_t$ increases, buyer power declines, and the price approaches the competitive limit of 1. Conversely, when $N_t$ is small, buyer power is significant, and prices are suppressed.
+where $N_t$ is within the range of non-negative integers, and hence the bound of $p_t$ is $[0, 1)$. This expression captures the inverse relation between market structure conditions and farm-gate prices: as $N_t$ increases, buyer power declines, and the price approaches the competitive limit of 1. Conversely, when $N_t$ is small, buyer power is significant, and prices are suppressed. When no one comes to a village, i.e., $N_t=0$, it leads to market failure. 
 
 Therefore, a farmer's maximization problem under the case of Cournot competition would be highly similar to Equation~\ref{eq:final objective} in the base model, but with a different farm-gate price formation rule:
 \begin{equation}
 \label{eq:Cournot objective function}
 \max_{s \in [0,1]} \mathbb{E} \left\{U\left[\underbrace{\frac{(1-s)N_1}{1+N_1}}_{\text{First-period income}} + \underbrace{ s \cdot \kappa \cdot \frac{N_2}{1+N_2}}_{\text{Adjusted second-period income}} \right]\right\}
 \end{equation}
-where $N_1$ is observed at harvest and $N_2$ is a stochastic element.
+where $N_1$ is observed at harvest and $N_2$ is a stochastic element. To solve this maximization problem, a numerical simulation is needed.
 
-(To be continued......)
+Let's model the second-period buyer count $N_2$ as a discrete Poisson-distributed random variable truncated to the interval $[0,9]$. I considered four different Poisson means, $\mu \in \{8, 4, 3, 1\}$, each representing different expectations about future market thickness. For each case, I simulated 5,000 realizations of $N_2$ and constructed a 2×4 panel plot in Figure~\ref{Fig: 3D Cournot}. The top row of the panel displays the probability mass functions (PMFs) of the Poisson distributions, offering a visual representation of how buyer count uncertainty is distributed under each mean. The bottom row presents 3D surface plots of the optimal storage share $s^*$ as a function of risk aversion $\gamma \in [0,10]$ and storage efficiency $\kappa \in [0.6, 1.0]$ as our baseline model. The CRRA utility framework was applied, and a closed-form solution was used when $\gamma = 0$. The results show that $s^*$ increases with both higher storage efficiency and lower risk aversion. Moreover, when the expected number of second-period buyers is low (e.g., $\mu = 1$), farmers optimally store less—particularly if they are risk averse—due to the weak and uncertain market prospects.
+
+To further explore the effects of expectations about second-period buyer power under different levels of risk aversion, I fixed storage efficiency at $\kappa = 0.9$ and first-period buyer count at $N_1 = 3$. I varied the expected second-period buyer count $\mathbb{E}[N_2]$ from 1 to 8 in increments of 1 by simulating truncated Poisson distributions. For each expected value, I computed the farmer’s optimal storage share $s^*$ under five levels of risk aversion: $\gamma \in \{0, 0.5, 2, 4, 7\}$.
+
+The resulting line plot in Figure~\ref{Fig: Cournot sensitivity} overlays the five curves of $s^*(\mathbb{E}[N_2])$, each representing a different risk aversion level. To visually distinguish them, darker lines correspond to higher risk aversion. A vertical dashed line is added at $\mathbb{E}[N_2] = N_1$ to indicate the benchmark where both periods have symmetric market conditions. For all $\gamma$, $s^*$ increases as the expected second-period buyer count rises, reflecting improving market prospects. More risk-averse farmers (higher $\gamma$) are generally less willing to store unless second-period conditions are significantly better than the present.
 
 
+
+
+\begin{figure}[pht]
+    \centering
+    \begin{subfigure}{\textwidth}
+        \centering
+        \includegraphics[width=\textwidth, keepaspectratio=true]{model_figures/3D_cournot.png}
+        \caption{Optimal Storage Share and PDF Visualizations under Four Poisson Distributions of $N_2$}
+        \label{Fig: 3D Cournot}
+    \end{subfigure}
+    
+    \vspace{2mm} % Reduced vertical gap between subfigures
+    
+    \begin{subfigure}{\textwidth}
+        \centering
+        \includegraphics[width=\textwidth, keepaspectratio=true]{model_figures/buyer_count_sensitivity_cournot.png}
+        \caption{Sensitivity to Expected Second-Period Buyer Presence}
+        \label{Fig: Cournot sensitivity}
+    \end{subfigure}
+\end{figure}
+
+
+
+
+
+
+
+\subsection{Connected to Fieldwork}
 
 \begin{figure}[pht]
 \centering
