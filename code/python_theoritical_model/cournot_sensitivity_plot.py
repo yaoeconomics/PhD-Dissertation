@@ -69,3 +69,6 @@ ax.grid(True, linestyle='--', alpha=0.6)
 ax.legend(title="Risk Aversion")
 plt.tight_layout()
 plt.show()
+
+
+

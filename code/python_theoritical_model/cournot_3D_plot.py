@@ -1,10 +1,10 @@
-# Re-import necessary packages due to kernel reset
+# Re-import required packages and redefine everything due to state reset
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import poisson
 from mpl_toolkits.mplot3d import Axes3D
 
-# Redefine utility and optimization functions
+# Redefine utility and optimization functions with reservation price
 def crra_utility(pi, gamma):
     with np.errstate(divide='ignore', invalid='ignore'):
         if gamma == 1:
