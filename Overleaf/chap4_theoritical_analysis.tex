@@ -437,36 +437,31 @@ Since the second-order condition ensures $\partial g / \partial s = \frac{d^2\ps
 
 
 \subsection{Quantity-Setting Competition: Cournot--Nash Equilibrium}
-\noindent In the quantity-setting environment, each homogeneous buyer chooses the quantity to purchase simultaneously, taking other buyers' quantities as given. The resulting equilibrium reflects strategic quantity-setting behavior and corresponds to a Cournot--Nash equilibrium. Unlike the Bertrand case, equilibrium prices are not polarized but vary smoothly with the number of active buyers.
+\noindent In the quantity-setting environment, each homogeneous buyer simultaneously chooses a purchase quantity, taking others’ decisions as given. The resulting Cournot–Nash equilibrium reflects strategic quantity-setting behavior. Unlike in the Bertrand case, prices are not binary but vary smoothly with the number of active buyers.
 
-
-Given this relationship, and maintaining the same linear demand structure used in Section~\ref{Section: Middlemen Market Structure and Farm-Gate Price Formation}, the resulting equilibrium price in each period $t$ under quantity-setting competition is:
+Maintaining the linear demand structure introduced in Section~\ref{Section: Middlemen Market Structure and Farm-Gate Price Formation}, the farm-gate price in each period $t$ under quantity-setting competition is given by:
 \begin{equation}
-    p_t = \frac{N_t}{N_t + 1}, \quad t = 1,2.
+p_t = \max\left\{\frac{N_t}{N_t + 1},, \underline{p} \right\}, \quad t = 1,2,
 \end{equation}
-where $N_t$ is within the range of positive integers, and hence the bound of $p_t$ is $[0.5, 1)$. This expression captures the inverse relation between market structure conditions and farm-gate prices: as $N_t$ increases, buyer power declines, and the price approaches the competitive limit of 1. Conversely, when $N_t$ is small, buyer power is significant, and prices are suppressed. 
+where $N_t \in \mathbb{N}_0$ denotes the number of standard fresh-fruit buyers in period $t$, and $\underline{p} \in (0,0.5)$ represents the low reservation price offered by fallback channels—typically processing facilities that accept any produce regardless of quality, but at steeply discounted rates. When at least one standard buyer is active ($N_t \geq 1$), the equilibrium price is strictly increasing in $N_t$, approaching the competitive limit of 1. When no such buyers are present ($N_t = 0$), the farmer receives $\underline{p}$ by selling to the outside option.
 
-I abstract from the market-failure case of $N_t = 0$, as producers typically retain fallback options—such as self-consumption or sales to processing firms that accept all quality levels at deeply discounted prices. While Figure~\ref{Figure: buyer count at harvest} does include some reported instances of zero buyers, these likely reflect limitations in my survey coverage, which targeted 15 key buyers but did not fully enumerate all potential buyers active in the county.
+This formulation ensures continuity of the farmer's problem and captures the floor imposed by fallback markets. Although Figure~\ref{Figure: buyer count at harvest} includes a small number of reported instances with zero buyers, these are likely due to limitations in survey coverage, which focused on 15 standard fresh-fruit buyers and may have missed informal or processors' purchasing activity.
 
-
-\paragraph{Maintained Assumption.}  
-Throughout the analysis I impose $N_t \geq 1$, ruling out the degenerate case of no buyers. In practice, farmers always face at least one procurement channel (e.g., processors who accept all quality levels at deeply discounted prices). The few instances of $N_t=0$ reported in Figure~\ref{Figure: buyer count at harvest} are best interpreted as artifacts of survey coverage: the data collection targeted 15 key buyers in this county and did not enumerate all possible participants. In the empirical analysis, I verify robustness by (i) dropping these observations and (ii) recoding them to $N_t=1$ when auxiliary sources confirm the presence of a fallback procurement channel.
-
-
-
-
-
-Therefore, a farmer's maximization problem under the case of Cournot competition would be highly similar to Equation~\ref{eq:final objective} in the base model, but with a different farm-gate price formation rule:
+Accordingly, the farmer’s maximization problem under Cournot competition becomes:
 \begin{equation}
 \label{eq:Cournot objective function}
-\max_{s \in [0,1]} \mathbb{E} \left\{U\left[\underbrace{\frac{(1-s)N_1}{1+N_1}}_{\text{First-period income}} + \underbrace{ s \cdot \kappa \cdot \frac{N_2}{1+N_2}}_{\text{Adjusted second-period income}} \right]\right\}
+\max_{s \in [0,1]} \mathbb{E} \left\{ U \left[ 
+\underbrace{(1-s) \cdot p_1(N_1)}_{\text{First-period income}} 
++ \underbrace{s \cdot \kappa \cdot p_2(N_2)}_{\text{Adjusted second-period income}} 
+\right] \right\},
 \end{equation}
-where $N_1$ is observed at harvest and $N_2$ is a stochastic element. To solve this maximization problem, a numerical simulation is needed.
+where $N_1$ is observed at harvest, $N_2$ is stochastic, and 
+$p_t(N_t) = \max\left\{ \tfrac{N_t}{N_t + 1}, \underline{p} \right\}$ for $t = 1,2$. 
 
 
-Let's model the second-period buyer count $N_2$ as a discrete Poisson-distributed random variable truncated to the interval $[1,9]$, capturing uncertainty in buyer presence.  I fix first-period buyer count at $N_1 = 3$ as the baseline. As in Section~\ref{Section: Base Model Numerical Analysis}, farmers are assumed to have constant relative risk aversion (CRRA) preferences.
+In simulation, I model second-period buyer availability $N_2$ as a discrete Poisson-distributed random variable truncated to the interval $[0,9]$, reflecting uncertainty over the presence of standard buyers while allowing for the possibility of no such buyers appearing. In the event that $N_2 = 0$, farmers can sell to a processing facility at a reservation price $\underline{p} = 0.1$, which serves as an outside option and places a floor on the farm-gate price. The first-period buyer count is fixed at $N_1 = 3$. As in Section~\ref{Section: Base Model Numerical Analysis}, farmers are assumed to exhibit constant relative risk aversion (CRRA) preferences.
 
-Four different Poisson means, $\mu \in \{8, 6, 3, 1\}$, are considered, each representing different expectations about second-period market thickness. For each case, I simulated 5,000 realizations of $N_2$ and constructed a 2×4 panel plot in Figure~\ref{Fig: 3D Cournot}. The top row of the panel displays the probability mass functions (PMFs) of the Poisson distributions, offering a visual representation of how buyer count uncertainty is distributed under each mean. The bottom row presents 3D surface plots of the optimal storage share $s^*$ as a function of risk aversion $\gamma \in [0,10]$ and storage efficiency $\kappa \in [0.6, 1.0]$ as our baseline model. The CRRA utility framework was applied, and a closed-form solution was used when $\gamma = 0$. The results show that $s^*$ increases with both higher storage efficiency and lower risk aversion. Moreover, when the expected number of second-period buyers is low (e.g., $\mu = 1$), farmers optimally store less—particularly if they are risk averse—due to the weak and uncertain market prospects.
+Four different Poisson means, $\mu \in \{8, 6, 3, 1\}$, are considered, each representing different expectations about second-period market thickness. For each case, I simulated 5,000 realizations of $N_2$ and constructed a 2×4 panel plot in Figure~\ref{Fig: 3D Cournot}. The top row of the panel displays the probability mass functions (PMFs) of the Poisson distributions, illustrating how buyer count uncertainty is distributed under each mean. The bottom row presents 3D surface plots of the optimal storage share $s^*$ as a function of risk aversion $\gamma \in [0,10]$ and storage efficiency $\kappa \in [0.6, 1.0]$. The CRRA utility framework was applied, with a closed-form solution used when $\gamma = 0$. The results show that $s^*$ increases with both higher storage efficiency and lower risk aversion. Moreover, when the expected number of second-period buyers is low (e.g., $\mu = 1$), farmers optimally store less—particularly if they are risk averse.
 
 \begin{figure}[htp]
     \centering
