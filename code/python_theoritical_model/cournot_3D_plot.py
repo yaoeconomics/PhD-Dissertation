@@ -12,30 +12,36 @@ def crra_utility(pi, gamma):
         else:
             return (np.power(pi, 1 - gamma) - 1) / (1 - gamma)
 
-def optimal_s(N2_samples, gamma, kappa):
+def effective_price(N, reservation_price):
+    with np.errstate(divide='ignore', invalid='ignore'):
+        return np.maximum(N / (N + 1), reservation_price)
+
+def optimal_s(N2_samples, gamma, kappa, reservation_price):
     s_grid = np.linspace(0, 1, 25)
     expected_utils = []
+    prices2 = effective_price(N2_samples, reservation_price)
     for s in s_grid:
         income1 = (1 - s) * 3 / 4
-        prices2 = N2_samples / (N2_samples + 1)
         income2 = s * kappa * prices2
         income_total = income1 + income2
         EU = np.mean(crra_utility(income_total, gamma))
         expected_utils.append(EU)
     return s_grid[np.argmax(expected_utils)]
 
-def closed_form_s(N2_samples, kappa):
+def closed_form_s(N2_samples, kappa, reservation_price):
     income1 = 0.75
-    income2 = kappa * np.mean(N2_samples / (N2_samples + 1))
+    prices2 = effective_price(N2_samples, reservation_price)
+    income2 = kappa * np.mean(prices2)
     return 1.0 if income2 > income1 else 0.0
 
-# Parameters
+# Define parameters
 mu_values = [8, 6, 3, 1]
 gamma_grid = np.linspace(0, 10, 30)
 kappa_grid = np.linspace(0.6, 1.0, 20)
 s_min, s_max = 0.0, 1.0
+reservation_price = 0.1  # Outside option fallback price
 
-# Create 2x4 grid figure
+# Create 2x4 grid figure with Poisson truncated to [0, 9] and reservation price
 fig = plt.figure(figsize=(20, 8))
 
 for mu_idx, mu in enumerate(mu_values):
@@ -49,7 +55,7 @@ for mu_idx, mu in enumerate(mu_values):
     pmf_vals /= pmf_vals.sum()
     ax = fig.add_subplot(2, 4, mu_idx + 1)
     ax.plot(x_vals, pmf_vals, marker='o', linestyle='-', color='steelblue')
-    ax.set_title(f"$\\mu$={mu} (Poisson)")
+    ax.set_title(f"$\\mu$={mu} (Poisson, Truncated [0,9])")
     ax.set_xlim([0, 9])
     ax.set_ylabel("PMF")
     ax.set_xlabel("$N_2$")
@@ -59,9 +65,9 @@ for mu_idx, mu in enumerate(mu_values):
     for i, gamma in enumerate(gamma_grid):
         for j, kappa in enumerate(kappa_grid):
             if gamma == 0:
-                s_star_surface[i, j] = closed_form_s(N2_samples, kappa)
+                s_star_surface[i, j] = closed_form_s(N2_samples, kappa, reservation_price)
             else:
-                s_star_surface[i, j] = optimal_s(N2_samples, gamma, kappa)
+                s_star_surface[i, j] = optimal_s(N2_samples, gamma, kappa, reservation_price)
 
     # Plot 3D surface (row 2)
     ax3d = fig.add_subplot(2, 4, mu_idx + 5, projection='3d')
@@ -77,6 +83,13 @@ for mu_idx, mu in enumerate(mu_values):
     ax3d.view_init(elev=30, azim=-135)
 
 plt.tight_layout()
-plt.suptitle("Optimal Storage Decision under Cournot Competition (Low Variance Only)", fontsize=18, y=1.03)
-plt.subplots_adjust(top=0.9)
+plt.suptitle("Optimal Storage under Cournot with Outside Option (Poisson Truncated [0,9])", fontsize=18, y=1.03)
+plt.subplots_adjust(top=0.9, bottom=0.1)
+
+
+# Save the figure
+plt.savefig("3D_cournot.png", dpi=300, bbox_inches="tight")
+
+
+
 plt.show()
