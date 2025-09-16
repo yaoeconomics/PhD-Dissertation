@@ -437,7 +437,7 @@ Since the second-order condition ensures $\partial g / \partial s = \frac{d^2\ps
 
 
 \subsection{Quantity-Setting Competition: Cournot--Nash Equilibrium}
-\noindent In the quantity-setting environment, each homogeneous buyer simultaneously chooses a purchase quantity, taking others’ decisions as given. The resulting Cournot–Nash equilibrium reflects strategic quantity-setting behavior. Unlike in the Bertrand case, prices are not binary but vary smoothly with the number of active buyers.
+\noindent In the quantity-setting environment, each homogeneous buyer simultaneously chooses a purchase quantity, taking others' decisions as given. The resulting Cournot–Nash equilibrium reflects strategic quantity-setting behavior. Unlike in the Bertrand case, prices are not binary but vary smoothly with the number of active buyers.
 
 Maintaining the linear demand structure introduced in Section~\ref{Section: Middlemen Market Structure and Farm-Gate Price Formation}, the farm-gate price in each period $t$ under quantity-setting competition is given by:
 \begin{equation}
@@ -447,7 +447,7 @@ where $N_t \in \mathbb{N}_0$ denotes the number of standard fresh-fruit buyers i
 
 This formulation ensures continuity of the farmer's problem and captures the floor imposed by fallback markets. Although Figure~\ref{Figure: buyer count at harvest} includes a small number of reported instances with zero buyers, these are likely due to limitations in survey coverage, which focused on 15 standard fresh-fruit buyers and may have missed informal or processors' purchasing activity.
 
-Accordingly, the farmer’s maximization problem under Cournot competition becomes:
+Accordingly, the farmer's maximization problem under Cournot competition becomes:
 \begin{equation}
 \label{eq:Cournot objective function}
 \max_{s \in [0,1]} \mathbb{E} \left\{ U \left[ 
@@ -484,10 +484,13 @@ Four different Poisson means, $\mu \in \{8, 6, 3, 1\}$, are considered, each rep
     \caption{Numerical Analysis under Cournot Competition}
 \end{figure}
 
-To further explore the effects of expectations about second-period buyer power under different levels of risk aversion, I varied the expected second-period buyer count $\mathbb{E}[N_2]$ from 1 to 8 in increments of 1 by simulating truncated Poisson distributions. For each expected value, I computed the farmer's optimal storage share $s^*$ under five levels of risk aversion: $\gamma \in \{0, 0.5, 2, 4, 7\}$. The storage efficiency parameter is assumed to be $\kappa=0.9$ across all cases here.
 
 
-The resulting line plot in Figure~\ref{Fig: Cournot sensitivity} overlays the five curves of $s^*(\mathbb{E}[N_2])$, each representing a different risk aversion level. To visually distinguish them, darker lines correspond to higher risk aversion. A vertical dashed line is added at $\mathbb{E}[N_2] = N_1$ to indicate the benchmark where both periods have symmetric market conditions. For all $\gamma$, $s^*$ increases as the expected second-period buyer count rises, reflecting improving market prospects. More risk-averse farmers (higher $\gamma$) are generally less willing to store unless second-period conditions are significantly better than the present.
+Figure~\ref{Fig: Cournot sensitivity} presents a three-panel sensitivity analysis of farmers' optimal storage share $s^*$ under Cournot competition when the second-period number of buyers follows a truncated Poisson distribution on $[0,9]$. The horizontal axis in each panel reports the expected value of $N_2$, and the vertical axis shows the corresponding optimal storage share. Each curve traces $s^*$ for a different level of risk aversion $\gamma \in \{0,0.5,2,4,7\}$, with darker shades of blue indicating higher $\gamma$. A vertical dashed line marks the benchmark case where the expected number of second-period buyers equals the observed first-period value, $\mathbb{E}[N_2]=N_1=3$. The three panels vary the assumed reservation price floor, $p_{\mathrm{reserve}} \in \{0.10,0.25,0.40\}$, which represents the outside option available if no standard buyers are present. This design allows direct comparison of how the outside option shifts storage incentives across risk preferences and market competitive scenarios.
+
+Introducing a reservation price $p_{\text{reserve}}$ shifts the whole schedule upward in a economically intuitive way. A better fallback (from $0.10$ to $0.25$ to $0.40$) weakly lowers the threshold $\mathbb{E}[N_2]$ at which storage becomes attractive and increases $s^*$ at any given $\mathbb{E}[N_2]$—with the effect most pronounced for high $\gamma$, because the floor insures the downside of thin buyer markets. In short: more expected buyers and a stronger outside option both raise the optimal storage share, while greater risk aversion tempers that response.
+
+On any particular curve plot in Figure~\ref{Fig: Cournot sensitivity}, for all $\gamma$, $s^*$ increases as the expected second-period buyer count rises, reflecting improving market prospects. More risk-averse farmers (higher $\gamma$) are generally less willing to store unless second-period conditions are significantly better than the present.
 
 A key insight is that even under relatively favorable conditions—such as a low composite storage cost ($\kappa = 0.9$) and a moderately competitive harvest market ($N_1 = 3$)—storage becomes an attractive option only when farmers anticipate a substantially more buyer-presence market in the second period. Specifically, storage is only worthwhile when the expected number of buyers in period 2 reaches or exceeds 6, implying an expected price increase from $p_1 = \frac{3}{4} = 0.75$ to $p_2 = \frac{6}{7} \approx 0.857$. This 10.7 percentage point gain is sufficient to offset the 10\% effective loss due to storage inefficiency.
 
@@ -520,6 +523,77 @@ By contrast, when $N_1$ is very small (e.g., 1 or 2), the incremental price gain
 Supporting this notion, \cite{williams1989economic} demonstrates, through a quadratic form of total marketing costs, that farmers need to weigh the marginal revenue of later sales against the elevated costs incurred. This balance leads to a positive inventory, even without considering risk aversion. Instead of capturing the composite storage cost by a discounting factor, a well-designed mathematical model would allow other forms of storage costs, therefore, may give us other relevant real-world policy implications.
 
 
+\section{Policy Implications}
+\noindent
+Whether in developing or advanced economies, policymakers care deeply about farm incomes. A common response has been direct interventions, such as minimum support prices or income transfers, that boost incomes but often at the cost of market distortions, fiscal burden, and misallocation of resources. The model here suggests an alternative emphasis: improve the environment in which farmers make intertemporal selling decisions. Three margins emerge from the analysis, competition, storage efficiency, and risk aversion, each capable of lifting expected incomes without direct price manipulation.
+
+
+
+\subsection{Enhancing Competition among Buyers}
+
+\textbf{Mechanism.} When competition among buyers is weak at harvest, farmers face low farm-gate prices. In the model this is captured by a high $\theta_1$, which depresses the immediate return to selling. Storage provides farmers with the option value of waiting, and its payoff rises if competition is expected to be stronger in the future, i.e.\ when the mean of $\theta_2$ falls and the second-period price distribution shifts upward. In this way, stronger future competition amplifies the benefits of storage by improving the relative return to waiting rather than selling at harvest.
+
+\textbf{Quantitative illustration ($\delta=1$, $\kappa=0.9$, $\text{Var}(\theta_2)=0.02$):}
+\begin{itemize}
+  \item Suppose $\theta_1=0.5$ (harvest price $p_1=0.667$) and beliefs about buyer power shift from $\mu=0.37$ (weaker future competition) to $\mu=0.32$ (stronger future competition). Risk-neutral and risk-averse ($\gamma=2$) farmers both switch from \emph{no storage} to \emph{full storage}. Expected income rises from $0.667$ to $0.690$, a gain of $+\;0.023$.
+\end{itemize}
+
+\textbf{Policy interpretation.} When policy succeeds in enhancing competition at harvest, the immediate farm-gate price $p_1$ rises, improving farmer welfare unconditionally. In this case, storage functions less as an active strategy and more as a bargaining tool: the mere possibility of deferring sales deters monopsonistic buyers from pushing down harvest-time prices. More importantly, the model also shows, however, that such policies may not always generate an immediate effect at the start of each marketing season. As long as competition among buyers improves later in the season, storage enables farmers to arbitrage this dynamic change, raising expected incomes even when they are risk-averse. Policy instruments that can deliver these gains include stricter antitrust enforcement to deter collusion, lowering entry barriers for new traders, and investing in digital trading platforms or logistics infrastructure that broaden farmers’ access to alternative buyers over the marketing season.
+
+
+
+
+
+\subsection{Subsidizing Storage and Technology Adoption}
+
+\textbf{Mechanism.} The model shows that improving storage efficiency---captured by a higher $\kappa$---raises the net return from delaying sales. In practical terms, farmers retain more value from what they store, making the option to wait more attractive. This effect is particularly strong when market conditions are finely balanced, because even a modest improvement in storage efficiency can shift farmers from selling immediately to storing their entire harvest.
+
+\textbf{Quantitative evidence (fix $\theta_1=0.5 \Rightarrow p_1=0.667$, $\delta=1$, $\text{Var}(\theta_2)=0.02$; raise $\kappa$ by 10\% from $0.90 \to 0.99$):}
+\begin{itemize}
+  \item At $\mu=0.33$, risk-neutral farmers already store fully, but expected income still rises markedly from $0.684$ to $0.752$ ($+\;0.068$).
+  \item At $\mu=0.35$, risk-neutral farmers continue to store fully, while moderately risk-averse farmers ($\gamma=2$) increase storage from 50\% to 100\%; their expected income rises from $0.670$ to $0.741$ ($+\;0.071$).
+  \item At $\mu=0.37$, right at the margin, both risk-neutral and risk-averse farmers switch from no storage to full storage, with expected income increasing from $0.667$ to $0.730$ ($+\;0.063$).
+\end{itemize}
+
+\textbf{Policy interpretation.} A 10\% increase in storage efficiency yields substantial income gains---on the order of 6--7 percentage points---and can induce dramatic behavioral shifts in storage, especially near the decision boundary. These results suggest that policies which subsidize storage or promote better technologies (e.g., air-controlled cold storage, or improved post-harvest handling) can deliver sizable welfare benefits without distorting market prices. Unlike direct price supports, which are costly and often inefficient, improving $\kappa$ raises returns across the board and strengthens farmers’ ability to capture intertemporal gains from storage. 
+
+
+
+
+
+
+\subsection{Reducing Effective Risk Aversion via Financial Deepening}
+
+\textbf{Mechanism.} While intrinsic risk preferences are relatively stable, \emph{effective} risk aversion declines as farmers gain financial security through liquidity, insurance, and wealth accumulation. A lower coefficient of relative risk aversion ($\gamma$) shifts behavior toward the risk-neutral benchmark, with the largest effects concentrated in the region where storage is only marginally profitable in expectation.
+
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.85\textwidth]{model_figures/income_gap_vs_mu_(unified).png}
+    \caption{Absolute and relative expected income losses from risk aversion. 
+    Solid lines show the absolute gap $\mathbb{E}[\pi(s^*_{RN})]-\mathbb{E}[\pi(s^*_{RA})]$ (left axis). 
+    Dashed lines show the same gap as a percentage of the risk-neutral benchmark (right axis). 
+    Colors indicate the degree of risk aversion ($\gamma$). 
+    The vertical dotted line marks the risk-neutral switching threshold $\mu^\star$ where storage ceases to be profitable.}
+    \label{fig:unified_gap_plot}
+\end{figure}
+
+
+\textbf{Quantitative illustration.} Simulation results (Figure~\ref{fig:unified_gap_plot}) show that absolute income losses from risk aversion peak at roughly 0.02--0.03 in normalized units, while the relative gap reaches about 2 percent of expected income under strong risk aversion ($\gamma=7$) and falls below 1 percent for moderate values ($\gamma=2$ to $4$). These effects vanish when storage is clearly profitable or clearly unprofitable, underscoring that the ``cost of risk aversion'' is concentrated exactly at the margin where storage incentives are fragile.
+
+\textbf{Interpretation.} The income effect from lowering risk aversion is modest in size but targeted: it recovers the ``money left on the table'' precisely where risk aversion binds most. Instruments that ease liquidity risk (warehouse-receipt finance, seasonal credit lines), transfer income across states (crop insurance), or smooth consumption (safety nets) can move farmers measurably closer to the risk-neutral storage decision. Even modest financial deepening---for example, reducing effective $\gamma$ from 7 to 2---eliminates more than half of the small but systematic income gap in this calibration.
+
+
+
+
+
+\subsection{Synthesis}
+
+Competition, storage efficiency, and risk-sharing operate through distinct mechanisms but share a common outcome: higher expected incomes without direct price supports. The examples above show that (i) improving competition today or tomorrow, (ii) raising $\kappa$ by 10\%, and (iii) lowering effective $\gamma$ all yield measurable gains---often by triggering discrete shifts in storage. As such, these tools expand the policy frontier, complementing traditional interventions while avoiding many of their well-known downsides.
+
+
+
+
 
 \section{Conclusion}
 \noindent This chapter demonstrates that storage adoption can have a dynamic impact on the welfare of farmers facing oligopsony power, providing inter-temporal arbitrage opportunities and stronger bargaining power over time. Cold storage adoption helps farmers overcome trading-time limitations and benefit even from temporal changes in trader competition alone. Examining storage from a market competition perspective offers a fresh approach to analyzing the influence of inventory on growers' and sellers' marketing strategies and their bargaining power.
@@ -529,7 +603,7 @@ My baseline model provides a theoretical basis for small-scale farmers' storage 
 
 This chapter's application extends beyond the fresh apple industry to various settings. Cold storage and inventory play a crucial role in agricultural transactions, commonly serving as tools for sellers to take advantage of demand-driven price fluctuations. However, the competitive dynamics among buyers (middlemen) can vary over time, even without changes in demand or supply elsewhere in the industry chain. By examining storage from a market competition perspective, this model offers a fresh approach to analyzing the influence of inventory on growers' and sellers' marketing strategies and their bargaining powers in agricultural commodity industries.
 
-In many developing countries, governments could complement or even substitute for minimum purchase price programs and direct cash transfers by subsidizing farmers’ investment in storage infrastructure. Rather than intervening directly in output markets, such policies would expand farmers’ access to quality-preserving storage technologies, enabling them to choose when to sell their crops. By shifting sales to more favorable periods, farmers can strengthen their bargaining position against middlemen, while the resulting improvements in market efficiency benefit both producers and consumers along the supply chain.
+In many developing countries, governments could complement or even substitute for minimum purchase price programs and direct cash transfers by subsidizing farmers' investment in storage infrastructure. Rather than intervening directly in output markets, such policies would expand farmers' access to quality-preserving storage technologies, enabling them to choose when to sell their crops. By shifting sales to more favorable periods, farmers can strengthen their bargaining position against middlemen, while the resulting improvements in market efficiency benefit both producers and consumers along the supply chain.
 
 
 
