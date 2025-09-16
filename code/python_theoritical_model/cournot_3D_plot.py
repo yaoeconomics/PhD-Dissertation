@@ -86,9 +86,25 @@ plt.tight_layout()
 plt.suptitle("Optimal Storage under Cournot with Outside Option (Poisson Truncated [0,9])", fontsize=18, y=1.03)
 plt.subplots_adjust(top=0.9, bottom=0.1)
 
+import os
+
+# 当前文件所在目录
+current_dir = os.path.dirname(os.path.abspath(__file__))
+# 上一级目录
+parent_dir = os.path.dirname(current_dir)
+# 上两级目录
+grandparent_dir = os.path.dirname(parent_dir)
+# 上两级平行目录（例如 results）
+target_dir = os.path.join(grandparent_dir, "model_figures")
+
+# 如果目标文件夹不存在就新建
+os.makedirs(target_dir, exist_ok=True)
+
+
+
 
 # Save the figure
-plt.savefig("3D_cournot.png", dpi=300, bbox_inches="tight")
+plt.savefig(os.path.join(target_dir, "3D_cournot.png"), dpi=300, bbox_inches="tight")
 
 
 

@@ -72,6 +72,25 @@ for p_floor in p_floors:
         for g in gamma_values:
             results[p_floor][g].append(s_star_for(mu, g, p_floor))
 
+
+
+
+import os
+
+# 当前文件所在目录
+current_dir = os.path.dirname(os.path.abspath(__file__))
+# 上一级目录
+parent_dir = os.path.dirname(current_dir)
+# 上两级目录
+grandparent_dir = os.path.dirname(parent_dir)
+# 上两级平行目录（例如 results）
+target_dir = os.path.join(grandparent_dir, "model_figures")
+
+# 如果目标文件夹不存在就新建
+os.makedirs(target_dir, exist_ok=True)
+
+
+
 # -----------------------------
 # Plotting: 3 horizontal panels
 # -----------------------------
@@ -95,5 +114,7 @@ axes[0].legend(title="Risk Aversion", loc="upper left", frameon=True)
 fig.suptitle("Sensitivity of $s^*$ to Expected Second-Period Buyer Presence and Reservation Price (Cournot, $\\kappa = 0.9$",
              fontsize=14, y=1.03)
 plt.tight_layout()
-plt.savefig("buyer_count_sensitivity_cournot.png", dpi=300, bbox_inches="tight")
+plt.savefig(os.path.join(target_dir, "buyer_count_sensitivity_cournot.png"), dpi=300, bbox_inches="tight")
 plt.show()
+
+

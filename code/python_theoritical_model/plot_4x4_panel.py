@@ -108,6 +108,22 @@ for i in range(4):
         ax.set_ylabel("PDF")
     ax.set_xlabel("$\\theta_2$")
 
+
+import os
+
+# 当前文件所在目录
+current_dir = os.path.dirname(os.path.abspath(__file__))
+# 上一级目录
+parent_dir = os.path.dirname(current_dir)
+# 上两级目录
+grandparent_dir = os.path.dirname(parent_dir)
+# 上两级平行目录（例如 results）
+target_dir = os.path.join(grandparent_dir, "model_figures")
+
+# 如果目标文件夹不存在就新建
+os.makedirs(target_dir, exist_ok=True)
+
 plt.tight_layout()
 plt.subplots_adjust(hspace=0.4)
+plt.savefig(os.path.join(target_dir, "3D_formulation1.png"), dpi=300, bbox_inches="tight")
 plt.show()
