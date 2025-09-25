@@ -662,7 +662,7 @@ model4 <- glmer(storage_usage_binary ~ num_buyers * subjective_belief_buyer_com 
                 data = data, family = binomial)
 
 # Extract coefficients and standard errors
-models_list <- list(model1, model2, model3, model4)
+models_list <- list(model1, model2, model3)
 
 
 # Create LaTeX table
@@ -671,7 +671,7 @@ stargazer(models_list,
           label = "tab: binary storage ~ buyers' competition at harvest",
           out = here("tables", "buyer's_competition_logistic_results.tex"),
           title = "Logistic Regression Results",
-          column.labels = c("Model 1", "Model 2", "Model 3", "Model 4"),
+          column.labels = c("Model 1", "Model 2", "Model 3"),
           covariate.labels = c("Number of Buyers",
                              "Subjective Belief",
                              "Age",
@@ -679,7 +679,6 @@ stargazer(models_list,
                              "Family Village Leader",
                              "CRRA Adjusted",
                              "Liquidity Constrained", 
-                             "Num Buyers $\\times$ Subjective Belief",
                              "Constant"),
           dep.var.labels = "Storage Usage (Binary)",
           model.numbers = TRUE,

@@ -23,15 +23,15 @@ os.makedirs(target_dir, exist_ok=True)
 
 
 
-rng = np.random.default_rng(202)
+rng = np.random.default_rng(304)
 
 # Config
-mu_grid = np.arange(0.05, 0.951, 0.10)
+mu_grid = np.arange(0.50, 0.91, 0.05)
 sigma2 = 0.02
 N = 100
 gammas = rng.uniform(0, 10, size=N); gammas.sort()
-kappa_pairs = [(0.75, 0.80), (0.80, 0.85), (0.85, 0.90), (0.90, 0.95)]
-R = 300
+kappa_pairs = [(0.80, 0.85), (0.80, 0.90), (0.80, 0.95)]
+R = 500
 nodes, weights = leggauss(12)
 x_nodes = 0.5*(nodes+1); w_nodes = 0.5*weights
 
@@ -134,7 +134,22 @@ for mu in mu_grid:
 summary_df = pd.DataFrame(summary_rows)
 gains_df = pd.DataFrame(gain_rows)
 
-def render_line_tile(df, contrast):
+# --- NEW: compute a global y-range for column-1 line charts ---
+contrasts = [f"{k0:.2f}→{k1:.2f}" for k0, k1 in kappa_pairs]
+vals_for_ylim = []
+for c in contrasts:
+    d = gains_df[gains_df["contrast"] == c]
+    vals_for_ylim.append(d["ΔCE"].values)
+    vals_for_ylim.append(d["ΔE[π]"].values)
+    vals_for_ylim.append((-d["ΔRP"]).values)  # insurance gain is plotted as -ΔRP
+all_vals = np.concatenate(vals_for_ylim)
+# Add a small 5% padding for readability
+vmin, vmax = all_vals.min(), all_vals.max()
+pad = 0.05*(vmax - vmin if vmax > vmin else (abs(vmax) + 1e-12))
+common_ylim = (vmin - pad, vmax + pad)
+
+
+def render_line_tile(df, contrast, ylim=None):
     d = df[df["contrast"] == contrast].sort_values("mu")
     fig = plt.figure(figsize=(4, 2.6))
     ax = fig.add_subplot(111)
@@ -144,6 +159,8 @@ def render_line_tile(df, contrast):
     ax.set_xlabel("Belief mean μ")
     ax.set_ylabel("Gain (price units)")
     ax.set_title(f"κ {contrast}: Gains vs μ")
+    if ylim is not None:
+        ax.set_ylim(*ylim)
     ax.legend()
     ax.grid(True)
     fig.tight_layout()
@@ -153,9 +170,8 @@ def render_line_tile(df, contrast):
     return Image.open(buf).convert("RGB")
 
 line_tiles = []
-contrasts = [f"{k0:.2f}→{k1:.2f}" for k0, k1 in kappa_pairs]
 for contrast in contrasts:
-    line_tiles.append(render_line_tile(gains_df, contrast))
+    line_tiles.append(render_line_tile(gains_df, contrast, ylim=common_ylim))
 
 # Decile heatmaps
 deciles = pd.qcut(gammas, 10, labels=False)
@@ -209,6 +225,7 @@ for mu in mu_grid:
 
 panel = pd.concat(records, ignore_index=True)
 
+
 def render_heatmap_image_shared(panel, contrast, metric, title_suffix, mu_grid, vmin, vmax):
     dfc = panel[panel["contrast"] == contrast].copy()
     df_pivot = dfc.pivot(index="decile", columns="mu", values=metric).sort_index()
@@ -219,7 +236,7 @@ def render_heatmap_image_shared(panel, contrast, metric, title_suffix, mu_grid, 
     fig = plt.figure(figsize=(4, 2.6))
     ax = fig.add_subplot(111)
     im = ax.imshow(df_pivot.values, aspect="auto", origin="lower", vmin=vmin, vmax=vmax)
-    cbar = fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
+    cbar = fig.colorbar(im, ax=ax, fraction=0.046, pad=0.4/10)
     ax.set_yticks(np.arange(0, 10)); ax.set_yticklabels([f"{i+1}" for i in range(10)])
     ax.set_xticks(np.arange(len(mu_grid))); ax.set_xticklabels([f"{m:.2f}" for m in mu_grid], rotation=45, ha="right")
     ax.set_xlabel("Belief mean μ"); ax.set_ylabel("γ-decile (low→high)")
@@ -253,12 +270,12 @@ for contrast in contrasts:
         img = render_heatmap_image_shared(panel, contrast, metric, title, mu_grid, vmin, vmax)
         heatmap_tiles[contrast].append(img)
 
-# Compose 4×4 grid
+# Compose 3×4 grid
 all_tiles = line_tiles + [im for row in heatmap_tiles.values() for im in row]
 cell_w = max(im.size[0] for im in all_tiles)
 cell_h = max(im.size[1] for im in all_tiles)
 
-rows, cols = 4, 4
+rows, cols = 3, 4
 canvas_w = cols * cell_w
 canvas_h = rows * cell_h
 grid_img = Image.new("RGB", (canvas_w, canvas_h), (255, 255, 255))
@@ -281,6 +298,10 @@ pdf_path = os.path.join(target_dir, "storage_subsidy_gain_heatmap.pdf")
 grid_img.save(png_path)
 grid_img.save(pdf_path, "PDF", resolution=300.0)
 
-png_path, pdf_path, metric_ranges
+print((png_path, pdf_path))
 
-grid_img.show()
+# Optional: preview in some environments
+try:
+    grid_img.show()
+except Exception:
+    pass

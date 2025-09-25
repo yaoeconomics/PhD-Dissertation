@@ -125,5 +125,5 @@ os.makedirs(target_dir, exist_ok=True)
 
 plt.tight_layout()
 plt.subplots_adjust(hspace=0.4)
-plt.savefig(os.path.join(target_dir, "3D_formulation1.png"), dpi=300, bbox_inches="tight")
+plt.savefig(os.path.join(target_dir, "3D_formulation.png"), dpi=300, bbox_inches="tight")
 plt.show()
