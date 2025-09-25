@@ -81,25 +81,29 @@ This approach is well-suited for field settings, being simple to administer whil
         \toprule
         \textbf{Option} & \textbf{Willingness to Pay} & \textbf{Outcome} & \textbf{EV$^{A}$--EV$^{B}$} & \textbf{CRRA Ranges} & \textbf{CRRA Adjusted}\\
         \midrule
-        1 & 120 CNY & 200 CNY or 0 & 20 CNY & $-0.4 < r < 0$  & $r = -0.2$\\
-        2 & 100 CNY & 200 CNY or 0 & 0 CNY & $0 < r < 0.2$  & $r= 0.1$ \\
-        3 & 80 CNY & 200 CNY or 0 & -20 CNY & $0.2 < r < 0.4$  & $r= 0.3$ \\
-        4 & 60 CNY & 200 CNY or 0 & -40 CNY & $0.4 < r < 0.6$  & $r= 0.5$ \\
-        5 & 40 CNY & 200 CNY or 0 & -60 CNY & $0.6 < r < 0.7$  & $r=0.6$ \\
-        6 & 20 CNY & 200 CNY or 0 & -80 CNY & $0.7 < r$  & $r= 0.9$ \\
+        1 & 120 CNY & 200 CNY or 0 & 20 CNY & $-0.4 < \gamma < 0$  & $\gamma = -0.2$\\
+        2 & 100 CNY & 200 CNY or 0 & 0 CNY & $0 < \gamma < 0.2$  & $\gamma= 0.1$ \\
+        3 & 80 CNY & 200 CNY or 0 & -20 CNY & $0.2 < \gamma < 0.4$  & $\gamma= 0.3$ \\
+        4 & 60 CNY & 200 CNY or 0 & -40 CNY & $0.4 < \gamma < 0.6$  & $\gamma= 0.5$ \\
+        5 & 40 CNY & 200 CNY or 0 & -60 CNY & $0.6 < \gamma < 0.7$  & $\gamma=0.6$ \\
+        6 & 20 CNY & 200 CNY or 0 & -80 CNY & $0.7 < \gamma$  & $\gamma= 0.9$ \\
         \bottomrule
     \end{tabular}
     \label{tab:experiment_design}
     \vspace{0.5em}
-    \small Notes: EV = Expected Value. CRRA = Coefficient of Relative Risk Aversion.
+    \small Notes: EV = Expected Value. CRRA = Coefficient of Constant Relative Risk Aversion.
 \end{table}
+
+While the head-tail lottery design provides a tractable way to elicit \textit{point estimates} of risk preferences in the field, the implied CRRA coefficients are typically much smaller than the range used in simulation exercises. For instance, the experimental design in Table~\ref{tab:experiment_design} maps observed willingness-to-pay decisions into CRRA values that mostly fall below 1, consistent with evidence from other MPL-style tasks in agricultural settings. By contrast, the simulations in Section~\ref{Section: Base Model Numerical Analysis} in Chapter 4 vary $\gamma$ over a wider domain, $[0,10]$, to capture the full spectrum of heterogeneity documented in the literature---from risk neutrality to extreme risk aversion. In practice, the field experiment serves to benchmark farmers’ risk preferences around the lower end of this spectrum, while the simulation framework explores the implications of more severe risk aversion that, although less common, is empirically observed in some rural populations.\footnote{Empirical studies using similar elicitation tasks often report CRRA values in the range of 0.5--3 (see, e.g., \cite{liu2013time}).}
+
+
 
 \subsubsection{Estimating Risk Aversion Using CRRA}  
 \noindent The highest entry price a participant is willing to pay provides insight into their risk preference. Following \cite{chiappori2011relative}, who found that individuals generally exhibit constant relative risk aversion (CRRA), a CRRA utility function is assumed:  
 \[
-U(x) = \frac{x^{1-r}}{1 - r}
+U(x) = \frac{x^{1-\gamma}}{1 - \gamma}
 \]  
-where \( r \) represents the risk aversion coefficient. Under this specification, \( r > 0 \) implies risk aversion, \( r = 0 \) indicates risk neutrality, and \( r < 0 \) reflects risk-seeking behavior. Columns 5 and 6 in Table \ref{tab:experiment_design} present the corresponding CRRA ranges and adjusted CRRA values. These estimates allow for a quantitative assessment of farmers' risk aversion, which is critical for understanding storage decisions and responses to market uncertainty.  
+where \( \gamma \) represents the risk aversion coefficient. Under this specification, \( \gamma > 0 \) implies risk aversion, \( \gamma = 0 \) indicates risk neutrality, and \( \gamma < 0 \) reflects risk-seeking behavior. Columns 5 and 6 in Table \ref{tab:experiment_design} present the corresponding CRRA ranges and adjusted CRRA values. These estimates allow for a quantitative assessment of farmers' risk aversion, which is critical for understanding storage decisions and responses to market uncertainty.  
 
 \subsubsection{Liquidity Constraint}  
 \noindent The binary variable \texttt{Liquidity constrained} equals 1 if a farmer reports both difficulty accessing credit and an urgent need to sell at harvest to cover immediate expenses (e.g., school tuition or medical costs). This measure refines and extends approaches used by \cite{albuquerque2024market} and \cite{stephens2011incomplete}, who define credit access as a proxy for liquidity constraints.  
@@ -141,9 +145,10 @@ Storage access appears closely linked to marketing strategy and market expectati
 \label{Figure: Demographics by Storage Type}
 \end{figure}
 
-Furthermore, Figure \ref{Figure: Demographics by Storage Type} compares key demographic characteristics across four storage usage categories: non-users, users with self-built storage, and users renting small- and large-scale commercial storage facilities. The figure highlights differences in six key variables: age, education level, car/truck ownership, risk aversion (adjusted CRRA), and participation in relational and implicit contractual sales.  
+Furthermore, Figure \ref{Figure: Demographics by Storage Type} compares key demographic characteristics across four storage usage categories: non-users, users with self-built storage, and users renting small- and large-scale commercial storage facilities. The figure highlights differences in six key variables: age, education level, car/truck ownership, risk aversion (adjusted CRRA), and participation in relational and implicit contractual sales.   
 
-Table \ref{tab: summary statistics} shows that non-storage farmers receive an average highest price of \$0.38 per pound (6.12 RMB/kg), with an average transaction price of \$0.37 per pound (5.96 RMB/kg), both slightly lower than those of storage users. As illustrated in Figure \ref{Figure: selling price bubble}, non-storage farmers are constrained to selling at harvest (October), when transaction prices exhibit high volatility before stabilizing in subsequent months. Prices typically rise in November and December, though sales volumes decline. Storage users who delay sales can achieve significantly higher prices, often reaching \$0.50–\$0.60 per pound in December. This suggests a trade-off between immediate storage costs and potential price gains from storage, contingent on inter-temporal market conditions.  
+Table \ref{tab: summary statistics} shows that non-storage farmers receive an average highest price of \$0.38 per pound (6.12 RMB/kg), with an average transaction price of \$0.37 per pound (5.96 RMB/kg), both slightly lower than those of storage users. As illustrated in Figure \ref{Figure: selling price bubble}, non-storage farmers are constrained to selling at harvest (October), when transaction prices exhibit high volatility before stabilizing in subsequent months. Prices typically rise in November and December, though sales volumes decline. Storage users who delay sales achieve on average a price premium of roughly \$0.03 per pound ($\approx$ 0.45 RMB/kg) over non-storers. Given that reported storage costs fall in the same range (0.40–0.50 RMB/kg), the average net payoff to storage in this survey year was close to zero. Nevertheless, storers retained the opportunity to capture substantially higher returns in certain months, with realized prices occasionally reaching \$0.50--\$0.60 per pound ($\approx$ 7.80--9.4 RMB/kg) in December. This highlights the role of storage as a risky inter-temporal strategy: while not systematically profitable on average once costs are deducted, it provided upside potential for some farmers depending on timing and market conditions.
+
 
 \begin{figure}[H]
 \centering
@@ -152,10 +157,7 @@ Table \ref{tab: summary statistics} shows that non-storage farmers receive an av
 \label{Figure: selling price bubble}
 \end{figure}
 
-Despite the potential benefits of storage, many farmers opt not to store their produce, often due to negative past experiences. Table \ref{tab:non_storage_reasons} summarizes the primary reasons cited by 349 non-storage farmers. The most frequently mentioned concern, reported by 60.75\% of respondents, is skepticism about future price increases, suggesting uncertainty over market conditions or a lack of confidence in their ability to capitalize on delayed sales. 
-
-
-Beyond price uncertainty, 28.65\% of farmers perceive storage as too risky, citing potential losses from spoilage, market downturns, or unreliable storage access. Additionally, 22.92\% report high storage costs as a prohibitive factor. A smaller group (8.02\%) indicates that pre-arranged sales eliminate the need for storage. These findings suggest that, while cold storage could improve farmers’ marketing flexibility, adoption is hindered by market uncertainty, perceived financial and logistical concerns, and established pre-arranged sales.  
+Despite the potential benefits of storage, many farmers opt not to store their produce, often due to negative past experiences. Table \ref{tab:non_storage_reasons} summarizes the primary reasons cited by 349 non-storage farmers. The most frequently mentioned concern, reported by 60.75\% of respondents, is skepticism about future price increases. Beyond price uncertainty, 28.65\% of farmers perceive storage as too risky, citing potential losses from spoilage, market downturns, or unreliable storage access. Additionally, 22.92\% report high storage costs as a prohibitive factor. A smaller group (8.02\%) indicates that pre-arranged sales eliminate the need for storage. These findings suggest that, while cold storage could improve farmers’ marketing flexibility, adoption is hindered by market uncertainty, perceived financial and logistical concerns, and established pre-arranged sales.  
 
 
 \begin{table}[H]
@@ -191,10 +193,10 @@ This section presents the results of a logistic regression model with town-level
 The estimated logit model with town-level fixed effects is specified as follows:
 
 \begin{equation}
-\text{logit} \left( D(S_i= 1) \right) = \beta_0 + \beta_1 B^o_i + \beta_2 B^s_i + \beta_3 X_i + \beta_4 (B^o_i \times B^s_i) + \gamma_t + \varepsilon_i
+\text{logit} \left( D(S_i= 1) \right) = \beta_0 + \beta_1 B^o_i + \beta_2 B^s_i + \beta_3 X_i + \beta_4 (B^o_i \times B^s_i) + \gamma_\tau + \varepsilon_i
 \label{Eq: empirical first one}
 \end{equation}
-where $D(S_i=1)$ is the dummy variable of storage usage, $X_i$ represents a vector of control variables including demographic and risk-related factors, $\gamma_t$ denotes town-level fixed effects, and $\varepsilon_i$ is the error term.  
+where $D(S_i=1)$ is the dummy variable of storage usage, $X_i$ represents a vector of control variables including demographic and risk-related factors, $\gamma_\tau$ denotes town-level fixed effects, and $\varepsilon_i$ is the error term.  
 
 \input{tables/buyer's_competition_logistic_results}
 \input{tables/buyer's_competition_logistic_results_AME}
@@ -259,9 +261,9 @@ To avoid confusion, it is crucial to distinguish between the observed number of 
 Therefore, my key independent variable here captures whether farmers anticipate more buyers, fewer buyers, or no change in buyer numbers post-harvest. The logistic regression model, incorporating town-level fixed effects, is specified as follows:
 
 \begin{equation}
-    \text{logit} \left( P(S_i = 1) \right) = \alpha_0 + \alpha_1 E^m_i + \alpha_2 E^f_i + \alpha_3 X_i + \gamma_t + \varepsilon_i,
+    \text{logit} \left( P(S_i = 1) \right) = \alpha_0 + \alpha_1 E^m_i + \alpha_2 E^f_i + \alpha_3 X_i + \gamma_\tau + \varepsilon_i,
 \end{equation}
-where $E^m_i$ denotes the expectation of more buyers in three months from the harvesting time, $E^f_i$ represents the expectation of fewer buyers, and $X_i$ includes demographic controls. Town-level fixed effects are denoted by $\gamma_t$, and $\varepsilon_i$ is the error term.
+where $E^m_i$ denotes the expectation of more buyers in three months from the harvesting time, $E^f_i$ represents the expectation of fewer buyers, and $X_i$ includes demographic controls. Town-level fixed effects are denoted by $\gamma_\tau$, and $\varepsilon_i$ is the error term.
 
 \input{tables/farmer_expectations_logistic_results}
 \input{tables/farmer_expectations_logistic_results_AME}
@@ -269,7 +271,7 @@ where $E^m_i$ denotes the expectation of more buyers in three months from the ha
 
 The average marginal effects in Table \ref{tab: binary storage ~ farmer's expectation on movement (AME)} show that farmers who expect an increase in the number of buyers within three months are significantly more likely to store their harvest. The coefficient for \texttt{Expect More Buyers} is 0.325 (\(p < 0.01\)), suggesting that farmers who anticipate more buyers have a 32.5 percentage point higher probability of using storage. This finding aligns with the idea that expectations of increased buyer competition motivate farmers to delay sales, anticipating higher farm-gate prices. Such behavior is consistent with intertemporal optimization, where farmers strategically store their produce to maximize returns when expecting stronger buyer competition.  
 
-On the other hand, \texttt{Expect Fewer Buyers} yields a positive but statistically insignificant marginal effect of 0.044 (\(p = 0.33\)), indicating that expectations of reduced competition do not significantly influence storage decisions. A priori, one might expect that pessimistic market expectations would discourage storage, as farmers anticipating fewer buyers might prefer immediate sales to avoid potential price declines. However, the lack of statistical significance suggests that these expectations do not systematically affect storage behavior. Several factors could explain this result. As discussed earlier, buyer collusion could attenuate the role of the number of buyers as an accurate indicator of competition. Farmers may not view a decline in buyers as a clear signal of lower prices, especially if they believe that the remaining buyers will still offer competitive prices. Additionally, factors such as liquidity constraints, risk aversion, and implicit storage costs could weaken the relationship between pessimistic expectations and storage behavior.
+On the other hand, \texttt{Expect Fewer Buyers} yields a positive but statistically insignificant marginal effect of 0.044 ($p = 0.33$), indicating that expectations of reduced competition do not significantly influence storage decisions. While one might expect pessimistic market expectations to discourage storage, the more plausible explanation for the null result is limited variation in this variable. As shown in Table~\ref{tab: summary statistics}, only 16\% of storage users (about 30 farmers) reported expecting fewer buyers, which restricts statistical power. In contrast, expectations of more buyers were far more common, providing sufficient variation to generate a meaningful estimate. The small number of pessimistic respondents thus likely explains the lack of significance.
 
 These findings highlight an asymmetry in farmers’ responses to expected changes in buyer competition. While the expectation of more intense competition strongly incentivizes storage, expectations of fewer buyers do not significantly deter it. This suggests that farmers are more sensitive to potential price gains from increased buyer competition than to the risks associated with fewer buyers, emphasizing the role of perceived future market opportunities in shaping storage decisions.
 
