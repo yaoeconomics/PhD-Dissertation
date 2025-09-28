@@ -296,9 +296,8 @@ for r, contrast in enumerate(contrasts):
 png_path = os.path.join(target_dir, "storage_subsidy_gain_heatmap.png")
 pdf_path = os.path.join(target_dir, "storage_subsidy_gain_heatmap.pdf")
 grid_img.save(png_path)
-grid_img.save(pdf_path, "PDF", resolution=300.0)
 
-print((png_path, pdf_path))
+print((png_path))
 
 # Optional: preview in some environments
 try:

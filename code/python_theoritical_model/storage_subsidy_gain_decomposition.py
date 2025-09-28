@@ -330,12 +330,6 @@ plt.savefig(os.path.join(target_dir, "storage_subsidy_gain_decomposition.png"),
             dpi=300, bbox_inches="tight")
 plt.show()
 
-# -----------------------------
-# Export core tables
-# -----------------------------
-summary_df.to_csv(os.path.join(target_dir, "summary_df.csv"), index=False)
-rn_df.to_csv(os.path.join(target_dir, "rn_df.csv"), index=False)
-avg_panel.to_csv(os.path.join(target_dir, "avg_panel.csv"), index=False)
 
 print("Saved figures and CSVs to:", target_dir,
       "\nREUSE_WORLDS =", REUSE_WORLDS)

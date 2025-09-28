@@ -29,16 +29,16 @@ STORE_THRESHOLD = 0.01   # 1% counts as storing
 rng = np.random.default_rng(314)
 
 # Grids and parameters
-mu1_grid = np.arange(0.50, 0.91, 0.05)  # Mean of the Distribution of θ1 (μ1)
-sigma2_1 = 0.02                          # Variance for θ1 Beta
-sigma2_2 = 0.02                          # Variance for θ2 Beta
+mu1_grid = np.arange(0.10, 0.81, 0.1)  # Mean of the Distribution of θ1 (μ1)
+sigma2_1 = 0.1                       # Variance for θ1 Beta
+sigma2_2 = 0.1                      # Variance for θ2 Beta
 N = 100
 # gammas = 10.0 * rng.beta(1, 5, size=N); gammas.sort()
 gammas = rng.uniform(0, 10, size=N); gammas.sort()
 
 kappa_scenarios = [0.80, 0.85, 0.90, 0.95]
 kappa_pairs = [(0.80, 0.85), (0.80, 0.90), (0.80, 0.95)]
-R = 500
+R = 2000
 nodes, weights = leggauss(12)
 x_nodes = 0.5*(nodes+1); w_nodes = 0.5*weights
 
