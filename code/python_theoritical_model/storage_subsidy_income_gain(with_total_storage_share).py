@@ -62,14 +62,14 @@ w_nodes = 0.5 * weights
 
 # Rows and columns
 kappa_rows = [0.95, 0.90, 0.85, 0.80]
-sigma2_cols = [0.05, 0.10, 0.15, 0.20]
+sigma2_cols = [0.02, 0.05, 0.10, 0.15]
 
 # Column-specific μ1 feasible base ranges (strict feasibility)
 col_base_ranges = {
+    0.02: (0.05, 0.95),
     0.05: (0.10, 0.90),
     0.10: (0.15, 0.85),
     0.15: (0.20, 0.80),
-    0.20: (0.30, 0.70),
 }
 
 # Styles
@@ -344,10 +344,9 @@ def run_and_plot():
         borderpad=0.6
     )
 
-    footer = (f"N={N} farmers; R={R} worlds; γ~Beta(1,5)×10 (heterogeneous); "
+    footer = (f"N={N} farmers; R={R} worlds; γ~Unif[0,10]; "
               "RN line treats all farmers as γ=0; "
-              "Total storage share = E_r[∑ s_i^*] in 0..100; "
-              "s* via golden-section; Beta(μ,σ²) strict feasibility.")
+              "Total storage share = E_r[∑ s_i^*] in 0..100.")
     fig.text(0.5, 0.018, footer, ha="center", va="center", fontsize=11.5)
 
     fig.tight_layout(rect=[0.04, 0.06, 0.98, 0.88])

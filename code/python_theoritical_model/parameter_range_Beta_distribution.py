@@ -19,7 +19,7 @@ target_dir = os.path.join(grandparent_dir, "model_figures")
 os.makedirs(target_dir, exist_ok=True)
 
 # Variances to consider
-vars_list = [0.05, 0.10, 0.15, 0.20]
+vars_list = [0.02, 0.05, 0.10, 0.15]
 
 def mean_interval_for_variance(s2):
     # Solve μ(1-μ) > s2 ⇒ μ² - μ + s2 < 0

@@ -31,8 +31,8 @@ os.makedirs(target_dir, exist_ok=True)
 rng = np.random.default_rng(314)  # reproducible
 
 
-mu_grid = np.arange(0.10, 0.91, 0.05)
-sigma2 = 0.02
+mu_grid = np.arange(0.15, 0.86, 0.05)
+sigma2 = 0.10
 N = 100
 gammas = rng.uniform(0, 10, size=N); gammas.sort()
 deciles = pd.qcut(gammas, 10, labels=False)  # 0..9
@@ -309,7 +309,7 @@ avg_panel = panel.groupby(["contrast", "decile"]).agg(
 avg_panel["−ΔRP (insurance gain)"] = -avg_panel["ΔRP"]
 
 # ---- Plot for (2): 2×2 grid, one subplot per κ-contrast ----
-fig, axes = plt.subplots(2, 2, figsize=(12, 8), sharey=True)
+fig, axes = plt.subplots(1, 4, figsize=(16, 8), sharey=True)
 axes = axes.ravel()
 for ax, contrast in zip(axes, avg_panel["contrast"].unique()):
     sub = avg_panel[avg_panel["contrast"] == contrast].sort_values("decile")

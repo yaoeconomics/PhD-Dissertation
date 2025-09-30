@@ -26,12 +26,13 @@ os.makedirs(target_dir, exist_ok=True)
 rng = np.random.default_rng(304)
 
 # Config
-mu_grid = np.arange(0.50, 0.91, 0.05)
-sigma2 = 0.02
+mu_grid = np.arange(0.15, 0.86, 0.05)
+sigma2 = 0.10
 N = 100
 gammas = rng.uniform(0, 10, size=N); gammas.sort()
-kappa_pairs = [(0.80, 0.85), (0.80, 0.90), (0.80, 0.95)]
-R = 500
+# kappa_pairs = [(0.80, 0.85), (0.80, 0.90), (0.80, 0.95)]
+kappa_pairs = [(0.75, 0.80), (0.80, 0.85), (0.85, 0.90), (0.90, 0.95)]
+R = 5000
 nodes, weights = leggauss(12)
 x_nodes = 0.5*(nodes+1); w_nodes = 0.5*weights
 
@@ -275,7 +276,7 @@ all_tiles = line_tiles + [im for row in heatmap_tiles.values() for im in row]
 cell_w = max(im.size[0] for im in all_tiles)
 cell_h = max(im.size[1] for im in all_tiles)
 
-rows, cols = 3, 4
+rows, cols = 4, 4
 canvas_w = cols * cell_w
 canvas_h = rows * cell_h
 grid_img = Image.new("RGB", (canvas_w, canvas_h), (255, 255, 255))
@@ -294,13 +295,16 @@ for r, contrast in enumerate(contrasts):
         grid_img.paste(tile, (x0, y0))
 
 png_path = os.path.join(target_dir, "storage_subsidy_gain_heatmap.png")
-pdf_path = os.path.join(target_dir, "storage_subsidy_gain_heatmap.pdf")
 grid_img.save(png_path)
 
 print((png_path))
 
-# Optional: preview in some environments
-try:
-    grid_img.show()
-except Exception:
-    pass
+
+import matplotlib.pyplot as plt
+
+# At the end of your script, after saving grid_img
+plt.figure(figsize=(16, 12))
+plt.imshow(grid_img)
+plt.axis("off")
+plt.tight_layout()
+plt.show()

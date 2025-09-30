@@ -73,29 +73,29 @@ hx, hw = hermgauss(H_N)  # nodes/weights for ∫ f(x) e^{-x^2} dx
 
 # Rows and columns
 kappa_rows = [(0.80, 0.85), (0.80, 0.90), (0.80, 0.95)]  # (κ_base, κ_new)
-sigma2_cols = [0.05, 0.10, 0.15, 0.20]
+sigma2_cols = [0.02, 0.05, 0.10, 0.15]
 gap_list = [0.00, 0.05, 0.15]  # curves
 
 # Column-specific μ1 base ranges and narrower ranges for g>0
 col_base_ranges = {
+    0.02: (0.05, 0.95),
     0.05: (0.10, 0.90),
     0.10: (0.15, 0.85),
     0.15: (0.20, 0.80),
-    0.20: (0.30, 0.70),
 }
 
 col_gap005_ranges = {  # for g in {0.05}
+    0.02: (0.10, 0.95),
     0.05: (0.15, 0.90),
     0.10: (0.20, 0.85),
     0.15: (0.25, 0.80),
-    0.20: (0.35, 0.70),
 }
 
 col_gap015_ranges = {  # for g in {0.15}
+    0.02: (0.20, 0.95),
     0.05: (0.25, 0.90),
     0.10: (0.30, 0.85),
     0.15: (0.35, 0.80),
-    0.20: (0.45, 0.70),
 }
 
 # Curve aesthetics
