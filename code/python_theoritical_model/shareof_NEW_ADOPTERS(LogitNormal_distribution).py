@@ -410,7 +410,7 @@ def run_and_plot():
     fig.suptitle(
         "Share of New Adopters (Logit-Normal, exact moment-matching)\n"
         "Rows: κ ∈ {0.80→0.85, 0.80→0.90, 0.80→0.95}; "
-        "Cols: Var(θ) = {0.05, 0.10, 0.15, 0.20}",
+        "Cols: Var(θ) = {0.02, 0.05, 0.10, 0.15}",
         fontsize=15, y=0.95
     )
 
