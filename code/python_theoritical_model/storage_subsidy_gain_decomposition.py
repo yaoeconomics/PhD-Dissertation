@@ -35,10 +35,11 @@ mu_grid = np.arange(0.15, 0.86, 0.05)
 sigma2 = 0.10
 N = 100
 gammas = rng.uniform(0, 10, size=N); gammas.sort()
+# gammas = 10.0 * rng.beta(1, 5, size=N); gammas.sort()
 deciles = pd.qcut(gammas, 10, labels=False)  # 0..9
 kappa_scenarios = [0.75, 0.80, 0.85, 0.90, 0.95]
 kappa_pairs = [(0.75, 0.80), (0.80, 0.85), (0.85, 0.90), (0.90, 0.95)]
-R = 500  # worlds per μ
+R = 5000  # worlds per μ
 # 12-point Gauss-Legendre for accurate inner expectations
 nodes, weights = leggauss(12)
 x_nodes = 0.5*(nodes+1); w_nodes = 0.5*weights

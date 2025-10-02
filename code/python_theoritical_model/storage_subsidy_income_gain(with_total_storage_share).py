@@ -4,13 +4,13 @@
 Rows:     κ in {0.95, 0.90, 0.85, 0.80} (top -> bottom)
 Columns:  Beta variance σ² in {0.05, 0.10, 0.15, 0.20} (left -> right)
 
-Within each subplot:
-- Solid line (left y-axis): % mean income gain vs no-storage (village average, heterogeneous γ)
-- Dashed line (left y-axis): % mean income gain if all farmers were risk-neutral (γ=0)
-- Histogram bars (right y-axis): Total Storage Share = sum_i s_i^* (0..100) under heterogeneous γ
+Within each subplot (left y-axis only):
+- Black solid:   % mean income gain (village avg) with γ_i ~ Unif[0,10]
+- Blue dashed:   % mean income gain (village avg) with γ_i ~ Unif[0,5]
+- Light-blue -. : % mean income gain if all farmers were risk-neutral (γ=0)
 
 Simulation:
-- R = 400 worlds; N = 100 farmers; γ ~ Beta(1,5) scaled to [0,10]
+- R = 20000 worlds; N = 100 farmers
 - Strict feasibility: Beta(μ, σ²) only when σ² < μ(1-μ)
 """
 
@@ -40,20 +40,24 @@ os.makedirs(target_dir, exist_ok=True)
 # -----------------------------
 REUSE_WORLDS = True
 DPI = 300
-FIG_PATH = os.path.join(target_dir, "gainpct_grid_4x4_zero_gap_total_storage_with_RN.png")
+FIG_PATH = os.path.join(
+    target_dir,
+    "gainpct_grid_4x4_zero_gap_three_curves.png"
+)
 
 rng = np.random.default_rng(314)
 
 # Farmers & worlds
 N = 100
-gammas = rng.uniform(0.0, 10.0, size=N); gammas.sort()
-# gammas = 10.0 * rng.beta(1, 5, size=N); gammas.sort()  # heterogeneous risk aversion
+# Two heterogeneous γ draws (fixed across panels for comparability)
+gammas_10 = rng.uniform(0.0, 10.0, size=N); gammas_10.sort()
+gammas_5  = rng.uniform(0.0,  5.0, size=N); gammas_5.sort()
 
 R = 20000  # increase for smoother curves
 
 # s*(θ1,γ) interpolation grid
 theta1_grid = np.linspace(0.01, 0.99, 24)
-gamma_grid  = np.linspace(0.0, 10.0, 24)
+gamma_grid  = np.linspace(0.0, 10.0, 24)   # covers both Unif[0,10] and Unif[0,5]
 
 # Quadrature nodes on [0,1] for Eθ2 when solving s*
 nodes, weights = leggauss(12)
@@ -73,9 +77,12 @@ col_base_ranges = {
 }
 
 # Styles
-LINE_STYLE = dict(color="#4D4D4D", marker="o", linewidth=2.0, markersize=3, label="Total gain (heterogeneous γ)")
-LINE_RN_STYLE = dict(color="#1f77b4", linestyle="--", linewidth=2.0, marker=None, label="Risk-neutral gain (γ=0)")
-BAR_TOTAL  = dict(color="#2CA02C", alpha=0.55, label="Total storage share")
+LINE_HET10 = dict(color="#000000", linestyle="-",  marker="o",  linewidth=2.0, markersize=3,
+                  label="Heterogeneous γ ~ Unif[0,10]")
+LINE_HET5  = dict(color="#1f77b4", linestyle="--", marker=None, linewidth=2.0,
+                  label="Heterogeneous γ ~ Unif[0,5]")
+LINE_RN    = dict(color="#6baed6", linestyle="-.", marker=None, linewidth=2.0,
+                  label="Risk-neutral (γ=0)")
 
 # -----------------------------
 # Helpers
@@ -160,15 +167,15 @@ def build_mu1_grid(sigma2):
 # -----------------------------
 # Core computation for ZERO-GAP (μ2 = μ1)
 # -----------------------------
-def compute_zero_gap_gain_and_total_storage(kappa, sigma2, mu1_grid):
+def compute_zero_gap_gains_three_series(kappa, sigma2, mu1_grid, gammas_hi, gammas_lo):
     """
-    For fixed (kappa, sigma2) and μ2=μ1, compute:
-    - total % gain vs no-storage (village mean, heterogeneous γ)
-    - risk-neutral % gain vs no-storage (as-if all farmers had γ=0)
-    - Total Storage Share = E_r[ ∑_i s_i^*(θ1_r, γ_i) ] in [0, 100]
-    Returns (mu_vec, total_pct, rn_pct, total_storage_units).
+    For fixed (kappa, sigma2) and μ2=μ1, compute three gain series:
+    - total_pct_hi : heterogeneous γ ~ Unif[0,10]
+    - total_pct_lo : heterogeneous γ ~ Unif[0,5]
+    - rn_pct       : all farmers risk-neutral (γ=0)
+    Returns (mu_vec, total_pct_hi, total_pct_lo, rn_pct).
     """
-    mu_list, total_list, rn_list, storage_list = [], [], [], []
+    mu_list, hi_list, lo_list, rn_list = [], [], [], []
 
     for mu in mu1_grid:
         ab = alpha_beta_from_strict(mu, sigma2)
@@ -195,10 +202,10 @@ def compute_zero_gap_gain_and_total_storage(kappa, sigma2, mu1_grid):
         p1s = 1.0 / (1.0 + theta1_worlds)
         mean_income_no = float(np.mean(p1s))
 
-        # With storage: compute village-average gain and total storage share
-        total_delta = 0.0
-        total_delta_rn = 0.0
-        total_storage_units = 0.0  # sum_i s_i^* per world, then average
+        # Accumulators
+        total_delta_hi = 0.0  # γ~Unif[0,10]
+        total_delta_lo = 0.0  # γ~Unif[0,5]
+        total_delta_rn = 0.0  # γ=0
 
         for r_idx in range(R):
             t1 = theta1_worlds[r_idx]
@@ -206,36 +213,40 @@ def compute_zero_gap_gain_and_total_storage(kappa, sigma2, mu1_grid):
             p1 = 1.0 / (1.0 + t1)
             p2 = 1.0 / (1.0 + t2)
 
-            # Heterogeneous γ storage vector
-            s_star_vec = interp2_vec(theta1_grid, gamma_grid, s_cache, t1, gammas)
-            incomes = (1.0 - s_star_vec) * p1 + s_star_vec * kappa * p2
-            dy = incomes - p1
-            total_delta += float(np.mean(dy))
-            total_storage_units += float(np.sum(s_star_vec))  # sum_i s_i^*
+            # Heterogeneous γ ~ Unif[0,10]
+            s_star_hi = interp2_vec(theta1_grid, gamma_grid, s_cache, t1, gammas_hi)
+            incomes_hi = (1.0 - s_star_hi) * p1 + s_star_hi * kappa * p2
+            total_delta_hi += float(np.mean(incomes_hi - p1))
 
-            # Risk-neutral (γ=0) benchmark: same prices/world, common s*∈{0,1}
+            # Heterogeneous γ ~ Unif[0,5]
+            s_star_lo = interp2_vec(theta1_grid, gamma_grid, s_cache, t1, gammas_lo)
+            incomes_lo = (1.0 - s_star_lo) * p1 + s_star_lo * kappa * p2
+            total_delta_lo += float(np.mean(incomes_lo - p1))
+
+            # Risk-neutral (γ=0): common s*∈{0,1}
             s_star_rn = solve_s(t1, 0.0, kappa, theta2_nodes, w_nodes)  # scalar 0 or 1
             income_rn = (1.0 - s_star_rn) * p1 + s_star_rn * kappa * p2
-            dy_rn = income_rn - p1
-            total_delta_rn += float(dy_rn)  # identical across farmers
+            total_delta_rn += float(income_rn - p1)
 
-        total_delta /= R
+        # Average across worlds
+        total_delta_hi /= R
+        total_delta_lo /= R
         total_delta_rn /= R
-        total_storage_units /= R  # expected sum in [0, N]; N=100 here
 
-        # Convert to percentage for gains; keep storage in 0..100 units
-        total_pct = 100.0 * total_delta / (mean_income_no + 1e-12)
-        rn_pct = 100.0 * total_delta_rn / (mean_income_no + 1e-12)
+        # Convert to percentage gains
+        pct_hi = 100.0 * total_delta_hi / (mean_income_no + 1e-12)
+        pct_lo = 100.0 * total_delta_lo / (mean_income_no + 1e-12)
+        pct_rn = 100.0 * total_delta_rn / (mean_income_no + 1e-12)
 
         mu_list.append(mu)
-        total_list.append(total_pct)
-        rn_list.append(rn_pct)
-        storage_list.append(total_storage_units)
+        hi_list.append(pct_hi)
+        lo_list.append(pct_lo)
+        rn_list.append(pct_rn)
 
     return (np.array(mu_list),
-            np.array(total_list),
-            np.array(rn_list),
-            np.array(storage_list))
+            np.array(hi_list),
+            np.array(lo_list),
+            np.array(rn_list))
 
 # -----------------------------
 # Build all data then plot
@@ -247,21 +258,20 @@ def run_and_plot():
     for r_idx, kappa in enumerate(kappa_rows):
         for c_idx, sigma2 in enumerate(sigma2_cols):
             mu1_grid = build_mu1_grid(sigma2)
-            mu_vec, total_pct, rn_pct, storage_units = compute_zero_gap_gain_and_total_storage(
-                kappa, sigma2, mu1_grid
+            mu_vec, pct_hi, pct_lo, pct_rn = compute_zero_gap_gains_three_series(
+                kappa, sigma2, mu1_grid, gammas_10, gammas_5
             )
             results[(r_idx, c_idx)] = {
                 "mu": mu_vec,
-                "total": total_pct,       # heterogeneous γ (left axis)
-                "rn": rn_pct,             # risk-neutral γ=0 (left axis)
-                "storage": storage_units  # right axis, 0..100
+                "het10": pct_hi,    # black solid
+                "het5":  pct_lo,    # blue dashed
+                "rn":    pct_rn,    # light-blue dash-dot
             }
-            if total_pct.size > 0:
-                all_gain_values.append(total_pct)
-            if rn_pct.size > 0:
-                all_gain_values.append(rn_pct)
+            for arr in (pct_hi, pct_lo, pct_rn):
+                if arr.size > 0:
+                    all_gain_values.append(arr)
 
-    # Global y-limits for the gain lines (left axis), covering both series
+    # Global y-limits for the gain lines (left axis), covering all series
     if len(all_gain_values) > 0:
         all_gains = np.concatenate(all_gain_values)
         y_lo, y_hi = float(np.min(all_gains)), float(np.max(all_gains))
@@ -283,21 +293,17 @@ def run_and_plot():
             ax = axes[r_idx, c_idx]
             data = results[(r_idx, c_idx)]
             mu = data["mu"]
-            total = data["total"]
-            rn = data["rn"]
-            storage_units = data["storage"]
+            het10 = data["het10"]
+            het5  = data["het5"]
+            rn    = data["rn"]
 
-            # Left axis: gain lines
             ax.set_xlim(0.05, 0.95)
             ax.set_ylim(*y_lim)
-            ax.plot(mu, total, **LINE_STYLE, zorder=3)
-            ax.plot(mu, rn, **LINE_RN_STYLE, zorder=3)
 
-            # Right axis: total storage share bars (0..100) under heterogeneous γ
-            ax2 = ax.twinx()
-            ax2.set_ylim(0.0, 100.0)
-            barw = 0.02
-            ax2.bar(mu, storage_units, width=barw, **BAR_TOTAL, zorder=2)
+            # Three curves
+            ax.plot(mu, het10, **LINE_HET10, zorder=3)
+            ax.plot(mu, het5,  **LINE_HET5,  zorder=3)
+            ax.plot(mu, rn,    **LINE_RN,    zorder=3)
 
             # Titles & labels
             if r_idx == 0:
@@ -309,31 +315,26 @@ def run_and_plot():
                 ax.set_ylabel("")
             ax.set_xlabel(r"$\mu_1$ (mean of $\theta_1$; $\mu_2=\mu_1$)", fontsize=9)
 
-            # Right-axis label shown on outermost column only
-            if c_idx == len(sigma2_cols) - 1:
-                ax2.set_ylabel("Total storage share (0–100)", fontsize=10)
-            else:
-                ax2.set_yticklabels([])
-
             ax.grid(True, alpha=0.35, linewidth=0.7)
 
     # Figure legend
     legend_handles = [
-        Line2D([0], [0], **{k: LINE_STYLE[k] for k in ["color", "marker", "linewidth", "markersize"]},
-               label="Total gain (heterogeneous γ)"),
-        Line2D([0], [0], **{k: LINE_RN_STYLE[k] for k in ["color", "linestyle", "linewidth"]},
-               label="Risk-neutral gain (γ=0)"),
-        Line2D([0], [0], color=BAR_TOTAL["color"], linewidth=8, alpha=BAR_TOTAL["alpha"],
-               label="Total storage share (right axis)"),
+        Line2D([0], [0],
+               **{k: LINE_HET10[k] for k in ["color", "linestyle", "marker", "linewidth", "markersize"]}),
+        Line2D([0], [0],
+               **{k: LINE_HET5[k] for k in ["color", "linestyle", "linewidth"]}),
+        Line2D([0], [0],
+               **{k: LINE_RN[k] for k in ["color", "linestyle", "linewidth"]}),
     ]
 
     fig.suptitle(
         "% Mean Income Gain vs No-Storage (μ2 = μ1)\n"
-        "Rows: κ ∈ {0.95, 0.90, 0.85, 0.80}; Cols: Var(θ) = {0.02, 0.05, 0.10, 0.15}",
+        "Rows: κ ∈ {0.95, 0.90, 0.85, 0.80}; Cols: Var(θ) = {0.05, 0.10, 0.15, 0.20}",
         fontsize=15, y=0.95
     )
     fig.legend(
         handles=legend_handles,
+        labels=[LINE_HET10["label"], LINE_HET5["label"], LINE_RN["label"]],
         loc="upper center",
         bbox_to_anchor=(0.5, 0.905),
         ncols=3,
@@ -344,9 +345,9 @@ def run_and_plot():
         borderpad=0.6
     )
 
-    footer = (f"N={N} farmers; R={R} worlds; γ~Unif[0,10]; "
-              "RN line treats all farmers as γ=0; "
-              "Total storage share = E_r[∑ s_i^*] in 0..100.")
+    footer = (f"N={N} farmers; R={R} worlds; "
+              "Heterogeneous curves use fixed γ samples: Unif[0,10] and Unif[0,5]; "
+              "RN curve treats all farmers as γ=0.")
     fig.text(0.5, 0.018, footer, ha="center", va="center", fontsize=11.5)
 
     fig.tight_layout(rect=[0.04, 0.06, 0.98, 0.88])
