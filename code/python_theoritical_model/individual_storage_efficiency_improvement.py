@@ -5,6 +5,22 @@ import pandas as pd
 import itertools
 import string
 
+
+import os
+
+# 当前文件所在目录
+current_dir = os.path.dirname(os.path.abspath(__file__))
+# 上一级目录
+parent_dir = os.path.dirname(current_dir)
+# 上两级目录
+grandparent_dir = os.path.dirname(parent_dir)
+# 上两级平行目录（例如 results）
+target_dir = os.path.join(grandparent_dir, "model_figures")
+
+# 如果目标文件夹不存在就新建
+os.makedirs(target_dir, exist_ok=True)
+
+
 # -------------------------------
 # Settings
 # -------------------------------
@@ -107,7 +123,7 @@ for mu in thetas_mu:
 df = pd.DataFrame.from_records(records)
 
 # Save full results for appendix
-df.to_csv("individual_storage_efficiency_policy_results.csv", index=False)
+df.to_csv(os.path.join(target_dir, "individual_storage_efficiency_policy_results.csv"), index=False)
 
 # -------------------------------
 # Styling
@@ -217,7 +233,7 @@ fig.legend(handles, labels, ncol=len(gammas), loc="lower center", frameon=False,
 fig.tight_layout(rect=(0, 0.03, 1, 1))  # leave room for legend
 
 # Save outputs
-fig.savefig("individual_storage_efficiency_policy_grid.png", bbox_inches="tight")
+fig.savefig(os.path.join(target_dir, "individual_storage_efficiency_policy_grid.png"), dpi=300, bbox_inches="tight")
 plt.close(fig)
 
 print("Saved: figure_storage_efficiency_policy_grid.png and storage_efficiency_policy_results.csv")
