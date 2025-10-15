@@ -253,7 +253,7 @@ Each 3D plot is rendered with a consistent viewing angle such that the origin, c
 
 In general, when the farmer expects buyer power to be stronger in the future than at harvest-that is, when $\mathbb{E}[\theta_2] > \theta_1$-the incentive to store totally disappears. In other words, farmers would never store when $\mu > 0.5$ in our simulation here. As illustrated in the far-right column of the panel, the optimal strategy across all risk and efficiency levels is to sell immediately ($s^* = 0$).
 
-Even when $\mathbb{E}[\theta_2] = \theta_1$, a farmer may still find storage worthwhile when he or she has a super high storage efficiency. This arises because the expected second-period price $\mathbb{E}[p_2] = \mathbb{E}\!\left[\frac{1}{1+\theta_2}\right]$ slightly exceeds the deterministic benchmark $\frac{1}{1+\mathbb{E}[\theta_2]} = p_1$, owing to the concavity of the price function in $\theta_2$. In other words, uncertainty in buyer power is beneficial from the farmer’s perspective: random fluctuations in $\theta_2$ generate an upward Jensen effect on expected prices. Consequently, even when the mean level of buyer power is unchanged across periods, the convexity of payoffs with respect to price risk induces modest positive storage in expectation.
+Even when $\mathbb{E}[\theta_2] = \theta_1$, a farmer may still find storage worthwhile when he or she has a super high storage efficiency. This arises because the expected second-period price $\mathbb{E}[p_2] = \mathbb{E}\!\left[\frac{1}{1+\theta_2}\right]$ slightly exceeds the deterministic benchmark $\frac{1}{1+\mathbb{E}[\theta_2]} = p_1$, owing to the concavity of the price function in $\theta_2$. In other words, uncertainty in buyer power is beneficial from the farmer's perspective: random fluctuations in $\theta_2$ generate an upward Jensen effect on expected prices. Consequently, even when the mean level of buyer power is unchanged across periods, the convexity of payoffs with respect to price risk induces modest positive storage in expectation.
 
 In contrast, when expectations about future buyer power are favorable ($\mathbb{E}[\theta_2] < \theta_1$), the decision becomes more nuanced. Interior solutions ($0 < s^* < 1$) emerge over a meaningful range of risk preferences and storage efficiencies. Moreover, as the expected buyer power $\mathbb{E}[\theta_2]$ declines, both the scope for interior solutions and the frequency of corner solutions with full storage ($s^* = 1$) expand, reflecting the improved relative attractiveness of deferring sales.
 
@@ -294,24 +294,47 @@ In summary, interior solutions occur only when multiple forces---expected price 
 \subsection{Sensitivity: Expected Future Buyer Power and Risk Aversion}
 \noindent To further examine how a farmer's optimal storage share $s^*$ responds to varying expectations about future buyer power, I conducted a simulation with the same parameter setting as in the 3D graphics above by holding first-period buyer power fixed at $\theta_1 = 0.5$, with a storage efficiency of $\kappa = 0.9$. The second-period buyer power $\theta_2$ was modeled as a Beta-distributed random variable with support on $[0, 1]$, maintaining a fixed variance of 0.02 while allowing the mean to vary from 0.05 to 0.95. For each mean value, I derived the associated Beta shape parameters and simulated 5,000 draws of $\theta_2$. The optimal storage share was then computed by maximizing expected utility under CRRA preferences, evaluated across five levels of risk aversion: $\gamma \in \{0, 0.5, 2, 4, 7\}$. As shown in Figure~\ref{Figure: sensitivity to second-period buyer power}, each resulting function $s^*(\mathbb{E}[\theta_2])$ was plotted to visualize how forward-looking uncertainty and risk preferences jointly shape storage behavior. Line color was varied monotonically with $\gamma$, increasing in darkness as risk aversion intensified.
 
-The results reveal a distinct shift in behavior across risk preference levels. Under risk neutrality ($\gamma = 0$), the decision rule is binary: the farmer stores all output if the expected net-storage-cost second-period price exceeds the current one, and none otherwise. As $\gamma$ increases to positive values, the decision becomes more nuanced. The sharp threshold gradually turns into a smooth, decreasing function of $\mathbb{E}[\theta_2]$, with interior solutions appearing when the expected future buyer power is only marginally lower than the first-period one.
-
-
-With higher risk aversion (like $\gamma = 4$ and $\gamma = 7$), the willingness to store declines substantially. Even when the expected second-period price exceeds today's price, the farmer often chooses to sell immediately due to the downside risk embedded in the distribution of $\theta_2$. The curve $s^*(\mathbb{E}[\theta_2])$ flattens near zero, and the turning point at which storage becomes attractive shifts leftward. This leftward shift reflects a heightened preference for certainty: more favorable expectations are required before any intertemporal transfer of output becomes worthwhile. 
-
-
 \begin{figure}[ht!]
 \centering
 \includegraphics[width=\textwidth]{model_figures/sensitivity_to_theta_2.png}
 \caption{Sensitivity to Expected Second-Period Buyer Power}
 \label{Figure: sensitivity to second-period buyer power}
+    \begin{tablenotes}[flushleft]
+    \footnotesize
+    \item \textit{Note:} This figure illustrates how the optimal storage share $s^*$ varies with the expected second-period buyer power $\mathbb{E}[\theta_2]=\mu$ under different levels of risk aversion. 
+    Simulation parameters: $\theta_1=0.5$, $\kappa=0.9$, $\mathrm{Var}(\theta_2)=0.02$, number of draws $=5000$, and storage grid of 25 points.
+    \end{tablenotes}
 \end{figure}
+
+
+The results reveal a distinct shift in behavior across risk preference levels. Under risk neutrality ($\gamma = 0$), the decision rule is binary: the farmer stores all output if the expected net-storage-cost second-period price exceeds the current one, and none otherwise. As $\gamma$ increases to positive values, the decision becomes more nuanced. The sharp threshold gradually turns into a smooth, decreasing function of $\mathbb{E}[\theta_2]$, with interior solutions appearing when the expected future buyer power is only marginally lower than the first-period one.
+
+Even when the expected second-period price exceeds today's price, the farmer often chooses to sell immediately due to the downside risk embedded in the distribution of $\theta_2$. The turning point at which full storage becomes less attractive shifts leftward as the more risk averse farmers are.
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=\textwidth]{model_figures/expected_price_gain_vs_mu.png}
+\caption{Expected Price Gains versus Mean Second-Period Buyer Power}
+\label{Figure: expected price gain vs mu}
+\begin{tablenotes}[flushleft]
+\footnotesize
+\item \textit{Notes:} This figure plots expected price gains, $\kappa\,\mathbb{E}[p_2]-p_1$, as a function of mean buyer power $\mu = \mathbb{E}[\theta_2]$ for $\theta_1 \in \{0.25, 0.5, 0.75\}$, highlighting the $\theta_1=0.5$ case. 
+Simulation setup: $\kappa=0.9$, $\mathrm{Var}(\theta_2)=0.02$, and $5000$ Beta draws.
+\end{tablenotes}
+\end{figure}
+
+
 
 \begin{figure}[ht!]
 \centering
 \includegraphics[width=\textwidth]{model_figures/sensitivity_to_gamma.png}
 \caption{Sensitivity to Risk Aversion}
 \label{Figure: sensitivity to risk aversion}
+    \begin{tablenotes}[flushleft]
+    \footnotesize
+    \item \textit{Notes:} This figure compares optimal storage behavior across risk aversion coefficients $\gamma \in \{0.5, 2, 4, 7\}$. 
+    Other parameters: $\theta_1=0.5$, $\kappa=0.9$, $\mathrm{Var}(\theta_2)=0.02$, and $5000$ Beta-distributed draws for $\theta_2$ in each $\mu$ grid point.
+\end{tablenotes}
 \end{figure}
 
 
@@ -355,16 +378,33 @@ Whether in developing or advanced economies, policymakers care deeply about farm
 \subsection{Improving Storage Efficiency} \label{sec:storage-efficiency}
 
 \textbf{Mechanism.} 
-An increase in storage efficiency, represented by a higher $\kappa$, raises the expected return from delaying sales. Farmers effectively preserve a larger share of the crop’s value, making intertemporal arbitrage more attractive. The effect is strongest when market conditions are expected to be better: even a modest gain in $\kappa$ can induce a shift from immediate sale to full storage. 
+An increase in storage efficiency, represented by a higher $\kappa$, raises the expected return from delaying sales. Farmers effectively preserve a larger share of the crop's value, making intertemporal arbitrage more attractive. The effect is strongest when market conditions are expected to be better: even a modest gain in $\kappa$ can induce a shift from immediate sale to full storage. 
 
 The welfare implications, however, depend on which producers adjust behavior. For farmers who would have stored fully regardless, a higher $\kappa$ merely transfers income. The principal welfare gains arise among marginal storers, those who switch from zero to positive storage or from partial to full storage. Only for these producers does the policy alter real storage decisions.
 
 
-\textbf{Quantitative Illustration.} 
-Consider a policy intervention that raises $\kappa$ by 10\%. Let $\operatorname{var}(\theta_2)=0.02$ and examine risk aversion at $\gamma \in \{0,\,0.5,\,2,\,4\}$. Figure~\ref{fig:storage_kappa} reports the induced changes in expected income, $\Delta E[\pi]$, and optimal storage share, $\Delta s^*$.
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=\textwidth]{model_figures/individual_storage_efficiency_policy_grid.png}
+    \caption{Welfare and Behavior Change from 10-Percent Storage Efficiency Improvement: by Initial Efficiency Level}
+    \label{fig: individual storage efficiency improvement}
+    \begin{tablenotes}[flushleft]
+    \footnotesize
+    \item \textit{Note:} 
+    Each panel shows simulated changes in farmers' expected income ($\Delta E[\pi]$) and optimal storage share ($\Delta s^*$) following a 10\% increase in storage efficiency ($\kappa$), under different initial efficiency levels ($\kappa_0 \in \{0.70, 0.80, 0.90\}$). 
+    Rows distinguish between two market structures: symmetric buyer power ($\theta_1 = E[\theta_2]$) and fixed current buyer power ($\theta_1 = 0.5$). 
+    Lines correspond to different risk-aversion levels ($\gamma$). 
+    A positive $\Delta s^*$ indicates higher storage share for delay sales, while positive $\Delta E[\pi]$ reflects welfare gains.
+    \end{tablenotes}
+\end{figure}
 
-\emph{Symmetric buyer power ($\theta_1 = E[\theta_2]$).} 
-Under symmetric expectations, storage efficiency improvements have subtle impacts on a farmer's welfare. When initial efficiency is $\kappa_0 = 0.70$ or $0.80$, the $\Delta E[\pi]$ curves are essentially zero across all $\mu$, indicating negligible behavioral response. At $\kappa_0 = 0.90$, however, $\Delta E[\pi]$ becomes positive and declines with $\mu$: farmers facing lower mean buyer power (low $\mu$) experience greater gains because higher $\kappa$ triggers a shift from no to positive storage. Random variation in $\theta_2$ generates a Jensen effect on expected second-period prices, confirmed by a modest upward movement in the $\Delta s^*$ panel. These effects are much smaller than in the asymmetric case below.
+
+
+\textbf{Quantitative Illustration.} 
+Consider a policy intervention that raises $\kappa$ by 10\%. Let $\operatorname{var}(\theta_2)=0.02$ and examine risk aversion at $\gamma \in \{0,\,0.5,\,2,\,4\}$. Figure~\ref{fig: individual storage efficiency improvement} reports the induced changes in expected income, $\Delta E[\pi]$, and optimal storage share, $\Delta s^*$.
+
+\emph{Symmetric buyer power ($\theta_1 = E[\theta_2] =\mu$).} 
+Under symmetric expectations, storage efficiency improvements have subtle impacts on a farmer's welfare. When initial efficiency is $\kappa_0 = 0.70$ or $0.80$, the $\Delta E[\pi]$ curves are essentially zero across all $\mu$, indicating negligible behavioral response. At $\kappa_0 = 0.90$, however, $\Delta E[\pi]$ becomes slightly positive and declines with $\mu$: farmers facing lower mean buyer power (low $\mu$) experience greater gains because higher $\kappa$ triggers a shift from no to positive storage. Random variation in $\theta_2$ generates a Jensen effect on expected second-period prices, confirmed by a modest upward movement in the $\Delta s^*$ panel. These effects are much smaller than in the asymmetric case below.
 
 
 \emph{Fixed current buyer power ($\theta_1 = 0.5$).} 
@@ -376,9 +416,11 @@ Consequently, a 10\% improvement in $\kappa$ yields positive expected-income gai
 
 
 \textbf{Policy Interpretation.} 
-The simulations suggest that gains from improved storage efficiency are largest when future buyer power is expected to be weaker than current levels. As baseline efficiency increases, welfare effects become increasingly infra-marginal, and the $\Delta s^*$ ``hill'' in Figure~\ref{fig:storage_kappa} shifts rightward. 
+The simulations suggest that gains from improved storage efficiency are largest when future buyer power is expected to be weaker than current levels. As baseline efficiency increases, welfare effects become increasingly infra-marginal, and the $\Delta s^*$ ``hill'' in Figure~\ref{fig: individual storage efficiency improvement} shifts rightward. 
 
-Importantly, higher effective $\kappa$ need not result from direct subsidies to storage. Similar outcomes can arise if farmers discount future income less. For instance, through income safety nets that smooth consumption or credit access that relaxes liquidity constraints. Such mechanisms enhance intertemporal storage efficiency without direct fiscal expenditure.
+Importantly, higher effective $\kappa$ need not result from direct subsidies to storage. Similar outcomes can arise if farmers discount future income less. For instance, through income safety nets that smooth consumption or credit access that relaxes liquidity constraints. Such mechanisms enhance intertemporal storage efficiency without direct fiscal expenditure. 
+
+It is worth-noting that such mechanisms often simultaneously reduce effective risk aversion. The two effects reinforce one another, making financial deepening a particularly high-leverage intervention. They improve farmers' capacity to wait (a $\kappa$ effect) and their willingness to wait (a $\gamma$ effect).
 
 
 
@@ -388,7 +430,7 @@ Importantly, higher effective $\kappa$ need not result from direct subsidies to 
 
 \subsection{Reducing Effective Risk Aversion}
 
-\textbf{Mechanism.} While intrinsic risk preferences are relatively stable, \emph{effective} risk aversion declines as farmers gain financial security through liquidity, insurance, and wealth accumulation. A lower coefficient of relative risk aversion ($\gamma$) shifts behavior toward the risk-neutral benchmark, with the largest effects concentrated in the region where storage is only marginally profitable in expectation.
+\textbf{Mechanism.} Building on this complementarity, we turn to the role of risk preferences themselves. While intrinsic attitudes toward risk are relatively stable, \emph{effective} risk aversion can decline as farmers gain financial security through liquidity, insurance, or wealth accumulation. A lower coefficient of relative risk aversion ($\gamma$) shifts behavior toward the risk-neutral benchmark, with the largest effects concentrated in the region where storage is only marginally profitable in expectation.
 
 
 \begin{figure}[ht!]
@@ -396,7 +438,7 @@ Importantly, higher effective $\kappa$ need not result from direct subsidies to 
     \includegraphics[width=0.85\textwidth]{model_figures/income_gap_vs_mu_(unified).png}
     \caption{Absolute and Relative Expected Income Losses from Risk Aversion}
     \label{fig:unified_gap_plot}
-    \begin{tablenotes}
+    \begin{tablenotes}[flushleft]
     \footnotesize
     \item Note: solid lines show the absolute gap $\mathbb{E}[\pi(s^*_{RN})]-\mathbb{E}[\pi(s^*_{RA})]$ (left axis). 
     Dashed lines show the same gap as a percentage of the risk-neutral benchmark (right axis). 
@@ -408,10 +450,13 @@ Importantly, higher effective $\kappa$ need not result from direct subsidies to 
 
 \textbf{Quantitative illustration:} The Simulation results from the baseline model in Figure~\ref{fig:unified_gap_plot} show that absolute income losses from risk aversion peak at roughly 0.02--0.03 in normalized units, while the relative gap reaches about 2 percent of expected income under strong risk aversion ($\gamma=7$) and falls below 1 percent for moderate values ($\gamma=2$ to $4$). These effects vanish when storage is clearly profitable or clearly unprofitable, underscoring that the ``cost of risk aversion'' is concentrated exactly at the margin where storage incentives are fragile.
 
-\textbf{Policy Interpretation.} The income effect from lowering risk aversion is modest in size but targeted: it recovers the ``money left on the table'' precisely where risk aversion binds most. Instruments that ease liquidity risk (warehouse-receipt finance, seasonal credit lines), transfer income across states (crop insurance), or smooth consumption (safety nets) can move farmers measurably closer to the risk-neutral storage decision. Even modest financial deepening---for example, reducing effective $\gamma$ from 7 to 2---eliminates more than half of the small but systematic income gap in this calibration.
 
+\textbf{Policy Interpretation.} 
+The income effect from lowering risk aversion is modest but targeted: it recovers the ``money left on the table'' exactly where storage incentives are fragile. Even modest financial deepening---for example, reducing effective $\gamma$ from 7 to 2---eliminates more than half of the small but systematic income gap in this calibration. 
 
+In practice, however, many instruments that reduce effective risk aversion also raise effective storage efficiency. Liquidity provision, warehouse---receipt finance, and crop insurance do more than alter risk preferences---they reduce the implicit cost of waiting by lowering liquidity needs, thereby increasing the effective $\kappa$.
 
+Consequently, policies that expand farmers' financial security operate on both margins of welfare improvement: they make farmers less risk averse (lower $\gamma$) and more capable of delaying sales without loss (higher $\kappa$). The model treats these channels separately for analytical clarity, but in reality they reinforce each other, amplifying welfare gains relative to interventions that shift either margin alone.
 
 
 
@@ -815,7 +860,7 @@ Higher $\kappa$ linearly scales the benchmark $A(\mu)$ upward, expanding the reg
 
 
 %----------------------------------------------------%
-\subsection{Welfare Effects of Storage Efficiency Increments by Initial Efficiency}
+\subsection{Welfare Effects of Storage Efficiency Improvements by Initial Efficiency}
 \noindent The preceding analysis has shown that policies or investments enabling storage can generate substantial welfare gains for farmers facing time-varying oligopsonistic power. In practice, the more common constraint is not a complete absence of storage facilities---as in remote interior villages---but rather the presence of storage at relatively high composite costs. These costs reflect not only actual costs of renting or operating storage space and physical deterioration of product but also discounting, transportation costs, and other frictions, resulting in low effective storage efficiency. 
 
 Such improvements in storage efficiency can arise through multiple channels: investment in rural road infrastructure, access to warehouse-receipt or inventory-financing schemes that relax credit constraints, or better post-harvest management practices. While a direct per-unit cash subsidy to storage costs could in principle raise $\kappa$, it is only one of many mechanisms, and it would raise concerns about distributional targeting, potentially favoring larger, already-storing farmers over smaller, liquidity-constrained ones.
@@ -827,9 +872,9 @@ The magnitude and distribution of these welfare gains, however, are likely to be
 \begin{figure}[ht]
     \centering
     \includegraphics[width=\linewidth]{model_figures/storage_subsidy_gain_decomposition.png}
-    \caption{Decomposition of Welfare Gains from Storage Subsidies by Risk Aversion}
+    \caption{Decomposition of Welfare Gains from Storage Efficiency Improvement by Risk Aversion}
     \label{fig:storage_subsidy_gain_decomposition}
-    \begin{tablenotes}
+    \begin{tablenotes}[flushleft]
     \footnotesize
     \item Note: Each panel reports results for one storage-efficiency contrast. For each buyer-power mean $\mu=\mu_1=\mu_2$, we simulate $R=5000$ worlds $(\theta_1,\theta_2)$ from Beta$(\mu,\sigma^2=0.10)$. Farmers ($N=100$) have heterogeneous risk preferences, with $\gamma \sim U[0,10]$ grouped into deciles. Bars show the decomposition of welfare gains into growth ($\Delta E[\pi]$) and insurance ($-\Delta RP$); the line shows the certainty-equivalent gain ($\Delta CE$). All values are averaged across $\mu \in [0.15,0.85]$ in steps of 0.05.
     \end{tablenotes}
@@ -839,9 +884,9 @@ In Figure~\ref{fig:storage_subsidy_gain_decomposition}, each panel corresponds t
 
 The decomposition clarifies that the welfare effects of improving storage efficiency operate through two distinct channels---income growth and risk reduction. In most cases, $\Delta CE$ exceeds $\Delta E[\pi]$, implying $\Delta RP<0$: the improvement in storage technology reduces income variance and hence the risk premium. This arises because, for $\kappa<1$ and interior $s^\in(0,1)$, the income mix $(1-s^\star)p_1 + s^\star\kappa p_2$ has lower variance than the harvest-only benchmark, since $(1-s^\star)^2 + (s^\star\kappa)^2 < 1$. In other words, optimal storage functions as a state-contingent hedge: farmers store more in low-price states and less in high-price states, effectively truncating downside risk while tempering extreme upside realizations. Even when expected income gains are modest, the induced risk smoothing raises certainty-equivalent welfare.
 
-When $\kappa$ is already relatively high, such as in the $0.90 \rightarrow 0.95$ contrast, the incremental welfare gains are larger than in the low-efficiency step $0.75 \rightarrow 0.80$. This convexity arises because higher storage efficiency strengthens both the intensive and extensive margins of storage. Farmers who were previously indifferent or weakly storing increase their storage share, while those already storing gain more from improved efficiency, so the aggregate response magnifies the value of each incremental subsidy.
+When $\kappa$ is already relatively high, such as in the $0.90 \rightarrow 0.95$ contrast, the incremental welfare gains are larger than in the low-efficiency step $0.75 \rightarrow 0.80$. This convexity arises because higher storage efficiency strengthens both the intensive and extensive margins of storage. Farmers who were previously indifferent or weakly storing increase their storage share, while those already storing gain more from improved efficiency, so the aggregate response magnifies the value of each storage-efficiency increment.
 
-At lower baseline levels of $\kappa$, the gains are smaller in absolute value but dominated by insurance effects, concentrated among more risk-averse deciles. In the $0.75 \rightarrow 0.80$ step, for example, the reduction in risk premium ($- \Delta RP$) is relatively more pronounced. These early-stage improvements thus act as insurance subsidies, offering the largest proportional benefits to farmers with high $\gamma$, for whom risk smoothing is most valuable. By contrast, once $\kappa$ reaches higher levels, additional subsidies reduce little risk and instead raise welfare almost exclusively through income growth. 
+At lower baseline levels of $\kappa$, the gains are smaller in absolute value but dominated by insurance effects, concentrated among more risk-averse deciles. In the $0.75 \rightarrow 0.80$ step, for example, the reduction in risk premium ($- \Delta RP$) is relatively more pronounced. These early-stage improvements thus act as insurance subsidies, offering the largest proportional benefits to farmers with high $\gamma$, for whom risk smoothing is most valuable. By contrast, once $\kappa$ reaches higher levels, additional improvements reduce little risk and instead raise welfare almost exclusively through income growth. 
 
 Taken together, the results from Figure~\ref{fig:storage_subsidy_gain_decomposition} highlight a dual policy message: early-stage investments in storage efficiency provide risk protection to vulnerable farmers, while later-stage improvements generate amplifying income effects by enabling more farmers to benefit from expanding market access and higher second-period competition. This heterogeneity underscores the importance of targeting and calibrating $\kappa$-enhancing interventions to local conditions rather than adopting a one-size-fits-all approach. 
 
@@ -851,11 +896,11 @@ Taken together, the results from Figure~\ref{fig:storage_subsidy_gain_decomposit
 \begin{figure}[ht]
     \centering
     \includegraphics[width=\linewidth]{model_figures/storage_subsidy_gain_heatmap.png}
-    \caption{Welfare Gains from Storage Subsidies: Line and Heatmap Decomposition across Buyer-Power Means and Risk Aversion}
+    \caption{Welfare Gains from Storage Efficiency Improvement: Line and Heatmap Decomposition across Buyer-Power Means and Risk Aversion}
     \label{fig: storage_subsidy_gain_heatmap}
-    \begin{tablenotes}
+    \begin{tablenotes}[flushleft]
     \footnotesize
-    \item Note: Each row shows one subsidy contrast. Line charts (first column) plot changes in expected income ($\Delta E[\pi]$), certainty equivalent ($\Delta CE$), and insurance gain ($-\Delta RP$) against belief mean $\mu$. Heatmaps (columns 2--4) decompose these effects across $\gamma$-deciles, highlighting that welfare improvements are strongest for more risk-averse farmers and grow with the size of the subsidy.
+    \item Note: Each row shows one storage-efficiency improvement contrast. Line charts (first column) plot changes in expected income ($\Delta E[\pi]$), certainty equivalent ($\Delta CE$), and insurance gain ($-\Delta RP$) against belief mean $\mu$. Heatmaps (columns 2--4) decompose these effects across $\gamma$-deciles, highlighting that welfare improvements are strongest for more risk-averse farmers and grow with the size of the improvement.
     \end{tablenotes}
 \end{figure}
 
@@ -865,7 +910,7 @@ The line plots reveal that when buyer power is weak (low $\mu$), income growth a
 
 
 \paragraph{Policy lessons.}
-Per-unit storage subsidies should be targeted to baseline conditions rather than deployed uniformly. At low initial storage efficiency (high ongoing storage costs), subsidies act chiefly as insurance---most valuable for high-$\gamma$ (more risk-averse) farmers---and should be paired with credit/guarantee or index-insurance instruments that lower effective risk aversion and crowd in participation. At high initial efficiency, the same-amount subsidy becomes a growth multiplier, with gains driven by higher mean returns rather than risk reduction; dollars spent here yield larger aggregate welfare per unit outlay, especially where $\sigma^2$ is meaningful. A practical design is a tiered schedule: insurance-oriented support for low-$\kappa$ environments (with eligibility keyed to observable storage losses) and performance-linked, sunset-eligible subsidies for high-$\kappa$ areas, complemented by measures that reduce $\gamma$ (credit/insurance) and by competition policies.
+The welfare patterns uncovered here identifies where improvements in storage efficiency are likely to matter most---at low initial efficiency levels, primarily through risk smoothing, and at high levels, mainly through income growth. Translating these patterns into actionable policy is less about designing finely targeted subsidies and more about recognizing structural heterogeneity across production environments. In practice, the feasibility and cost-effectiveness of raising $\kappa$ depend on local infrastructure, financial access, and market integration rather than on farmer-specific traits such as $\gamma$. Hence, the model's relevance lies in clarifying \emph{which types of environments} generate the largest marginal welfare returns to efficiency gains. Empirically, this implies that investments improving storage reliability or reducing losses, whether through logistics, credit access, or cooperative facilities, can have different welfare payoffs depending on where they enter the efficiency spectrum, suggesting that context, not instrument design, is the central policy variable.
 
 
 %----------------------------------------------------%
@@ -879,7 +924,7 @@ This subsection evaluates how lower risk aversion enhances the value of storage 
     \includegraphics[width=\linewidth]{model_figures/gainpct_grid_4x4_zero_gap_three_curves.png}
     \caption{$\%$ Mean Income Gains under High, Median, and No Risk Aversion}
     \label{fig: Income gains with RN case}
-    \begin{tablenotes}
+    \begin{tablenotes}[flushleft]
     \footnotesize
     \item Note: Panels show mean income gains from storage relative to no-storage under the zero-gap case ($\mu_2=\mu_1$). Rows vary storage efficiency and columns vary buyer-power variance. Curves compare heterogeneous farmers with $\gamma_i \sim \text{Unif}[0,10]$ (black solid) and $\gamma_i \sim \text{Unif}[0,5]$ (blue dashed) against the risk-neutral benchmark ($\gamma=0$, light-blue dash-dotted). Results average $R=20{,}000$ simulated worlds with $N=100$ farmers each.
     \end{tablenotes}
