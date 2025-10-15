@@ -1,68 +1,113 @@
-\usepackage{subcaption}
-\usepackage{amsmath,amsfonts,amssymb,geometry}
-\usepackage{dcolumn}
-\usepackage{float}
-\usepackage{booktabs, threeparttable}
-\usepackage[figuresright]{rotating}
-\usepackage{hyperref}
-\usepackage{adjustbox}   %% you can resize if the table goes beyond \textwidth
-\usepackage{graphicx}
-\usepackage{pdfpages}
-\usepackage{dirtytalk}
+% =========================
+% CORE MATH & SYMBOLS
+% =========================
+\usepackage{amsmath, amsfonts, amssymb}
+
+% =========================
+% PAGE LAYOUT
+% =========================
+\usepackage{geometry}
 \geometry{a4paper, margin=1in}
+\renewcommand{\baselinestretch}{2} % line spacing
+
+% =========================
+% FIGURES, TABLES & FLOATS
+% =========================
+\usepackage{graphicx}
+\usepackage{adjustbox}              % resize boxes/tables that exceed \textwidth
+\usepackage{subcaption}             % sub-figures
+\usepackage[figuresright]{rotating} % sideways figures/tables
+\usepackage{float}                  % improved float placement
+\usepackage{booktabs, threeparttable}
+\usepackage{dcolumn}
+\usepackage{multirow}
+\usepackage{diagbox}
+
+% =========================
+% TIKZ & DIAGRAMS
+% =========================
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta, positioning}
 
-\usepackage{xpatch}
-    \newlength{\chaptertopskip}
-    \setlength{\chaptertopskip}{10pt}
-    \makeatletter
-    \xpatchcmd{\@makechapterhead}{\vspace*{50\p@}}{\vspace*{\chaptertopskip}}{\typeout{Success}}{\typeout{Failure!!!}}
-\makeatother
-\usepackage{dialogue}
-    % redefine dialogue environment to use new parameters
-    \makeatletter
-    \renewenvironment{dialogue} {%
-        \begin{list}{} {%
-            \setlength\itemsep{\z@ \@plus .5ex}%
-            \setlength{\parsep}{\parskip}%
-            \setlength{\rightmargin}{0pt}% no indentation on right; change this if you wish
-            \setlength{\labelsep}{0.5em}% space between (longest) name and text
-            \setlength{\leftmargin}{\labelwidth}% set margin on left to same width
-            \addtolength{\leftmargin}{\labelsep}% plus the label sep
-            \defcommand\speak[2]{\item[\hfill {##1}] {\itshape ``{##2}''}} % define speak command
-            \let\makelabel\DialogueLabel
-          }%
-          \PreDialogue\relax
-        }{%
-      \end{list}%
-      }
-    \makeatother
-\usepackage{natbib}
-\usepackage{diagbox}
-\usepackage{multirow}
-\usepackage{bbm}
-\usepackage{url}
-\usepackage{lipsum}
-\usepackage{setspace}
-    \footnotesep=10pt
-    \usepackage{etoolbox}
-    \makeatletter
-    \patchcmd{\@footnotetext}
-      {\setspace@singlespace}{0.8}
-      {}{}
-    \makeatother % 调整footnote的行间距
-    
+% =========================
+% PDF & LINKS
+% =========================
+\usepackage{pdfpages}
+\usepackage{url}      % robust URL typesetting for bib/footnotes
+\usepackage{natbib}   % load before hyperref for compatibility
+\usepackage{hyperref} % keep close to the end of package list
 
-\renewcommand{\baselinestretch}{1.5} % 调整行间距
-\DeclareRobustCommand{\firstsecond}[2]{#1}
+% =========================
+% TEXT, QUOTES, UTILITIES
+% =========================
+\usepackage{dirtytalk}  % \say{}
+\usepackage{bbm}        % \mathbbm{1}
+\usepackage{lipsum}     % dummy text
+\usepackage{setspace}   % fine-grained spacing control
 
 
+\newenvironment{acknowledgments}
+  {\renewcommand{\abstractname}{Acknowledgments}\begin{abstract}}
+  {\end{abstract}}
 
+\newenvironment{dedication}
+  {\cleardoublepage \thispagestyle{empty} \vspace*{\fill} \begin{center}}
+  {\end{center} \vspace*{\fill} \clearpage}
+
+
+% =========================
+% SECTIONING & NUMBERING
+% =========================
 \usepackage{titlesec}
-% 重新定义 section 编号格式
-\renewcommand{\thesection}{\arabic{section}}
+\renewcommand{\thesection}{\thechapter.\arabic{section}} % show as X.1, X.2, ...
 \setcounter{secnumdepth}{3}
-%----------------------------------------------------------------%
-%----------------------------------------------------------------%
+\makeatletter
+\@addtoreset{section}{chapter} % reset section counter at each chapter
+\makeatother
+
+% =========================
+% PATCHES & CUSTOM ENVIRONMENTS
+% =========================
+\usepackage{xpatch}
+\makeatletter
+% Reduce default chapter top space (if using book/report)
+\newlength{\chaptertopskip}
+\setlength{\chaptertopskip}{10pt}
+\xpatchcmd{\@makechapterhead}{\vspace*{50\p@}}{\vspace*{\chaptertopskip}}{\typeout{Success}}{\typeout{Failure!!!}}
+\makeatother
+
+% Dialogue environment customization
+\usepackage{dialogue}
+\makeatletter
+\renewenvironment{dialogue}{%
+  \begin{list}{}{%
+    \setlength\itemsep{\z@ \@plus .5ex}%
+    \setlength{\parsep}{\parskip}%
+    \setlength{\rightmargin}{0pt}%
+    \setlength{\labelsep}{0.5em}%
+    \setlength{\leftmargin}{\labelwidth}%
+    \addtolength{\leftmargin}{\labelsep}%
+    % NOTE: If you intended a custom macro, consider \newcommand instead of \defcommand
+    \defcommand\speak[2]{\item[\hfill {##1}] {\itshape ``{##2}''}}%
+    \let\makelabel\DialogueLabel
+  }%
+  \PreDialogue\relax
+}{%
+  \end{list}%
+}
+\makeatother
+
+% Footnote spacing tweak
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd{\@footnotetext}{\setspace@singlespace}{0.8}{}{}
+\makeatother
+\footnotesep=10pt
+
+% =========================
+% LOAD LAST
+% =========================
 \usepackage{subfiles} % Best loaded last in the preamble
+
+\RequirePackage{silence}
+\WarningFilter{etex}{Extended allocation already in use}
