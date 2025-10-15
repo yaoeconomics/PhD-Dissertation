@@ -1,7 +1,7 @@
 \section{Conceptual Framework: Linear Mean-Variance Approach} \label{Appendix: mean-variance approach}
 \noindent In the main text, I model farmer storage decisions under market-structural uncertainty using a CRRA (constant relative risk aversion) utility specification, which is widely adopted in agricultural economics and allows for a structurally interpretable mapping between risk preferences and observed behavior. This choice facilitates empirical calibration, as the CRRA form nests intuitive behavioral responses and aligns well with micro-level data on consumption and risk. Crucially, it maintains coherence between the theoretical framework and the empirical analysis, which relies on price expectations and storage behavior inferred from actual market data. Since there is limited empirical guidance on how to calibrate abstract risk aversion coefficients across different agricultural contexts, preserving this consistency helps ensure that the model remains empirically grounded and interpretable.
 
-Nonetheless, in the Appendix here, I provide an alternative formulation based on a mean–variance (MV) decision rule as a complement \citep{levy1979approximating, schoemaker1982expected}. The principal advantage of the MV framework is that it avoids assuming any specific utility function, thereby abstracting away from the functional form of farmers’ risk preferences \citep{coyle1992risk}. This allows for greater transparency in tracing how storage incentives respond to changes in price levels, volatility, and market structure. MV has been adopted in many works in the field of agricultural economics such as \cite{saitone2009optimal} and \cite{yu2018effects}. While my inter-temporal price rule formation from the \textit{FOOM} models (the expected second-period revenue is not an affine transformation of the stochastic buyer power change), hence the MV model is not always consistent with expected utility maximization \citep{meyer1987two}, a careful choice from a mean–variance efficient frontier will approximately maximize expected utility \citep{markowitz2014mean, chiu2016supply}.
+Nonetheless, in the Appendix here, I provide an alternative formulation based on a mean-variance (MV) decision rule as a complement \citep{levy1979approximating, schoemaker1982expected}. The principal advantage of the MV framework is that it avoids assuming any specific utility function, thereby abstracting away from the functional form of farmers' risk preferences \citep{coyle1992risk}. This allows for greater transparency in tracing how storage incentives respond to changes in price levels, volatility, and market structure. MV has been adopted in many works in the field of agricultural economics such as \cite{saitone2009optimal} and \cite{yu2018effects}. While my inter-temporal price rule formation from the \textit{FOOM} models (the expected second-period revenue is not an affine transformation of the stochastic buyer power change), hence the MV model is not always consistent with expected utility maximization \citep{meyer1987two}, a careful choice from a mean-variance efficient frontier will approximately maximize expected utility \citep{markowitz2014mean, chiu2016supply}.
 
 
 
@@ -20,7 +20,7 @@ $$
 
 \subsection{Preference Representation}
 \noindent
-Departing from expected-utility maximization, I adopt the standard \textit{mean–variance} (two-moment) method, which is the quadratic approximation to any twice-differentiable utility around its certainty equivalent:
+Departing from expected-utility maximization, I adopt the standard \textit{mean-variance} (two-moment) method, which is the quadratic approximation to any twice-differentiable utility around its certainty equivalent:
 $$
 \max_{s\in[0,1]}
 \;\;{\cal V}(s)
@@ -124,7 +124,7 @@ $$
 i.e., more monopsonistic market conditions on average lead farmers to store less.
 
 \paragraph{Variance of buyer power \(\sigma_\theta^2\).}
-This parameter enters both the numerator and denominator of \(s^{\star}\), yielding a nontrivial tradeoff between \textit{convexity gains} (via Jensen’s inequality) and \textit{risk penalties}. Substituting \(A = A_0 + C\sigma_\theta^2\), \(B = D\sigma_\theta^2\), with \(A_0 = 1/(1 + \mu_\theta)\), \(C = 1/(1 + \mu_\theta)^3\), and \(D = 1/(1 + \mu_\theta)^4\), the derivative becomes:
+This parameter enters both the numerator and denominator of \(s^{\star}\), yielding a nontrivial tradeoff between \textit{convexity gains} (via Jensen's inequality) and \textit{risk penalties}. Substituting \(A = A_0 + C\sigma_\theta^2\), \(B = D\sigma_\theta^2\), with \(A_0 = 1/(1 + \mu_\theta)\), \(C = 1/(1 + \mu_\theta)^3\), and \(D = 1/(1 + \mu_\theta)^4\), the derivative becomes:
 $$
 \frac{\partial s^{\star}}{\partial \sigma_\theta^2}
 =
@@ -147,7 +147,7 @@ When the expected future price (without Jensen's correction) already exceeds the
 \midrule
 \(p_1\) & \(< 0\) & \(\downarrow\) & Higher current price discourages storage \\
 \(\delta\) & Mixed & \(\uparrow\) if \(\delta A > 2p_1\) & Storage gain vs. variance amplification \\
-\(\kappa\) & \(< 0\) & \(\downarrow\) & More risk aversion → earlier selling \\
+\(\kappa\) & \(< 0\) & \(\downarrow\) & More risk aversion leads to earlier selling \\
 \(\mu_\theta\) & \(< 0\) & \(\downarrow\) & More monopsony power depresses future price \\
 \(\sigma_\theta^2\) & \(\text{sign}(\delta/(1+\mu_\theta) - p_1)\) & \(\uparrow\) or \(\downarrow\) & Jensen gain vs. added risk \\
 \bottomrule

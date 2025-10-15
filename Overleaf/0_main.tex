@@ -5,7 +5,7 @@
 
 \title{Time-Varying Oligopsonistic Competition, Storage Dynamics, and Welfare in Agricultural Markets}
 \author{Zhiyao (Yao) Ma}
-\institute{Committee: Richard J. Sexton, Jeffrey Williams, and Stephen Boucher}
+\institute{Committee: Richard J. Sexton, Jeffrey C. Williams, and Stephen Boucher}
 \date{\today}
 
 %----------------------------------------------------------------%
@@ -13,21 +13,77 @@
 
 \begin{document}
 \maketitle
+\thispagestyle{empty}
+
+
+\begin{dedication}
+\textit{For my beloved grandparents}\\
+\textit{Qilong Ma, Qingzhen Fei, Qingxiang Li, and Yanling Sun}\\
+\textit{whose love and guidance endure in memory.}
+\end{dedication}
+
+
+\newpage
+\pagenumbering{roman}
+
+
+\begin{acknowledgments}
+This journey has been extraordinary, and the gratitude I feel for those who supported me along the way is beyond what words can convey, though I will do my best. I am deeply indebted to my advisors, Richard J. Sexton and Jeffrey C. Williams, for their invaluable guidance and extraordinary mentorship. Richard's clarity of thought, insistence on careful identification, and instinct for policy-relevant questions shaped every chapter of this dissertation. He taught me how to connect theory to institutions and data, to write both parsimoniously and elegantly, and to defend ideas with evidence rather than volume. Jeffrey has been a gold mine of insight: whenever I became tangled in brainstorming or modeling, he helped me tango on with balance and rigor. Our explorations of commodity futures markets and storage dynamics in U.S. and Chinese supply chains will remain a lasting source of inspiration. I aspire one day to grow into someone with their vitality, charisma, and intellectual power.
+
+I am grateful to Stephen Boucher, who served on my dissertation committee and provided valuable input from the very beginning of my journey. I will never forget the Zoom moment when I received the acceptance, nor the many hours Steve and I spent together refining my fieldwork plan in detail. I also owe special thanks to Professor Michael R. Carter for his insightful comments and suggestions on this research---whether in the classroom, during the development sequence, or over a glass of wine in beautiful Sonoma County. Every presentation of his was a pure joy and inspired me to think more deeply about ongoing development issues.
+
+This research has also benefited immensely from feedback received from UC Davis faculty, like Colin Carter, Rachael Goodhue, Ashish Shenoy, Diana Moreira, Katrina Jessoe, Pierre M\'erel, and Matthew Reimer. I am equally grateful to the outstanding graduate students and alumni from the ARE and Economics departments---Shisham Adhikari, Mohan Chen, Matthew Dudek, Yan Ge, Jiawei Guo, Rachel E. Jones, Gal Koss, Gilberto Jose Nogueira, Zhiran Qin, Hui Ren, Yujing Song, Qi Wu, Shuhan Zeng, and Jiahao Zhu---whose suggestions, critiques, and encouragement were invaluable. I also thank my department as a whole for providing the unique opportunity to pursue this degree and to grow both as a scholar and as a person.
+
+A special thanks goes to the apple growers and local officials in Yanchang County, Shaanxi Province, China, where I conducted my fieldwork, for generously providing information that inspired much of this research. I am also fortunate to have had opportunities to consult with officials, both junior and senior, from the China Securities Regulatory Commission, the China Zhengzhou Commodity Exchange, and the China Financial Futures Exchange. Their insightful observations and probing questions motivated me to carry on and to contribute, in a small way, to real-world solutions.
+
+Most heartfelt thanks go to my family for their love and support. I am blessed with the greatest parents, Wei Ma and Xuesong Li, who shaped my character and encouraged me to explore the world. I am profoundly grateful to my fianc\'ee, Yining Xiang, who has been a constant source of inspiration since our undergraduate years. She contributed research ideas, helped with fieldwork, and engaged in countless helpful discussions. I know that her love, patience, and sacrifices sustained my well-being and made it possible to complete this dissertation.
+
+I am also fortunate to have great friends---Yuanshang Ding, Kefan Guo, Ziheng Hua, Mengjiang Huang, Ye Hong, Ziqiang Liu, Qizhen Liu, Xin Lan, Fenglin Lu, Zhongxian Ren, Lingxiao Qian, Changgeng Xu, Jing Xu, Yan Xu, Yuanruo Xu, Yingeng Zhang, Chang Zhang, Guyu Zhang, Duanduan Zhu, and Hui Zhu---who offered unconditional help and camaraderie beyond academic pursuits.
+
+Finally, I would like to thank the many researchers I met at academic conferences, including the 2025 AAEA Annual Meeting, who provided constructive suggestions on this work. All remaining errors in this dissertation are, of course, my own.
+\end{acknowledgments}
+
+
+
+
+\newpage
+\begin{abstract}
+This dissertation reframes oligopsonistic power in agricultural procurement as time-varying rather than fixed, showing how buyer competition waxes and wanes within a single marketing season and how farmers use storage to shift when, and on what terms, they sell. Using China's fresh-apple sector as the empirical setting, I argue that storage is not only a vehicle for intertemporal arbitrage but a lever that reallocates relative power toward smallholders when oligopsony conditions loosen over time.
+
+I build a two-period model in which buyer power is time-varying and farmers equipped with storage can optimally ``wait into'' possibly more competitive windows. The framework cleanly separates buyer-power dynamics from demand shocks and illuminates how expectations about the future competitive conditions among rivalry and risk preferences jointly determine storage choices and realized selling conditions. Numerical simulations with heterogeneous risk preferences map storage efficiency and risk attitudes to welfare, quantifying when waiting pays, how risk aversion suppresses storage, and why policies that raise storage efficiency or reduce effective risk aversion lift certainty equivalents and mean incomes. Equal-sized storage subsidies yield uneven benefits: when existing storage costs are high, they function like insurance; when storage is already affordable, they amplify farmers' returns like a growth multiplier.
+
+Empirically, a field survey of over 500 apple growers in an interior region in central China tracks trading timelines, subjective expectations of buyer competition, objective measures of buyer competitiveness, and storage access. Storage adoption and time-to-sale respond strongly to anticipated future rivalry and logistical frictions, closely matching the model's predictions. Policy-wise, the results point beyond price supports toward market design: strengthen buyer competition at any point in the season, upgrade storage efficiency, and expand credit or insurance, each margin raises welfare without directly interfering with market prices.
+\end{abstract}
+
+
+
+
 \setcounter{tocdepth}{2}
 
 \tableofcontents
+\addcontentsline{toc}{chapter}{List of Figures}
+\listoffigures
+\addcontentsline{toc}{chapter}{List of Tables}
+\listoftables
+
+
+%----------------------------------------------------------------%
+%----------------------------------------------------------------%
+
+% Switch to arabic page numbering starting at Chapter 1
+\clearpage
+\pagenumbering{arabic}
+
+\newpage
+\chapter{Introduction} \label{Chapter: introduction}
+    \input{Overleaf/chap1_introduction}
+
+
 
 %----------------------------------------------------------------%
 %----------------------------------------------------------------%
 \newpage
-\chapter{Introduction}
-
-
-
-%----------------------------------------------------------------%
-%----------------------------------------------------------------%
-\newpage
-\chapter{Oligopsony, Storage Inefficiency, and Welfare in China’s Apple Industry}
+\chapter{Oligopsony, Storage Inefficiency, and Welfare in China's Apple Industry}
 \label{Chapter: descriptive chapter}
 
 \begin{abstract}
