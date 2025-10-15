@@ -56,7 +56,7 @@ def compute_beta_params(mu, sigma2):
     return alpha, beta_param
 
 # --- Main Simulation ---
-mu_values_focus = [0.2, 0.25, 0.3, 0.35, 0.4, 0.45]
+mu_values_focus = [0.2, 0.25, 0.3, 0.35, 0.4]
 gamma_grid = np.linspace(0, 10, 100)
 results_focus = {mu: [] for mu in mu_values_focus}
 
