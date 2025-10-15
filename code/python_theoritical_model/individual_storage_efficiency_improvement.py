@@ -1,239 +1,196 @@
+# -*- coding: utf-8 -*-
+import os
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.stats import beta as beta_dist
-import pandas as pd
-import itertools
-import string
+from scipy.stats import beta
+from pathlib import Path
+from matplotlib.lines import Line2D
 
-
-import os
-
-# 当前文件所在目录
+# ============================================================
+# Directory setup
+# ============================================================
 current_dir = os.path.dirname(os.path.abspath(__file__))
-# 上一级目录
 parent_dir = os.path.dirname(current_dir)
-# 上两级目录
 grandparent_dir = os.path.dirname(parent_dir)
-# 上两级平行目录（例如 results）
 target_dir = os.path.join(grandparent_dir, "model_figures")
-
-# 如果目标文件夹不存在就新建
 os.makedirs(target_dir, exist_ok=True)
 
-
-# -------------------------------
-# Settings
-# -------------------------------
-policy_increase = 1.10
-delta = 1.0
+# ============================================================
+# Primitives & Grids
+# ============================================================
+theta1, kappa, delta = 0.5, 0.9, 1.0
+p1 = 1 / (1 + theta1)
 variance = 0.02
-thetas_mu = [0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50, 0.60]
-kappas0 = [0.70, 0.80, 0.90]
-gammas = [0, 0.5, 2, 4]
-num_draws = 100000
-s_grid = np.linspace(0, 1, 41)
-rng = np.random.default_rng(20251014)
+mu_values = np.arange(0.05, 0.951, 0.01)   # E[theta2]
+gammas    = [0.5, 2, 4, 7]                 # risk aversion levels
+num_draws = 5000
+s_grid    = np.linspace(0, 1, 25)
 
-# Scenarios (rows grouped by metric × scenario)
-scenarios = [
-    {"name": "Symmetric Buyer Power (θ₁ = E[θ₂])", "short": "Symmetric", "theta1_fn": lambda mu: mu},
-    {"name": "Fixed Current Buyer Power (θ₁ = 0.5)", "short": "Fixed θ₁=0.5", "theta1_fn": lambda mu: 0.5},
-]
+# Output directory (in case running from notebook)
+try:
+    SAVE_DIR = (Path(__file__).resolve().parents[2] / "model_figures")
+except NameError:
+    SAVE_DIR = Path.cwd() / "model_figures"
+SAVE_DIR.mkdir(parents=True, exist_ok=True)
 
-# -------------------------------
+# ============================================================
+# Reproducibility: fixed random generator
+# ============================================================
+rng = np.random.default_rng(seed=42)
+
+# ============================================================
 # Helper functions
-# -------------------------------
-def feasible_beta_params(mu, sigma2, eps=1e-9):
-    max_var = mu * (1 - mu)
-    if sigma2 >= max_var:
-        sigma2 = max_var * 0.999 - eps
-    factor = mu * (1 - mu) / sigma2 - 1.0
-    alpha = mu * factor
-    beta_p = (1 - mu) * factor
-    return max(alpha, eps), max(beta_p, eps)
+# ============================================================
+def beta_params(mu, var):
+    """Convert mean and variance to (α, β) parameters of Beta distribution."""
+    f = mu * (1 - mu) / var - 1
+    return mu * f, (1 - mu) * f
 
-def crra_utility(pi, gamma):
-    pi = np.maximum(pi, 1e-12)
-    if gamma == 1:
-        return np.log(pi)
-    return (pi ** (1 - gamma) - 1) / (1 - gamma)
+def U_crra(pi, gamma):
+    pi = np.maximum(pi, 1e-10)
+    return np.log(pi) if gamma == 1 else (pi**(1 - gamma) - 1) / (1 - gamma)
 
-def p_from_theta(theta):
-    return 1.0 / (1.0 + theta)
+def s_star_RN(v_mean):
+    """Risk-neutral optimal storage share."""
+    return 1.0 if delta * kappa * v_mean > p1 else 0.0
 
-def optimize_s(theta2_draws, p1, kappa, gamma, s_grid):
-    if gamma == 0:
-        exp_p2 = np.mean(1.0 / (1.0 + theta2_draws))
-        return float(1.0) if delta * kappa * exp_p2 > p1 else float(0.0)
-    v_draws = 1.0 / (1.0 + theta2_draws)
-    incomes = (1 - s_grid[:, None]) * p1 + s_grid[:, None] * kappa * v_draws
-    utils = crra_utility(incomes, gamma).mean(axis=1)
-    tol = 1e-10
-    best_u = utils.max()
-    idx = int(np.where(np.isclose(utils, best_u, atol=tol))[0].min())
-    return float(s_grid[idx])
+def s_star_RA(v_draws, gamma):
+    """Risk-averse optimal storage share via expected utility maximization."""
+    incomes = (1 - s_grid)[:, None] * p1 + (s_grid[:, None] * kappa) * v_draws[None, :]
+    util = U_crra(incomes, gamma).mean(axis=1)
+    return s_grid[util.argmax()]
 
-# -------------------------------
+def E_income_from_v(s, v_mean):
+    """Expected income given s and mean future price."""
+    return (1 - s) * p1 + delta * s * kappa * v_mean
+
+# ============================================================
 # Simulation
-# -------------------------------
-records = []
-for mu in thetas_mu:
-    a, b = feasible_beta_params(mu, variance)
-    theta2_draws = beta_dist(a, b).rvs(size=num_draws, random_state=rng)
-    v_draws = 1.0 / (1.0 + theta2_draws)
+# ============================================================
+G = len(gammas)
+M = len(mu_values)
+s_RA   = np.zeros((G, M))           # risk-averse s*
+s_RN   = np.zeros(M)                # risk-neutral s*
+gap_abs = np.zeros((G, M))          # absolute income gap
+gap_pct = np.zeros((G, M))          # relative gap (%)
 
-    for k0 in kappas0:
-        k1 = min(1.0, policy_increase * k0)
+for j, mu in enumerate(mu_values):
+    a, b = beta_params(mu, variance)
+    th2  = rng.beta(a, b, size=num_draws)
+    v    = 1.0 / (1.0 + th2)
+    vbar = v.mean()
 
-        for scenario in scenarios:
-            theta1 = scenario["theta1_fn"](mu)
-            p1 = p_from_theta(theta1)
+    s_rn = s_star_RN(vbar)
+    s_RN[j] = s_rn
+    Ei_rn = E_income_from_v(s_rn, vbar)
 
-            for gamma in gammas:
-                s0 = optimize_s(theta2_draws, p1, k0, gamma, s_grid)
-                income0 = (1 - s0) * p1 + s0 * k0 * v_draws
-                Epi0 = income0.mean()
-                EU0 = Epi0 if gamma == 0 else crra_utility(income0, gamma).mean()
+    for i, g in enumerate(gammas):
+        s_ra = s_star_RA(v, g)
+        s_RA[i, j] = s_ra
+        Ei_ra = E_income_from_v(s_ra, vbar)
+        diff  = Ei_rn - Ei_ra
+        gap_abs[i, j] = diff
+        gap_pct[i, j] = 0.0 if Ei_rn <= 1e-12 else 100.0 * diff / Ei_rn
 
-                s1 = optimize_s(theta2_draws, p1, k1, gamma, s_grid)
-                income1 = (1 - s1) * p1 + s1 * k1 * v_draws
-                Epi1 = income1.mean()
-                EU1 = Epi1 if gamma == 0 else crra_utility(income1, gamma).mean()
+# Risk-neutral switch (approximate where s_RN changes)
+switch_idx = np.where(np.diff(s_RN) != 0)[0]
+mu_star = mu_values[switch_idx[0] + 1] if switch_idx.size > 0 else None
 
-                records.append({
-                    "scenario": scenario["name"],
-                    "scenario_short": scenario["short"],
-                    "mu=E[theta2]": mu,
-                    "theta1": theta1,
-                    "p1": p1,
-                    "kappa0": k0,
-                    "kappa1": k1,
-                    "gamma": gamma,
-                    "s*_before": s0,
-                    "s*_after": s1,
-                    "Δs*": s1 - s0,
-                    "E[π]_before": Epi0,
-                    "E[π]_after": Epi1,
-                    "ΔE[π]": Epi1 - Epi0,
-                    "EU_before": EU0,
-                    "EU_after": EU1,
-                    "ΔEU": EU1 - EU0
-                })
+# ============================================================
+# Figure 1: Risk-aversion cost (absolute vs relative)
+# ============================================================
+fig, ax1 = plt.subplots(figsize=(10, 6))
+ax2 = ax1.twinx()
+colors = plt.cm.Blues(np.linspace(0.4, 0.95, len(gammas)))
 
-df = pd.DataFrame.from_records(records)
+for i, g in enumerate(gammas):
+    ax1.plot(mu_values, gap_abs[i], color=colors[i], lw=2)
+    ax2.plot(mu_values, gap_pct[i], color=colors[i], lw=2, ls='--')
 
-# Save full results for appendix
-df.to_csv(os.path.join(target_dir, "individual_storage_efficiency_policy_results.csv"), index=False)
+if mu_star is not None:
+    ax1.axvline(mu_star, color='k', ls=':', lw=1)
+    ax2.axvline(mu_star, color='k', ls=':', lw=1)
 
-# -------------------------------
-# Styling
-# -------------------------------
-import matplotlib.cm as cm
-cmap = cm.get_cmap("Blues")
-def deeper_blue(val):
-    frac = 0.50 + 0.60 * (val - min(gammas)) / (max(gammas) - min(gammas))
-    return cmap(frac)
-color_map = {g: deeper_blue(g) for g in gammas}
-linestyles = {0: "-", 0.5: "--", 2: "-.", 4: ":"}  # helps B/W print
-markers = {0: "o", 0.5: "s", 2: "D", 4: "^"}
+ax1.set_xlabel(r"Expected second-period buyer power $\mathbb{E}[\theta_2]=\mu$")
+ax1.set_ylabel(r"Absolute income gap  $\mathbb{E}[\pi(s^*_{RN})]-\mathbb{E}[\pi(s^*_{RA})]$")
+ax2.set_ylabel(r"Relative gap  $\frac{\mathbb{E}[\pi(s^*_{RN})]-\mathbb{E}[\pi(s^*_{RA})]}{\mathbb{E}[\pi(s^*_{RN})]}\times100\%$")
+ax1.set_title("Risk Aversion Cost: Absolute vs Relative Gaps (Unified View)")
+ax1.grid(True, alpha=0.3)
 
-plt.rcParams.update({
-    "figure.dpi": 300,
-    "savefig.dpi": 300,
-    "font.size": 10,
-    "axes.titlesize": 11,
-    "axes.labelsize": 10,
-    "legend.fontsize": 9,
-    "xtick.labelsize": 9,
-    "ytick.labelsize": 9,
-    "axes.spines.top": False,
-    "axes.spines.right": False,
-})
+legend1 = ax1.legend([Line2D([0], [0], color=colors[i], lw=2) for i in range(len(gammas))],
+                     [f"γ = {g}" for g in gammas], title="Risk aversion (color)", loc="upper left")
+legend2 = ax1.legend([Line2D([0], [0], color='grey', lw=2, ls='-'),
+                      Line2D([0], [0], color='grey', lw=2, ls='--')],
+                     ["Absolute (left axis)", "Relative % (right axis)"],
+                     title="Line style", loc="upper right")
+ax1.add_artist(legend1)
 
-# -------------------------------
-# Build combined grid
-#   Rows (4): [ΔE[π] | Symmetric], [Δs* | Symmetric], [ΔE[π] | Fixed], [Δs* | Fixed]
-#   Cols (3): κ0 in {0.70, 0.80, 0.90}
-# -------------------------------
-row_defs = [
-    ("ΔE[π]", "Symmetric Buyer Power (θ₁ = E[θ₂])"),
-    ("Δs*",  "Symmetric Buyer Power (θ₁ = E[θ₂])"),
-    ("ΔE[π]", "Fixed Current Buyer Power (θ₁ = 0.5)"),
-    ("Δs*",  "Fixed Current Buyer Power (θ₁ = 0.5)"),
-]
+fig.tight_layout()
+plt.savefig(os.path.join(target_dir, "income_gap_vs_mu_(unified).png"), dpi=300, bbox_inches="tight")
+plt.show()
 
-n_rows, n_cols = 4, len(kappas0)
-fig, axes = plt.subplots(n_rows, n_cols, figsize=(3.8*n_cols, 2.6*n_rows), sharex=False, sharey=False)
+# ============================================================
+# Figure 2: Sensitivity of s* to E[θ2]
+# ============================================================
+plt.figure(figsize=(10, 6))
+for i, g in enumerate(gammas):
+    plt.plot(mu_values, s_RA[i], color=colors[i], lw=2, label=rf"$\gamma={g}$")
+plt.plot(mu_values, s_RN, 'k--', lw=2, label=r"Risk-neutral $s^*$")
 
-# Compute consistent y-limits by metric across all scenarios/kappas
-limits = {}
-for metric in ["ΔE[π]", "Δs*"]:
-    sub = df[metric]
-    # More robust: group by metric and take min/max across all rows
-    limits[metric] = (float(df[metric].min()), float(df[metric].max()))
+if mu_star is not None:
+    plt.axvline(mu_star, color='k', ls=':', lw=1)
 
-# Slight symmetric padding around zero for readability
-def padded_limits(lo, hi, pct=0.05):
-    span = hi - lo
-    if np.isclose(span, 0):
-        span = 1e-6
-    pad = pct * span
-    return lo - pad, hi + pad
+plt.xlabel(r"Expected second-period buyer power $\mathbb{E}[\theta_2]=\mu$")
+plt.ylabel(r"Optimal storage share $s^*$")
+plt.title("Chosen Storage Shares: Risk-Averse vs. Risk-Neutral")
+plt.grid(True, alpha=0.3)
+plt.legend(title="Risk aversion")
+plt.tight_layout()
+plt.savefig(os.path.join(target_dir, "sensitivity_to_theta_2.png"), dpi=300, bbox_inches="tight")
+plt.show()
 
-# Panel labels (a), (b), ...
-panel_labels = list(string.ascii_lowercase)
+# ============================================================
+# Figure 3: Expected Price Gain vs μ for θ1 = {0.25, 0.5, 0.75} (highlight θ1=0.5)
+# ============================================================
+E_p2 = np.zeros(M)
+for j, mu in enumerate(mu_values):
+    a, b = beta_params(mu, variance)
+    th2  = rng.beta(a, b, size=num_draws)
+    p2   = 1.0 / (1.0 + th2)
+    E_p2[j] = p2.mean()
 
-# Plotting loop
-for r, (metric, scenario_name) in enumerate(row_defs):
-    scenario_df = df[df["scenario"] == scenario_name]
-    ylo, yhi = padded_limits(*limits[metric], pct=0.06)
-    for c, k0 in enumerate(kappas0):
-        ax = axes[r, c]
-        sub_k = scenario_df[scenario_df["kappa0"] == k0].copy()
-        k1 = min(1.0, policy_increase * k0)
+theta1_vals = [0.25, 0.50, 0.75]
+p1_vals = [1.0 / (1.0 + t1) for t1 in theta1_vals]
+gains = [kappa * E_p2 - p1 for p1 in p1_vals]
 
-        # sort by mu for each gamma, plot lines
-        for gamma in gammas:
-            sub_g = sub_k[sub_k["gamma"] == gamma].sort_values("mu=E[theta2]")
-            x = sub_g["mu=E[theta2]"].values
-            y = sub_g[metric].values
-            ax.plot(
-                x, y,
-                marker=markers[gamma],
-                linewidth=2,
-                markersize=4,
-                linestyle=linestyles[gamma],
-                color=color_map[gamma],
-                label=f"γ={gamma}"
-            )
+# Color scheme: muted gray for outer cases, strong blue for θ1=0.5
+colors = {
+    0.25: "lightgray",
+    0.50: "darkblue",
+    0.75: "lightgray"
+}
+linestyles = {
+    0.25: "--",
+    0.50: "-",
+    0.75: "--"
+}
 
-        # Titles, labels, grids
-        if r == 0:
-            ax.set_title(f"κ: {k0:.2f} → {k1:.2f}")
-        if c == 0:
-            left_label = "Δ Expected Income  E[π]" if metric == "ΔE[π]" else "Δ s*"
-            # Include scenario short tag on the left rows for clarity
-            scen_short = "Symmetric" if "Symmetric" in scenario_name else "Fixed θ₁=0.5"
-            ax.set_ylabel(f"{left_label}\n({scen_short})")
-        ax.set_xlabel("μ = E[θ₂]")
-        ax.grid(True, alpha=0.35)
-        ax.axhline(0.0, color="gray", linewidth=1.0, alpha=0.6)
-        ax.set_ylim(ylo, yhi)
+plt.figure(figsize=(10, 6))
+for t1, g in zip(theta1_vals, gains):
+    plt.plot(mu_values, g, lw=3 if t1 == 0.5 else 2,
+             color=colors[t1], ls=linestyles[t1],
+             label=f"θ₁ = {t1:.2f}  (p₁={1/(1+t1):.3f})")
 
-        # Panel label
-        label_idx = r*n_cols + c
-        ax.text(0.01, 0.98, f"({panel_labels[label_idx]})", transform=ax.transAxes,
-                ha="left", va="top", fontsize=10, fontweight="bold")
+# Highlight y = 0 line (risk-neutral indifference)
+plt.axhline(0.0, lw=2.5, color="darkred", alpha=0.7)
+plt.text(mu_values[-1]*0.98, 0.005, r"Indifference: $\kappa\,\mathbb{E}[p_2]=p_1$",
+         fontsize=11, color="red", ha="right", va="bottom")
 
-# Build a single shared legend (bottom center)
-# Grab handles/labels from the last axis plotted
-handles, labels = axes[-1, -1].get_legend_handles_labels()
-fig.legend(handles, labels, ncol=len(gammas), loc="lower center", frameon=False, bbox_to_anchor=(0.5, -0.01))
-
-fig.tight_layout(rect=(0, 0.03, 1, 1))  # leave room for legend
-
-# Save outputs
-fig.savefig(os.path.join(target_dir, "individual_storage_efficiency_policy_grid.png"), dpi=300, bbox_inches="tight")
-plt.close(fig)
-
-print("Saved: figure_storage_efficiency_policy_grid.png and storage_efficiency_policy_results.csv")
+plt.xlabel(r"Expected second-period buyer power $\mathbb{E}[\theta_2]=\mu$")
+plt.ylabel(r"Expected Price Gain  $=\kappa\,\mathbb{E}[p_2]-p_1$")
+plt.title(r"Expected Price Gain vs. $\mu$  ($\kappa=0.9$)")
+plt.grid(True, alpha=0.3)
+plt.legend(title="First-period buyer power", frameon=False)
+plt.tight_layout()
+plt.savefig(os.path.join(target_dir, "expected_price_gain_vs_mu.png"), dpi=300, bbox_inches="tight")
+plt.show()

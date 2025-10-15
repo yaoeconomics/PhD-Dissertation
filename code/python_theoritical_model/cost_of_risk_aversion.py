@@ -135,3 +135,54 @@ plt.legend(title="Risk aversion")
 plt.tight_layout()
 plt.savefig(os.path.join(target_dir, "sensitivity_to_theta_2.png"), dpi=300, bbox_inches="tight")
 plt.show()
+
+
+
+
+
+# ---------------------- Figure 3: Expected Price Gain vs μ for θ1 = {0.25, 0.5, 0.75} (highlight θ1=0.5) ----------------------
+E_p2 = np.zeros(M)
+for j, mu in enumerate(mu_values):
+    a, b = beta_params(mu, variance)
+    th2  = beta.rvs(a, b, size=num_draws)
+    p2   = 1.0 / (1.0 + th2)
+    E_p2[j] = p2.mean()
+
+theta1_vals = [0.25, 0.50, 0.75]
+p1_vals = [1.0 / (1.0 + t1) for t1 in theta1_vals]
+gains = [kappa * E_p2 - p1 for p1 in p1_vals]
+
+# Color scheme: muted gray for outer cases, strong blue for the focal θ1 = 0.5
+colors = {
+    0.25: "lightgray",
+    0.50: "darkblue",
+    0.75: "lightgray"
+}
+linestyles = {
+    0.25: "--",
+    0.50: "-",
+    0.75: "--"
+}
+
+plt.figure(figsize=(10, 6))
+for t1, g in zip(theta1_vals, gains):
+    plt.plot(
+        mu_values, g, lw=3 if t1 == 0.5 else 2,
+        color=colors[t1], ls=linestyles[t1],
+        label=f"θ₁ = {t1:.2f}  (p₁={1/(1+t1):.3f})"
+    )
+
+# Highlight y = 0 line (risk-neutral indifference)
+plt.axhline(0.0, lw=2.5, color="darkred", alpha=0.7)
+plt.text(mu_values[-1]*0.98, 0.005, r"Indifference: $\kappa\,\mathbb{E}[p_2]=p_1$",
+         fontsize=11, color="red", ha="right", va="bottom")
+
+plt.xlabel(r"Expected second-period buyer power $\mathbb{E}[\theta_2]=\mu$")
+plt.ylabel(r"Expected Price Gain  $=\kappa\,\mathbb{E}[p_2]-p_1$")
+plt.title(r"Expected Price Gain vs. $\mu$  ($\kappa=0.9$)")
+plt.grid(True, alpha=0.3)
+plt.legend(title="First-period buyer power", frameon=False)
+plt.tight_layout()
+plt.savefig(os.path.join(target_dir, "expected_price_gain_vs_mu.png"),
+            dpi=300, bbox_inches="tight")
+plt.show()
