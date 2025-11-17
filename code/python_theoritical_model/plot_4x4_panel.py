@@ -9,10 +9,10 @@ import matplotlib.gridspec as gridspec
 theta1 = 0.5
 p1 = 1 / (1 + theta1)
 delta = 1.0
-s_grid = np.linspace(0, 1, 25)
-gamma_grid = np.linspace(0, 10, 30)
-kappa_grid = np.linspace(0.6, 1.0, 20)
-num_draws = 2000
+s_grid = np.linspace(0, 1, 100)
+gamma_grid = np.linspace(0, 10, 50)
+kappa_grid = np.linspace(0.6, 1.0, 50)
+num_draws = 5000
 
 def compute_beta_params(mu, sigma2):
     factor = mu * (1 - mu) / sigma2 - 1
