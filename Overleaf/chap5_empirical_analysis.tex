@@ -4,7 +4,7 @@ Existing observational data are insufficient, as micro-surveys typically capture
 
 %------------------------------------------------------%
 \section{Field Site: A County in Central China}
-\noindent This study surveys both farmers and intermediaries in Yanchang County, Shaanxi Province, a region where Fuji apple cultivation dominates (see Figure \ref{Figure: Yanchang}). Given its reliance on a single cash crop and the strategic role of cold storage in marketing decisions, Yanchang provides an ideal setting to analyze the interaction between storage and market competition. Each village has a central market where farmers sell apples to middlemen and traders, with commercial cold storage facilities available for rent. In 2024, the county's fruit storage capacity reached 180,000 tons, with most of it utilized annually.  
+\noindent This study surveys both farmers and intermediaries in Yanchang County, Shaanxi Province, a region where Fuji apple cultivation dominates (see Figure \ref{Figure: Yanchang}). Given its reliance on a single cash crop and the strategic role of cold storage in marketing decisions, Yanchang provides an concrete setting to analyze the interaction between storage and market competition. Each village has a central market where farmers sell apples to middlemen and traders, with commercial cold storage facilities available for rent. In 2024, the county's fruit storage capacity reached 180,000 tons, with most of it utilized annually.  
 
 \begin{figure}[thp]
 \centering
@@ -35,7 +35,7 @@ As indicated in Chapter~\ref{Chapter: descriptive chapter}, the cost of renting 
 
 %------------------------------------------------------%
 \subsection{Measures of Farmers' Storage Usage and Procurement Competitiveness}
-\noindent This study examines apple growers' cold storage usage and marketing timing decisions as key dependent variables. First, I define \texttt{Storage-Usage-Binary}, a binary indicator equal to 1 if a farmer used cold storage at harvest and 0 otherwise. Second, \texttt{Storage-Usage-Type} categorizes storage choices into four groups: \textit{Not\_use} (no storage), \textit{Rent\_large} (rented large-scale commercial storage), \textit{Rent\_small} (rented small-scale storage), and \textit{Self\_built} (self-owned storage). Third, \texttt{Time-to-Sell} measures the delay between harvest and sale, effectively capturing storage duration. Sales occurring in October are classified as 1-4 weeks post-harvest, November as 5-8 weeks, and so forth, yielding interval-censored data with four predefined selling-time intervals: 1-4, 5-8, 9-12, and 13-28 weeks. Figure \ref{Figure: selling weeks distribution} illustrates the distribution of selling weeks by storage type.  
+\noindent This study examines apple growers' cold storage usage and marketing timing decisions as key dependent variables. First, I define \textsf{Storage-Usage-Binary}, a binary indicator equal to 1 if a farmer used cold storage at harvest and 0 otherwise. Second, \textsf{Storage-Usage-Type} categorizes storage choices into four groups: \textit{Not\_use} (no storage), \textit{Rent\_large} (rented large-scale commercial storage), \textit{Rent\_small} (rented small-scale storage), and \textit{Self\_built} (self-owned storage). Third, \textsf{Time-to-Sell} measures the delay between harvest and sale, effectively capturing storage duration. Sales occurring in October are classified as 1-4 weeks post-harvest, November as 5-8 weeks, and so forth, yielding interval-censored data with four predefined selling-time intervals: 1-4, 5-8, 9-12, and 13-28 weeks. Figure \ref{Figure: selling weeks distribution} illustrates the distribution of selling weeks by storage type.  
 
 \begin{figure}[H]
 \centering
@@ -46,8 +46,8 @@ As indicated in Chapter~\ref{Chapter: descriptive chapter}, the cost of renting 
 
 To capture inter-temporal variations in buyer power and market competitive conditions, farmers reported:
 \begin{enumerate}
-    \item Their subjective assessment of buyer competition at harvest (\texttt{Subjective buyer competitiveness}, measured on a 1-5 scale);
-    \item Their expectations regarding changes in the number of traders over the next three months (recorded as \texttt{Expect more buyers} and \texttt{Expect fewer buyers}).
+    \item Their subjective assessment of buyer competition at harvest (\textsf{Subjective buyer competitiveness}, measured on a 1-5 scale);
+    \item Their expectations regarding changes in the number of traders over the next three months (recorded as \textsf{Expect more buyers} and \textsf{Expect fewer buyers}).
 \end{enumerate}
 
 Additionally, the survey collected data on farmers' agricultural income, production costs, storage expenses, and demographic characteristics to assess the welfare implications of storage adoption.  
@@ -57,7 +57,7 @@ To complement these farmer-level insights with market-level dynamics, a buyer su
     \item The specific villages each buyer visited during the October harvest;
     \item The cold storage facilities from which they had procured apples over the preceding two months.
 \end{enumerate}
-These responses allow for the construction of an objective measure of buyer concentration which might serve as a proxy of inter-temporal buyer competition. Inspired by \cite{macchiavello2021competition}, who used the number of coffee mills within a 10 km radius as a competition metric in Rwanda's coffee industry, I define \texttt{Number of buyers} as the count of traders visiting each village at harvest.  
+These responses allow for the construction of an objective measure of buyer concentration which might serve as a proxy of inter-temporal buyer competition. Inspired by \cite{macchiavello2021competition}, who used the number of coffee mills within a 10 km radius as a competition metric in Rwanda's coffee industry, I define \textsf{Number of buyers} as the count of traders visiting each village at harvest.  
 
 
 %------------------------------------------------------%
@@ -71,6 +71,7 @@ These responses allow for the construction of an objective measure of buyer conc
 \noindent To complement the self-assessment, a modified Holt-Laury-type lottery game was implemented. Apple growers were asked how much they would be willing to pay to enter a 50-50 lottery with a potential payout of 200 CNY or nothing. This adapts the \textit{multiple price list (MPL) choice task} from \cite{brick2012risk}, a variation of the Holt-Laury method \citep{holt2002risk}. Participants chose whether to pay varying entry fees (20-120 CNY), effectively selecting between a \textit{safe} (keeping the money) and a \textit{risky} (entering the lottery) option.  
 
 This approach is well-suited for field settings, being simple to administer while using real monetary stakes to elicit truthful responses. Different willingness-to-pay (WTP) values correspond to varying expected values and degrees of risk aversion, as shown in Table \ref{tab:experiment_design}.  
+
 
 \begin{table}[H]
     \centering
@@ -103,10 +104,10 @@ While the head-tail lottery design provides a tractable way to elicit \textit{po
 \[
 U(x) = \frac{x^{1-\gamma}}{1 - \gamma}
 \]  
-where \( \gamma \) represents the risk aversion coefficient. Under this specification, \( \gamma > 0 \) implies risk aversion, \( \gamma = 0 \) indicates risk neutrality, and \( \gamma < 0 \) reflects risk-seeking behavior. Columns 5 and 6 in Table \ref{tab:experiment_design} present the corresponding CRRA ranges and adjusted CRRA values. These estimates allow for a quantitative assessment of farmers' risk aversion, which is critical for understanding storage decisions and responses to market uncertainty.  
+where $ \gamma $ represents the risk aversion coefficient. Under this specification, $ \gamma > 0 $ implies risk aversion, $ \gamma = 0 $ indicates risk neutrality, and $ \gamma < 0 $ reflects risk-seeking behavior. Columns 5 and 6 in Table \ref{tab:experiment_design} present the corresponding CRRA ranges and adjusted CRRA values. These estimates allow for a quantitative assessment of farmers' risk aversion, which is critical for understanding storage decisions and responses to market uncertainty.  
 
 \subsubsection{Liquidity Constraint}  
-\noindent The binary variable \texttt{Liquidity constrained} equals 1 if a farmer reports both difficulty accessing credit and an urgent need to sell at harvest to cover immediate expenses (e.g., school tuition or medical costs). This measure refines and extends approaches used by \cite{albuquerque2024market} and \cite{stephens2011incomplete}, who define credit access as a proxy for liquidity constraints.  
+\noindent The binary variable \textsf{Liquidity constrained} equals 1 if a farmer reports both difficulty accessing credit and an urgent need to sell at harvest to cover immediate expenses (e.g., school tuition or medical costs). This measure refines and extends approaches used by \cite{albuquerque2024market} and \cite{stephens2011incomplete}, who define credit access as a proxy for liquidity constraints.  
 
 Only a small fraction of surveyed farmers (about 15\%) meet the criteria for liquidity constraints, with no strong correlation between liquidity constraints and storage or selling decisions. One possible explanation is that the study region, located in Central China, is a designated provincial rural revitalization area, attracting both state- and private-owned financial institutions that provide inclusive credit access.  
 
@@ -183,7 +184,7 @@ Despite the potential benefits of storage, many farmers opt not to store their p
 %------------------------------------------------------%
 %------------------------------------------------------%
 \section{Empirical Specification}
-\subsection{Storage Decisions: Buyers' Competitiveness at Harvest}
+\subsection{Farmer Storage Decisions: Buyers' Competitiveness at Harvest}
 \noindent 
 This section presents the results of a logistic regression model with town-level fixed effects examining the determinants of binary storage usage. The dependent variable is whether an individual engages in storage ($S_i = 1$) or not ($S_i = 0$). The key independent variables fall into two categories:  
 \begin{enumerate}
@@ -219,14 +220,14 @@ One key explanation for this discrepancy lies in the existence of buyer collusio
 This dynamic likely shapes farmers' perceptions. If farmers are aware that many traders operate under the influence of a few dominant firms, they may not view the mere presence of more buyers as an assurance of greater competition. Instead, their beliefs about competition may be shaped by informal market signals, previous experiences, and interactions with traders. For example, if farmers observe that price offers are not influenced by the number of buyers, they may conclude that true competition is lacking. Specifically, if multiple buyers offer the same price, which would be true under collusion, or if the buyers are merely agents for dominant firms and have little autonomy to make price offers, then growers rationally infer little significance to the presence of multiple buyers. Consequently, their storage decisions align more closely with their perception of competitive intensity rather than the raw count of buyers. This reasoning underscores the limitations of using the number of buyers as a standalone metric for market competition. In contexts where buyer collusion is prevalent, farmers may rationally discount the relevance of this measure in their decision-making process. Instead, they may rely on subjective assessments that better capture the market dynamics they actually face.  
 
 
-Several individual-level characteristics also significantly influence farmers' storage decisions, as reported in Table~\ref{tab:marginal_effects_model3}. Age exhibits a negative relationship with storage usage: the marginal effect is \(-0.003\) (\(p<0.1\)), indicating that each additional year of age reduces the probability of adopting storage by 0.3 percentage points. Education, defined as an ordered categorical variable (primary school, junior high school, senior high school, and college or above), is positively associated with storage adoption. The average marginal effect (AME) for education level is 0.038 (\(p<0.05\)), suggesting that advancing by one education level increases the likelihood of using storage by 3.8 percentage points.
+Several individual-level characteristics also significantly influence farmers' storage decisions, as reported in Table~\ref{tab:marginal_effects_model3}. Age exhibits a negative relationship with storage usage: the marginal effect is $-0.003$ ($p<0.1$), indicating that each additional year of age reduces the probability of adopting storage by 0.3 percentage points. Education, defined as an ordered categorical variable (primary school, junior high school, senior high school, and college or above), is positively associated with storage adoption. The average marginal effect (AME) for education level is 0.038 ($p<0.05$), suggesting that advancing by one education level increases the likelihood of using storage by 3.8 percentage points.
 
 
-Social capital also plays a key role, as farmers with a family member who has ever served as a village leader are 15.2 percentage points more likely to engage in storage (\(p<0.01\)). This suggests that farmers with stronger social ties benefit from lower storage costs or better access to market information.
+Social capital also plays a key role, as farmers with a family member who has ever served as a village leader are 15.2 percentage points more likely to engage in storage ($p<0.01$). This suggests that farmers with stronger social ties benefit from lower storage costs or better access to market information.
 
-Risk preferences significantly affect storage decisions. The coefficient on CRRA-adjusted risk aversion is \(-0.122\) (\(p<0.01\)), indicating that a one-unit increase in a farmer's CRRA decreases the probability of storage adoption by 12.2 percentage points. This finding aligns with economic theory, which predicts that more risk-averse individuals prefer immediate sales over storage due to uncertainty about future prices.
+Risk preferences significantly affect storage decisions. The coefficient on CRRA-adjusted risk aversion is $-0.122$ ($p<0.01$), indicating that a one-unit increase in a farmer's CRRA decreases the probability of storage adoption by 12.2 percentage points. This finding aligns with economic theory, which predicts that more risk-averse individuals prefer immediate sales over storage due to uncertainty about future prices.
 
-Interestingly, liquidity constraints do not significantly influence storage decisions (AME = \(-0.004\), \(p=0.97\)). This suggests that in this context, storage adoption is not primarily driven by immediate financial constraints.
+Interestingly, liquidity constraints do not significantly influence storage decisions (AME = $-0.004$, $p=0.97$). This suggests that in this context, storage adoption is not primarily driven by immediate financial constraints.
 
 These findings highlight that farmers' storage decisions are primarily shaped by their subjective beliefs about buyer competition at harvest rather than by the objective number of buyers present. The weak effect of buyer count suggests that collusive buyer behavior may offset the advantages of having more buyers. Additionally, risk aversion, education, and social capital emerge as significant determinants of storage adoption, while liquidity constraints appear to play a minimal role.
 
@@ -235,7 +236,7 @@ Building on these insights, the following section examines how farmers' expectat
 
 
 
-\subsection{Storage Decisions: Farmers' Expectations of Buyer Competitiveness}
+\subsection{Farmer Storage Decisions: Farmers' Expectations of Buyer Competitiveness}
 
 \noindent This section analyzes the impact of farmers' expectations regarding buyer availability and competitiveness in three months from the harvest on their storage decisions. 
 
@@ -250,16 +251,16 @@ To avoid confusion, it is crucial to distinguish between the observed number of 
 Therefore, my key independent variable here captures whether farmers anticipate more buyers, fewer buyers, or no change in buyer numbers post-harvest. The logistic regression model, incorporating town-level fixed effects, is specified as follows:
 
 \begin{equation}
-    \text{logit} \left( P(S_i = 1) \right) = \alpha_0 + \alpha_1 E^m_i + \alpha_2 E^f_i + \alpha_3 X_i + \gamma_\tau + \varepsilon_i,
+    \text{logit} \left( D(S_i = 1) \right) = \alpha_0 + \alpha_1 E^m_i + \alpha_2 E^f_i + \alpha_3 X_i + \gamma_\tau + \varepsilon_i,
 \end{equation}
 where $E^m_i$ denotes the expectation of more buyers in three months from the harvesting time, $E^f_i$ represents the expectation of fewer buyers, and $X_i$ includes demographic controls. Town-level fixed effects are denoted by $\gamma_\tau$, and $\varepsilon_i$ is the error term.
 
 \input{tables/farmer_expectations_logistic_results_AME}
 
 
-The average marginal effects in Table \ref{tab: binary storage ~ farmer's expectation on movement (AME)} show that farmers who expect an increase in the number of buyers within three months are significantly more likely to store their harvest. The coefficient for \texttt{Expect More Buyers} is 0.325 (\(p < 0.01\)), suggesting that farmers who anticipate more buyers have a 32.5 percentage point higher probability of using storage. This finding aligns with the idea that expectations of increased buyer competition motivate farmers to delay sales, anticipating higher farm-gate prices. Such behavior is consistent with intertemporal optimization, where farmers strategically store their produce to maximize returns when expecting stronger buyer competition.  
+The average marginal effects in Table \ref{tab: binary storage ~ farmer's expectation on movement (AME)} show that farmers who expect an increase in the number of buyers within three months are significantly more likely to store their harvest. The coefficient for \textsf{Expect More Buyers} is 0.325 ($p < 0.01$), suggesting that farmers who anticipate more buyers have a 32.5 percentage point higher probability of using storage. This finding aligns with the idea that expectations of increased buyer competition motivate farmers to delay sales, anticipating higher farm-gate prices. Such behavior is consistent with intertemporal optimization, where farmers strategically store their produce to maximize returns when expecting stronger buyer competition.  
 
-On the other hand, \texttt{Expect Fewer Buyers} yields a positive but statistically insignificant marginal effect of 0.044 ($p = 0.33$), indicating that expectations of reduced competition do not significantly influence storage decisions. While one might expect pessimistic market expectations to discourage storage, the more plausible explanation for the null result is limited variation in this variable. As shown in Table~\ref{tab: summary statistics}, only 16\% of storage users (about 30 farmers) reported expecting fewer buyers, which restricts statistical power. In contrast, expectations of more buyers were far more common, providing sufficient variation to generate a meaningful estimate. The small number of pessimistic respondents thus likely explains the lack of significance.
+On the other hand, \textsf{Expect Fewer Buyers} yields a positive but statistically insignificant marginal effect of 0.044 ($p = 0.33$), indicating that expectations of reduced competition do not significantly influence storage decisions. While one might expect pessimistic market expectations to discourage storage, the more plausible explanation for the null result is limited variation in this variable. As shown in Table~\ref{tab: summary statistics}, only 16\% of storage users (about 30 farmers) reported expecting fewer buyers, which restricts statistical power. In contrast, expectations of more buyers were far more common, providing sufficient variation to generate a meaningful estimate. The small number of pessimistic respondents thus likely explains the lack of significance.
 
 These findings highlight an asymmetry in farmers' responses to expected changes in buyer competition. While the expectation of more intense competition strongly incentivizes storage, expectations of fewer buyers do not significantly deter it. This suggests that farmers are more sensitive to potential price gains from increased buyer competition than to the risks associated with fewer buyers, emphasizing the role of perceived future market opportunities in shaping storage decisions.
 
@@ -297,8 +298,6 @@ These patterns highlight the critical role of forward-looking market expectation
 
 
 
-
-
 \begin{figure}[ht]
     \centering
     \includegraphics[width=1\textwidth]{figures/filtered_difference_from_baseline_plot.png}
@@ -314,9 +313,9 @@ These patterns highlight the critical role of forward-looking market expectation
 \label{Figure: Correlation Matrix of Controls}
 \end{figure}
 
-Demographic and risk-related factors continue to influence storage decisions in expected directions. Age has a consistently negative impact on storage usage, with AMEs of -0.003 (\(p < 0.1\)), indicating that older individuals are less likely to store their harvest. In contrast, family leadership status remains a strong positive predictor, with an AME of 0.105 (\(p < 0.01\)), suggesting that farmers with family leadership experience are significantly more likely to store their produce. Risk aversion also exerts a significant negative effect on storage decisions, with AMEs of -0.100 (\(p < 0.01\)), reinforcing the tendency of more risk-averse individuals to favor immediate sales over storage due to the uncertainty associated with future prices.
+Demographic and risk-related factors continue to influence storage decisions in expected directions. Age has a consistently negative impact on storage usage, with AMEs of -0.003 ($p < 0.1$), indicating that older individuals are less likely to store their harvest. In contrast, family leadership status remains a strong positive predictor, with an AME of 0.105 ($p < 0.01$), suggesting that farmers with family leadership experience are significantly more likely to store their produce. Risk aversion also exerts a significant negative effect on storage decisions, with AMEs of -0.100 ($p < 0.01$), reinforcing the tendency of more risk-averse individuals to favor immediate sales over storage due to the uncertainty associated with future prices.
 
-The correlation matrix of control variables, presented in Figure \ref{Figure: Correlation Matrix of Controls}, further contextualizes these findings by illustrating the relationships among key covariates. The negative correlation between age and education level (\(\rho = -0.18\)) is consistent with the observed effect of age on storage behavior, as younger farmers---who tend to have higher education levels---may be more receptive to market-based strategies, such as storage. Similarly, the relatively low correlation between risk aversion (CRRA adjusted) and other covariates suggests that its influence on storage decisions operates independently of other demographic characteristics. Additionally, farmers' subjective beliefs about buyer competition at harvest exhibit a strong positive correlation with the objective number of buyers at harvest (\(\rho = 0.79\)), reinforcing the idea that perceptions of market competition align closely with objective conditions, though they remain distinct factors. The overall low to moderate correlations among control variables reduce concerns about multicollinearity, supporting the reliability of the logistic regression estimates and their implications for storage behavior.
+The correlation matrix of control variables, presented in Figure \ref{Figure: Correlation Matrix of Controls}, further contextualizes these findings by illustrating the relationships among key covariates. The negative correlation between age and education level ($\rho = -0.18$) is consistent with the observed effect of age on storage behavior, as younger farmers---who tend to have higher education levels---may be more receptive to market-based strategies, such as storage. Similarly, the relatively low correlation between risk aversion (CRRA adjusted) and other covariates suggests that its influence on storage decisions operates independently of other demographic characteristics. Additionally, farmers' subjective beliefs about buyer competition at harvest exhibit a strong positive correlation with the objective number of buyers at harvest ($\rho = 0.79$), reinforcing the idea that perceptions of market competition align closely with objective conditions, though they remain distinct factors. The overall low to moderate correlations among control variables reduce concerns about multicollinearity, supporting the reliability of the logistic regression estimates and their implications for storage behavior.
 
 
 
@@ -326,19 +325,19 @@ The correlation matrix of control variables, presented in Figure \ref{Figure: Co
 \noindent 
 To examine how farmers' expectations regarding buyer competition, price expectations, logistical factors, and external conditions influence the timing of their sales, I employ an accelerated failure-time (AFT) specification within a hazard model framework, following \cite{albuquerque2024market}. The AFT model is well-suited for analyzing interval-censored survival data, as it estimates the time until an event occurs---in this case, the sale of apples. This model assumes that covariates accelerate or decelerate the time to an event by a constant factor. A positive coefficient for a covariate indicates that it prolongs the time until the sale (delays selling), while a negative coefficient shortens it.
 
-Given that my survey data only records the month of sale, an interval-censoring approach is used to improve the accuracy of selling duration estimates. The hazard model estimates the probability that a farmer sells apples at a given time, conditional on not having sold them earlier. In the AFT framework, the model is reinterpreted to focus on the speed of selling. The hazard rate for farmer \(f\) selling apples \(c\) at time \(t_{c,f}\) is given by:
+Given that my survey data only records the month of sale, an interval-censoring approach is used to improve the accuracy of selling duration estimates. The hazard model estimates the probability that a farmer sells apples at a given time, conditional on not having sold them earlier. In the AFT framework, the model is reinterpreted to focus on the speed of selling. The hazard rate for farmer $f$ selling apples $c$ at time $t_{c,f}$ is given by:
 
 \begin{equation}
     h_j(t_{c,f}) = h_0(t_{c,f}) \exp\left(-\mathbf{x}_{c,f} \boldsymbol{\beta}\right),
 \end{equation}
 
-where \(h_0(t)\) is the baseline hazard function, assumed to follow a Weibull distribution:
+where $h_0(t)$ is the baseline hazard function, assumed to follow a Weibull distribution:
 
 \begin{equation}
     h_0(t) = \alpha t^{\alpha-1}.
 \end{equation}
 
-The vector \(\mathbf{x}_{c,f}\) includes explanatory variables that influence the timing of sales. The survivor function \(S_j(t)\), which represents the probability that a farmer has not yet sold their apples by time \(t\), is related to the hazard function through:
+The vector $\mathbf{x}_{c,f}$ includes explanatory variables that influence the timing of sales. The survivor function $S_j(t)$, which represents the probability that a farmer has not yet sold their apples by time $t$, is related to the hazard function through:
 
 \begin{equation}
     h_j(t) = -\frac{d \log S_j(t)}{dt}.
@@ -350,7 +349,7 @@ For interval-censored data, the likelihood function is:
     \mathcal{L} = \prod_{j=1}^N \left(S_j(t_{i-1}) h(t_i)\right)^{y_{j,i-1}} S_j(t_{i-1})^{1-y_{j,i}},
 \end{equation}
 
-where \(y_{j,i} = 1\) if the sale occurs within the interval \(i\).
+where $y_{j,i} = 1$ if the sale occurs within the interval $i$.
 
 To control for unobserved location-specific factors such as weather conditions, road infrastructure, and market accessibility, township fixed effects are included in the empirical specification. This improves the model's ability to capture local heterogeneity, although it may reduce estimation efficiency due to the limited number of observations in some townships.
 
@@ -361,22 +360,22 @@ To control for unobserved location-specific factors such as weather conditions, 
 Table \ref{tab: extended Survival AFT with controls} presents the results from the AFT Weibull survival model, which estimates the duration (storing time) until farmers sell their apples. Column (1) includes the full sample, while Column (2) focuses exclusively on farmers who utilize storage.
 
 \begin{enumerate}
-    \item \textbf{Expected Buyer Competitiveness and Time to Sell:} Farmers' expectations about future buyer competition exhibit distinct effects on their marketing timing. In the full sample (Column 1), anticipating more buyers in the future significantly prolongs the time to sell (\(\beta = 0.50, p<0.01\)), suggesting that farmers expecting increased competition among buyers delay sales, likely in anticipation of higher farm-gate prices. This aligns with the theoretical expectation that greater buyer competition enhances farmers' bargaining power, incentivizing them to wait for more favorable market conditions.
+    \item \textbf{Expected Buyer Competitiveness and Time to Sell:} Farmers' expectations about future buyer competition exhibit distinct effects on their marketing timing. In the full sample (Column 1), anticipating more buyers in the future significantly prolongs the time to sell ($\beta = 0.50, p<0.01$), suggesting that farmers expecting increased competition among buyers delay sales, likely in anticipation of higher farm-gate prices. This aligns with the theoretical expectation that greater buyer competition enhances farmers' bargaining power, incentivizing them to wait for more favorable market conditions.
     
-    However, among storage users (Column 2), the coefficient on expecting more buyers is smaller and statistically insignificant (\(\beta = 0.12, p>0.1\)), indicating that for farmers already engaged in storage, expectations of further increased competition do not further delay their sales. This suggests that these farmers are already positioned to take advantage of higher prices and are less responsive to incremental changes in buyer expectations.
+    However, among storage users (Column 2), the coefficient on expecting more buyers is smaller and statistically insignificant ($\beta = 0.12, p>0.1$), indicating that for farmers already engaged in storage, expectations of further increased competition do not further delay their sales. This suggests that these farmers are already positioned to take advantage of higher prices and are less responsive to incremental changes in buyer expectations.
 
     Therefore, an optimistic projection on future market competitive conditions mainly encourages storage, but does not necessarily lead to a longer storage time (marketing wait).
     
-    Conversely, expectations of fewer buyers in the future exhibit a negative but statistically insignificant coefficient in the full sample (\(\beta = -0.05, p>0.1\)), implying that pessimism about buyer competition does not significantly accelerate selling decisions across all farmers. Among storage users, however, expecting fewer buyers significantly shortens the time to sell (\(\beta = -0.21, p<0.1\)), suggesting that those who store their harvest are more sensitive to potential market downturns and may liquidate their stocks sooner when facing expectations of reduced competition.
+    Conversely, expectations of fewer buyers in the future exhibit a negative but statistically insignificant coefficient in the full sample ($\beta = -0.05, p>0.1$), implying that pessimism about buyer competition does not significantly accelerate selling decisions across all farmers. Among storage users, however, expecting fewer buyers significantly shortens the time to sell ($\beta = -0.21, p<0.1$), suggesting that those who store their harvest are more sensitive to potential market downturns and may liquidate their stocks sooner when facing expectations of reduced competition.
     
     \item \textbf{Storage Conditions and Purpose:} 
-    Logistical constraints related to storage access significantly influence the decision to store but have limited impact on the duration of storage. Specifically, greater distance to a storage facility reduces the likelihood of storage adoption but does not significantly affect the time apples are kept in storage, which is consistent with theoretical expectations. Farmers located farther from small storage facilities sell significantly earlier than those with closer access (\(\beta = -0.30, p<0.01\)), underscoring that distance imposes a meaningful transaction cost that limits farmers' ability to delay sales for better prices. In contrast, distance to large storage facilities does not have a statistically significant effect, suggesting that large storage infrastructures may be either less frequently utilized or more accessible under different institutional or market arrangements.
+    Logistical constraints related to storage access significantly influence the decision to store but have limited impact on the duration of storage. Specifically, greater distance to a storage facility reduces the likelihood of storage adoption but does not significantly affect the time apples are kept in storage, which is consistent with theoretical expectations. Farmers located farther from small storage facilities sell significantly earlier than those with closer access ($\beta = -0.30, p<0.01$), underscoring that distance imposes a meaningful transaction cost that limits farmers' ability to delay sales for better prices. In contrast, distance to large storage facilities does not have a statistically significant effect, suggesting that large storage infrastructures may be either less frequently utilized or more accessible under different institutional or market arrangements.
     
-    The stated purpose of storage also plays a crucial role in determining the time to sell. Farmers who store with the explicit goal of marketing optimization exhibit significantly prolonged selling durations (\(\beta = 0.33, p<0.01\)), supporting the notion that these farmers strategically time their sales to capture better market conditions. Similarly, those who store for bargaining leverage also delay sales (\(\beta = 0.27, p<0.01\)), reinforcing the idea that farmers with stronger price negotiation motives tend to wait longer before selling. However, among storage users (Column 2), neither of these motivations significantly influences time to sell, likely because all individuals in this subsample are already engaged in storage, making other factors more decisive.
+    The stated purpose of storage also plays a crucial role in determining the time to sell. Farmers who store with the explicit goal of marketing optimization exhibit significantly prolonged selling durations ($\beta = 0.33, p<0.01$), supporting the notion that these farmers strategically time their sales to capture better market conditions. Similarly, those who store for bargaining leverage also delay sales ($\beta = 0.27, p<0.01$), reinforcing the idea that farmers with stronger price negotiation motives tend to wait longer before selling. However, among storage users (Column 2), neither of these motivations significantly influences time to sell, likely because all individuals in this subsample are already engaged in storage, making other factors more decisive.
     
-    \item \textbf{Human Capital and Market Conditions:} Farmers' education levels exhibit a significant and positive relationship with selling time in the full sample (\(\beta = 0.10, p<0.05\)), indicating that more educated farmers are more likely to delay sales, potentially due to better access to market information or stronger financial literacy. However, this effect diminishes among storage users (\(\beta = 0.06, p>0.1\)), suggesting that education primarily affects the initial decision to store rather than the subsequent timing of sales.
+    \item \textbf{Human Capital and Market Conditions:} Farmers' education levels exhibit a significant and positive relationship with selling time in the full sample ($\beta = 0.10, p<0.05$), indicating that more educated farmers are more likely to delay sales, potentially due to better access to market information or stronger financial literacy. However, this effect diminishes among storage users ($\beta = 0.06, p>0.1$), suggesting that education primarily affects the initial decision to store rather than the subsequent timing of sales.
     
-    The number of buyers at harvest in the market positively affects time to sell in both specifications, though the magnitude is relatively small. In the full sample, each additional buyer visiting during the harvest is associated with a slight delay in selling (\(\beta = 0.03, p<0.05\)), while among storage users, the effect is somewhat stronger (\(\beta = 0.04, p<0.1\)). This implies that market depth during harvest plays a role in prolonging sales, potentially by increasing farmers' confidence in their ability to obtain better prices.
+    The number of buyers at harvest in the market positively affects time to sell in both specifications, though the magnitude is relatively small. In the full sample, each additional buyer visiting during the harvest is associated with a slight delay in selling ($\beta = 0.03, p<0.05$), while among storage users, the effect is somewhat stronger ($\beta = 0.04, p<0.1$). This implies that market depth during harvest plays a role in prolonging sales, potentially by increasing farmers' confidence in their ability to obtain better prices.
 \end{enumerate}
 
 \subsubsection{Summary of Findings}
