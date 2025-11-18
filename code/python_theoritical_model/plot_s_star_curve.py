@@ -19,6 +19,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import beta
 
+# Global font settings
+plt.rcParams.update({
+    "axes.titlesize": 18,
+    "axes.labelsize": 18,
+    "xtick.labelsize": 18,
+    "ytick.labelsize": 18,
+    "legend.fontsize": 16,
+    "legend.title_fontsize": 16
+})
+
+
 # --- Constants ---
 theta1 = 0.5
 p1 = 1 / (1 + theta1)

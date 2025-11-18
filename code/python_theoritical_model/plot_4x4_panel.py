@@ -4,6 +4,16 @@ import matplotlib.pyplot as plt
 from scipy.stats import beta
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.gridspec as gridspec
+# Global font settings
+plt.rcParams.update({
+    "axes.titlesize": 14,      # panel titles
+    "axes.labelsize": 14,      # axis labels
+    "xtick.labelsize": 14,     # x tick labels
+    "ytick.labelsize": 14,     # y tick labels
+    "legend.fontsize": 13,     # legend entries
+    "legend.title_fontsize": 14,
+    "figure.titlesize": 20     # suptitle
+})
 
 # Constants
 theta1 = 0.5

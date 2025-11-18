@@ -6,6 +6,17 @@ import matplotlib.pyplot as plt
 from scipy.stats import beta
 from numpy.polynomial.legendre import leggauss
 
+# Global font settings
+plt.rcParams.update({
+    "axes.titlesize": 18,      # panel titles
+    "axes.labelsize": 16,      # axis labels
+    "xtick.labelsize": 14,     # x tick labels
+    "ytick.labelsize": 14,     # y tick labels
+    "legend.fontsize": 13,     # legend entries
+    "legend.title_fontsize": 14,
+    "figure.titlesize": 20     # suptitle
+})
+
 # -----------------------------
 # Switch
 # -----------------------------
@@ -320,12 +331,15 @@ for ax, contrast in zip(axes, avg_panel["contrast"].unique()):
     ax.bar(x + width/2, sub["−ΔRP (insurance gain)"], width=width, label="−ΔRP (insurance)")
     ax.plot(x, sub["ΔCE"], marker="o", linestyle="-", label="ΔCE (total)")
     ax.set_title(f"κ {contrast}")
-    ax.set_xlabel("γ decile (low → high risk aversion)")
+    ax.set_xlabel("γ decile")
     ax.grid(True, axis="y", linestyle="--", alpha=0.5)
 axes[0].set_ylabel("Gain (price units)")
 axes[2].set_ylabel("Gain (price units)")
 handles, labels = axes[0].get_legend_handles_labels()
-fig.legend(handles, labels, loc="lower center", ncol=3, bbox_to_anchor=(0.5, -0.02))
+fig.legend(handles, labels, loc="lower center", ncol=3,
+           bbox_to_anchor=(0.5, -0.12))   # move legend further down
+
+plt.subplots_adjust(bottom=0.10)          # create room for it
 plt.tight_layout()
 plt.savefig(os.path.join(target_dir, "storage_subsidy_gain_decomposition.png"),
             dpi=300, bbox_inches="tight")

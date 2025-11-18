@@ -4,6 +4,17 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from math import sqrt
 
+# Global font settings
+plt.rcParams.update({
+    "axes.titlesize": 16,      # panel titles
+    "axes.labelsize": 16,      # axis labels
+    "xtick.labelsize": 14,     # x tick labels
+    "ytick.labelsize": 14,     # y tick labels
+    "legend.fontsize": 13,     # legend entries
+    "legend.title_fontsize": 14,
+    "figure.titlesize": 20     # suptitle
+})
+
 import os
 
 # 当前文件所在目录

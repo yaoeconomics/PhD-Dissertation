@@ -4,6 +4,17 @@ import matplotlib.pyplot as plt
 from scipy.stats import poisson
 from mpl_toolkits.mplot3d import Axes3D
 
+plt.rcParams.update({
+    "axes.titlesize": 18,      # subplot titles
+    "axes.labelsize": 16,      # axis labels
+    "xtick.labelsize": 14,     # x tick labels
+    "ytick.labelsize": 14,     # y tick labels
+    "legend.fontsize": 14,     # legend text
+    "figure.titlesize": 20     # suptitle
+})
+
+
+
 # Redefine utility and optimization functions with reservation price
 def crra_utility(pi, gamma):
     with np.errstate(divide='ignore', invalid='ignore'):

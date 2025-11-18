@@ -7,6 +7,7 @@ from numpy.polynomial.legendre import leggauss
 from io import BytesIO
 from PIL import Image
 
+
 import os
 
 # 当前文件所在目录
@@ -157,18 +158,21 @@ def render_line_tile(df, contrast, ylim=None):
     ax.plot(d["mu"], d["ΔCE"], linewidth=2, label="ΔCE")
     ax.plot(d["mu"], d["ΔE[π]"], linewidth=2, label="ΔE[π]")
     ax.plot(d["mu"], -d["ΔRP"], linewidth=2, label="−ΔRP (insurance gain)")
-    ax.set_xlabel("Belief mean μ")
-    ax.set_ylabel("Gain (price units)")
-    ax.set_title(f"κ {contrast}: Gains vs μ")
-    if ylim is not None:
-        ax.set_ylim(*ylim)
-    ax.legend()
+
+    ax.set_xlabel("mean buyer power μ", fontsize=14)
+    ax.set_ylabel("Gain (price units)", fontsize=14)
+    ax.set_title(f"κ {contrast}: Gains vs μ", fontsize=14)
+
+    ax.tick_params(axis="both", labelsize=9)
+    ax.legend(fontsize=10)
     ax.grid(True)
+
     fig.tight_layout()
     buf = BytesIO()
     fig.savefig(buf, format="png", dpi=200, bbox_inches="tight")
     plt.close(fig); buf.seek(0)
     return Image.open(buf).convert("RGB")
+
 
 line_tiles = []
 for contrast in contrasts:
@@ -233,23 +237,38 @@ def render_heatmap_image_shared(panel, contrast, metric, title_suffix, mu_grid, 
     vtitle = title_suffix
     if metric == "mean_dRP":
         df_pivot = -df_pivot
-        vtitle = f"{title_suffix} (shown as −ΔRP)"
+        vtitle = f"{title_suffix}"
+
     fig = plt.figure(figsize=(4, 2.6))
     ax = fig.add_subplot(111)
     im = ax.imshow(df_pivot.values, aspect="auto", origin="lower", vmin=vmin, vmax=vmax)
+
     cbar = fig.colorbar(im, ax=ax, fraction=0.046, pad=0.4/10)
-    ax.set_yticks(np.arange(0, 10)); ax.set_yticklabels([f"{i+1}" for i in range(10)])
-    ax.set_xticks(np.arange(len(mu_grid))); ax.set_xticklabels([f"{m:.2f}" for m in mu_grid], rotation=45, ha="right")
-    ax.set_xlabel("Belief mean μ"); ax.set_ylabel("γ-decile (low→high)")
-    ax.set_title(f"{contrast}: {vtitle}")
+    cbar.ax.tick_params(labelsize=8)
+
+    ax.set_yticks(np.arange(0, 10))
+    ax.set_yticklabels([f"{i+1}" for i in range(10)], fontsize=14)
+
+    tick_idx = np.arange(0, len(mu_grid), 3)
+    ax.set_xticks(tick_idx)
+    ax.set_xticklabels([f"{mu_grid[i]:.2f}" for i in tick_idx],
+                       rotation=45, ha="right", fontsize=14)
+
+    ax.set_xlabel("mean buyer power μ", fontsize=14)
+    ax.set_ylabel("γ decile", fontsize=14)
+    ax.set_title(f"{contrast}: {vtitle}", fontsize=14)
+
+    ax.tick_params(axis="both", labelsize=9)
+
     fig.tight_layout()
     buf = BytesIO()
     fig.savefig(buf, format="png", dpi=200, bbox_inches="tight")
     plt.close(fig); buf.seek(0)
     return Image.open(buf).convert("RGB")
 
-metrics = [("mean_dCE", "ΔCE by γ-decile and μ"),
-           ("mean_dY", "ΔE[π] by γ-decile and μ"),
+
+metrics = [("mean_dCE", "ΔCE"),
+           ("mean_dY", "ΔE[π]"),
            ("mean_dRP", "Insurance gain")]
 
 metric_ranges = {}

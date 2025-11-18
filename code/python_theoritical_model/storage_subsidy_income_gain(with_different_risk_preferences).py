@@ -21,6 +21,19 @@ from matplotlib.lines import Line2D
 from scipy.stats import beta
 from numpy.polynomial.legendre import leggauss
 
+
+plt.rcParams.update({
+    "font.size": 14,            # base font size
+    "axes.titlesize": 14,       # subplot titles
+    "axes.labelsize": 14,       # x and y labels
+    "xtick.labelsize": 14,
+    "ytick.labelsize": 14,
+    "legend.fontsize": 14,
+    "figure.titlesize": 14      # super-title
+})
+
+
+
 # -----------------------------
 # Paths (robust to interactive)
 # -----------------------------
@@ -307,13 +320,13 @@ def run_and_plot():
 
             # Titles & labels
             if r_idx == 0:
-                ax.set_title(rf"$\sigma^2={sigma2:.2f}$", fontsize=11, pad=6)
+                ax.set_title(rf"$\sigma^2={sigma2:.2f}$", fontsize=14, pad=6)
             if c_idx == 0:
                 ax.set_ylabel(rf"$\kappa={kappa:.2f}$" + "\nGain vs no-storage (%)",
-                              fontsize=10)
+                              fontsize=14)
             else:
                 ax.set_ylabel("")
-            ax.set_xlabel(r"$\mu_1$ (mean of $\theta_1$; $\mu_2=\mu_1$)", fontsize=9)
+            ax.set_xlabel(r"$\mu_1=\mu_2$", fontsize=14)
 
             ax.grid(True, alpha=0.35, linewidth=0.7)
 
@@ -339,7 +352,7 @@ def run_and_plot():
         bbox_to_anchor=(0.5, 0.905),
         ncols=3,
         frameon=True,
-        fontsize=10,
+        fontsize=14,
         handlelength=2.5,
         columnspacing=1.6,
         borderpad=0.6
@@ -348,7 +361,7 @@ def run_and_plot():
     footer = (f"N={N} farmers; R={R} worlds; "
               "Heterogeneous curves use fixed γ samples: Unif[0,10] and Unif[0,5]; "
               "RN curve treats all farmers as γ=0.")
-    fig.text(0.5, 0.018, footer, ha="center", va="center", fontsize=11.5)
+    fig.text(0.5, 0.018, footer, ha="center", va="center", fontsize=12)
 
     fig.tight_layout(rect=[0.04, 0.06, 0.98, 0.88])
     plt.savefig(FIG_PATH, dpi=DPI, bbox_inches="tight")

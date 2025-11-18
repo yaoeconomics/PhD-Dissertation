@@ -24,6 +24,18 @@ from matplotlib.lines import Line2D
 from scipy.stats import beta
 from numpy.polynomial.legendre import leggauss
 
+
+plt.rcParams.update({
+    "font.size": 14,            # base font size
+    "axes.titlesize": 14,       # subplot titles
+    "axes.labelsize": 14,       # x and y labels
+    "xtick.labelsize": 14,
+    "ytick.labelsize": 14,
+    "legend.fontsize": 14,
+    "figure.titlesize": 14      # super-title
+})
+
+
 # -----------------------------
 # Paths (robust to interactive)
 # -----------------------------
@@ -334,14 +346,14 @@ def run_and_plot():
 
             # Titles & labels
             if r_idx == 0:
-                ax.set_title(rf"$\sigma^2={sigma2:.2f}$", fontsize=11, pad=6)
+                ax.set_title(rf"$\sigma^2={sigma2:.2f}$", fontsize=14, pad=6)
             if c_idx == 0:
-                ax.set_ylabel(rf"$\kappa={kappa:.2f}$" + "\n" + "Gain vs no-storage (%)",
-                              fontsize=10)
+                ax.set_ylabel(rf"$\kappa={kappa:.2f}$" + "\n" + "Income Gain (%)",
+                              fontsize=14)
             else:
                 ax.set_ylabel("")
 
-            ax.set_xlabel(r"$\mu_1$ (mean of $\theta_1$)", fontsize=9)
+            ax.set_xlabel(r"$\mu_1$ (mean of $\theta_1$)", fontsize=14)
             ax.grid(True, alpha=0.35, linewidth=0.7)
 
     # Clean, non-overlapping legend: figure-level, between title and panels
@@ -370,7 +382,7 @@ def run_and_plot():
         bbox_to_anchor=(0.5, 0.905),  # below suptitle, above panels
         ncols=3,
         frameon=True,
-        fontsize=10,
+        fontsize=14,
         handlelength=2.5,
         columnspacing=1.6,
         borderpad=0.6
