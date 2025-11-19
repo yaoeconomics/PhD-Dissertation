@@ -37,7 +37,7 @@ kappa = 0.9
 delta = 1.0
 num_draws = 5000
 variance = 0.02
-s_grid = np.linspace(0, 1, 25)
+s_grid = np.linspace(0, 1, 100)
 
 # CRRA utility function
 def crra_utility(pi, gamma):

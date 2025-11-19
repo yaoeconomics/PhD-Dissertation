@@ -10,7 +10,7 @@ plt.rcParams.update({
     "axes.labelsize": 14,      # axis labels
     "xtick.labelsize": 14,     # x tick labels
     "ytick.labelsize": 14,     # y tick labels
-    "legend.fontsize": 13,     # legend entries
+    "legend.fontsize": 14,     # legend entries
     "legend.title_fontsize": 14,
     "figure.titlesize": 20     # suptitle
 })
