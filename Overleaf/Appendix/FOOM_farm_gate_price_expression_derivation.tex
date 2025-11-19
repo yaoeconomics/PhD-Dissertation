@@ -1,100 +1,99 @@
 \section{Derivation of Farm Price under the FOOM Framework} \label{Appendix: Derivation of Farm Price under the FOOM Framework}
 
-This appendix provides a rigorous derivation of the farm-gate price expression under the Flexible-Oligopoly-Oligopsony Model (FOOM), assuming perfect competition downstream and constant marginal cost.
+\noindent This appendix derives the equilibrium farm-gate price under the Flexible-Oligopoly-Oligopsony Model (FOOM). The analysis focuses on a local agricultural market where a group of buyers procure a homogeneous crop from many farmers. Buyers are assumed to operate in a \emph{perfectly competitive downstream market}---that is, they take the retail or output price $p_r$ as given---and incur a \emph{constant marginal cost} $c$ per unit for marketing, storage, or processing. These assumptions imply that buyers' only strategic decision concerns their procurement behavior in the farm input market, not their pricing downstream.
 
 \subsection{Model Setup}
+\noindent
+Let $p_f$ denote the farm-gate price paid to farmers, $p_r$ the exogenous downstream (retail) price, and $c$ the constant per-unit downstream cost. The total net price received by the buying sector from selling the processed or marketed product is therefore $(p_r - c)$. Buyers procure aggregate quantity $Q_f$ from farmers, who collectively supply according to an upward-sloping \emph{residual supply curve} $Q_f(p_f)$.
 
-Consider a market in which buyers procure a cash crop from farmers. Let \( p_f \) denote the farmgate price paid to farmers, \( p_r \) represent the downstream retail price, and \( c \) be the constant marginal cost incurred by buyers in marketing or processing. Buyers face an upward-sloping farm supply curve described by \( Q_f(p_f) \), characterized by price elasticity of farm supply \( \varepsilon \):
+The slope of this residual supply curve reflects not only farmers' biological production responsiveness but also their ability to shift sales across markets or across time. Its elasticity, defined as
+$$
+\varepsilon \equiv \frac{p_f}{Q_f}\frac{dQ_f}{dp_f},
+$$
+measures the percentage change in aggregate quantity available to the buyer sector for a one-percent change in the farm price. This $\varepsilon$ is therefore the \emph{residual supply elasticity facing the buyer sector}, not the technological elasticity of farm output.
 
-\begin{equation}
-\varepsilon = \frac{p_f}{Q_f(p_f)} \frac{dQ_f}{dp_f}.
-\end{equation}
-
-Let \( \theta \geq 0 \) denote the oligopsony conduct parameter, capturing the degree of buyer market power, where \( \theta = 0 \) indicates perfect competition, and \( \theta = 1 \) indicates pure monopsony.
+Let $\theta \in [0,1]$ denote the \emph{oligopsony conduct parameter}, which captures the degree of market power on the buyer side:
+\begin{itemize}
+    \item $\theta = 0$: perfect competition among buyers (no strategic interaction);
+    \item $\theta = 1$: pure monopsony (a single buyer fully internalizes its price impact);
+    \item $0 < \theta < 1$: oligopsony with partial internalization of the price effect.
+\end{itemize}
 
 \subsection{Buyer's Optimization Problem}
-
-Buyers maximize profits by selecting the quantity \( Q_f \) to purchase from farmers:
-
-\begin{equation}
-\max_{Q_f} \Pi = (p_r - c)Q_f - p_f(Q_f)Q_f.
-\end{equation}
-
-
-To obtain the optimal procurement quantity, we take the first derivative of the profit function \(\Pi\) with respect to the procurement quantity \(Q_f\):
-
-\[
-\frac{d\Pi}{dQ_f} = (p_r - c) - \frac{d}{dQ_f}\left[p_f(Q_f)Q_f\right].
-\]
-
-Applying the product rule, the derivative of the total procurement cost term \(p_f(Q_f)Q_f\) is:
-
-\[
-\frac{d}{dQ_f}\left[p_f(Q_f)Q_f\right] = p_f(Q_f) + Q_f \frac{dp_f(Q_f)}{dQ_f}.
-\]
-
-Thus, we have the first-order condition:
-
-\[
-\frac{d\Pi}{dQ_f} = (p_r - c) - \left[p_f(Q_f) + Q_f \frac{dp_f(Q_f)}{dQ_f}\right] = 0.
-\]
-
-
-
-To explicitly capture the degree of buyer market power (oligopsony), let's introduce the conduct parameter \(\theta\), which measures how much the buyer internalizes the impact of its procurement decision on the farmgate price \(p_f(Q_f)\):
-\begin{itemize}
-    \item \(\theta = 0\) indicates perfect competition (no market power).
-    \item \(\theta = 1\) indicates pure monopsony (full internalization).
-    \item Intermediate values \(0 < \theta < 1\) indicate oligopsony or partial market power.
-\end{itemize}
-
-Thus, the generalized first-order condition with market power becomes:
-
-\[
+\noindent
+The representative buyer (or equivalently, the sector acting collectively under conduct parameter $\theta$) chooses the procurement quantity $Q_f$ to maximize profit:
+$$
+\max_{Q_f}\; \Pi(Q_f) = (p_r - c) Q_f - p_f(Q_f) Q_f.
+$$
+Differentiating with respect to $Q_f$ yields:
+$$
+\frac{d\Pi}{dQ_f} = (p_r - c) - \Big[p_f(Q_f) + Q_f \frac{dp_f(Q_f)}{dQ_f}\Big].
+$$
+Under perfect competition ($\theta = 0$), buyers take $p_f$ as given, while under monopsony ($\theta = 1$), they fully internalize the price effect of expanding procurement. The general FOOM condition interpolates between these cases by weighting the strategic effect with $\theta$:
+$$
 (p_r - c) - p_f(Q_f) - \theta Q_f \frac{dp_f(Q_f)}{dQ_f} = 0.
-\]
+$$
+Rearranging gives the industry first-order condition (FOC):
+$$
+p_r - c = p_f + \theta \frac{dp_f}{dQ_f} Q_f.
+$$
+The left-hand side represents the constant marginal revenue from downstream sales, while the right-hand side is the perceived marginal procurement cost, which increases with $\theta$ as buyers internalize the upward slope of the farm supply.
 
-Therefore, rearranging this expression clearly, under oligopsony, the first-order condition incorporating buyer market power is:
+Under a standard convex inverse supply curve $p_f(Q_f)$, the second-order condition for profit maximization is satisfied:
+$$
+\frac{d^2\Pi}{dQ_f^2}
+  = -\Big[(1+\theta)\frac{dp_f}{dQ_f} + \theta Q_f \frac{d^2p_f}{dQ_f^2}\Big] < 0.
+$$
 
-\begin{equation}
-p_r - c = p_f + \theta \frac{dp_f}{dQ_f}Q_f.
-\end{equation}
 
-This condition equates buyers' marginal revenue (net downstream price minus marketing cost) to their perceived marginal procurement cost, which includes the strategic effect of increased purchases on the farmgate price (see \cite{sexton2000industrialization}, \cite{rogers_rich_1994assessing}, or other FOOM models).
+\subsection{FOOM Price Equation}
+\noindent
+Substituting $\frac{dp_f}{dQ_f} = \frac{p_f}{\varepsilon Q_f}$, implied by the elasticity definition, into the FOC gives:
 
-\subsection{Deriving the Farmgate Price Expression}
+$$
+p_r - c = p_f + \theta \left(\frac{p_f}{\varepsilon Q_f}\right) Q_f 
+= p_f \left(1 + \frac{\theta}{\varepsilon}\right).
+$$
 
-Expressing the derivative \( dp_f/dQ_f \) in terms of elasticity of supply \( \varepsilon \), we have:
+Thus, the farm-gate price can be expressed as:
 
-\begin{equation}
-\frac{dQ_f}{dp_f} = \varepsilon \frac{Q_f}{p_f} \quad \Rightarrow \quad \frac{dp_f}{dQ_f} = \frac{p_f}{\varepsilon Q_f}.
-\end{equation}
+$$
+p_f = \frac{p_r - c}{1 + \theta / \varepsilon}.
+$$
 
-Substituting this into the first-order condition gives:
+Equivalently, the oligopsony ``markdown'' wedge satisfies:
 
-\begin{equation}
-p_r - c = p_f + \theta \left(\frac{p_f}{\varepsilon Q_f}\right)Q_f = p_f\left(1 + \frac{\theta}{\varepsilon}\right).
-\end{equation}
+$$
+\frac{(p_r - c) - p_f}{p_f} = \frac{\theta}{\varepsilon}.
+$$
 
-Thus, we obtain the general FOOM pricing relation:
+Normalizing $p_r - c = 1$ for simplicity yields the compact form:
 
-\begin{equation}
-p_f = \frac{p_r - c}{1 + \frac{\theta}{\varepsilon}}.
-\end{equation}
-
-\subsection{Normalized Expression}
-
-By normalizing the downstream net price \( p_r - c \) to unity, \( p_r - c = 1 \), the farmgate price simplifies neatly to:
-
-\begin{equation}
+$$
 p_f = \frac{\varepsilon}{\varepsilon + \theta}.
-\end{equation}
+$$
 
 \subsection{Economic Interpretation}
+\noindent
+Equation above is the FOOM analogue of the Lerner index: the percentage markdown in the farm price relative to the competitive benchmark equals the ratio of the conduct parameter to the residual supply elasticity. A higher $\theta$ (stronger buyer coordination) depresses $p_f$, while a higher $\varepsilon$ (more elastic farm response) mitigates the markdown.
 
-The resulting expression reveals intuitive insights:
+\subsection{Role of Storage for Residual Supply Elasticity: With vs. Without Storage}
+\noindent
+The residual supply elasticity $\varepsilon$ depends on the margins through which farmers can adjust their marketed quantities. A key determinant is whether they can store part of their harvest and sell intertemporally.
 
-\begin{itemize}
-    \item Higher buyer market power \( \theta \) depresses the farmgate price \( p_f \).
-    \item Greater elasticity of farm supply \( \varepsilon \) mitigates the downward pressure on the farm price caused by oligopsony power.
-\end{itemize}
+\paragraph{No storage.} 
+When farmers cannot store (or face tight capacity and liquidity constraints), all harvested output must be sold at harvest. In this short-run setting, the marketed quantity is nearly fixed, so the residual supply curve facing buyers is steep. The elasticity $\varepsilon^{NS}$ is small, and the markdown $\theta / \varepsilon^{NS}$ is large.
+
+\paragraph{With storage.}
+If farmers can store at gross storage efficiency rate $\kappa \in (0,1]$, they can shift sales across periods. When storage operates at an interior margin, small changes in the current price $p_{f,1}$ induce changes in carryover $x$, providing an additional intertemporal adjustment channel beyond contemporaneous sales. This flattens the residual supply in each period:
+
+$$
+\varepsilon_t^{S} > \varepsilon_t^{NS} 
+\quad \Rightarrow \quad 
+\frac{\theta_t}{\varepsilon_t^{S}} < \frac{\theta_t}{\varepsilon_t^{NS}}.
+$$
+
+Hence, storage generally raises the elasticity buyers face and reduces the markdown wedge, raising equilibrium farm prices. The effect is strongest when storage is efficient (high $\kappa$) and unconstrained; it weakens at corner solutions (store-all or store-none) or when storage costs or financing constraints bind.
+
+\medskip
+\noindent\textit{Remark.} If downstream markets are not perfectly competitive, the same logic applies with $p_r$ replaced by marginal revenue $MR(Q_f)$; the oligopsony markdown then stacks with any downstream markup wedge.
