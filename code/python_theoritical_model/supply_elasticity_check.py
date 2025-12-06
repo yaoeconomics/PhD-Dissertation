@@ -85,7 +85,7 @@ def compute_beta_params(mu, sigma2):
 # --------------------------------
 # Main Simulation
 # --------------------------------
-mu_fixed = 0.2
+mu_fixed = 0.20
 gamma_grid = np.linspace(0, 10, 100)
 results_eps2 = {eps2: [] for eps2 in eps2_values}
 expected_p2 = {}
@@ -118,7 +118,7 @@ for i, eps2 in enumerate(eps2_values):
     axes[0].plot(
         gamma_grid,
         results_eps2[eps2],
-        label=fr"$\varepsilon_2 = {eps2:.2f}$",
+        label=fr"$\varepsilon_1 = 1$, $\varepsilon_2 = {eps2:.2f}$",
         color=colors[i],
         linewidth=3
     )
@@ -126,7 +126,7 @@ for i, eps2 in enumerate(eps2_values):
 axes[0].set_xlabel(r"Risk aversion $\gamma$")
 axes[0].set_ylabel(r"Optimal storage share $s^*$")
 axes[0].set_title(r"(a) $s^*(\gamma)$ under different $\varepsilon_2$")
-axes[0].legend(title=r"$\varepsilon_2$", loc="lower left")
+axes[0].legend(loc="upper right")
 axes[0].grid(True, linewidth=0.6)
 
 # Panel (b): implied expected p2 for each ε2
@@ -142,7 +142,7 @@ axes[1].set_xticklabels(
 axes[1].set_ylabel(r"Expected second-period price  $\mathbb{E}[p_2]$")
 axes[1].set_title(
     r"(b) Implied $\mathbb{E}[p_2]$ under fixed "
-    fr"$\mu={mu_fixed}$"
+    fr"$E[\theta_2]={mu_fixed}$"
 )
 axes[1].grid(axis="y", linewidth=0.6)
 
@@ -163,13 +163,165 @@ for rect, val in zip(bars, p2_values):
 fig.suptitle(
     r"Impact of Second-Period Supply Elasticity on Storage and Expected Price"
     + "\n"
-    + rf"($\mu={mu_fixed}$,  $Var(\theta_2)={variance}$,  $\theta_1={theta1}$,  $\kappa={kappa}$)",
+    + rf"($E[\theta_2]={mu_fixed}$,  $Var(\theta_2)={variance}$,  $\theta_1={theta1}$,  $\kappa={kappa}$)",
     y=1.02
 )
 
 plt.tight_layout()
 plt.savefig(
     os.path.join(target_dir, "sensitivity_to_gamma_eps2_with_p2_panel.png"),
+    dpi=300,
+    bbox_inches="tight"
+)
+plt.show()
+
+
+
+
+
+
+# ============================================================
+# New figure: p1 also depends on supply elasticity,
+# with ε1 = ε2 = ε across periods
+# ============================================================
+
+# Common supply elasticities across both periods
+eps_common_values = [0.75, 1.00, 1.25]
+
+results_eps_common = {eps: [] for eps in eps_common_values}
+expected_p2_common = {}
+p1_values = {}
+
+def optimize_s_common(theta2_draws, gamma, eps_common):
+    """
+    Case with ε1 = ε2 = ε:
+    p1(ε) = ε / (ε + θ1)
+    p2(θ2, ε) = ε / (ε + θ2)
+    """
+    p1_local = eps_common / (eps_common + theta1)
+    p2_draws_local = eps_common / (eps_common + theta2_draws)
+
+    # Risk-neutral benchmark
+    if gamma == 0:
+        expected_p2_local = np.mean(p2_draws_local)
+        return 1.0 if delta * kappa * expected_p2_local > p1_local else 0.0
+
+    utilities = []
+    for s in s_grid:
+        income = (1 - s) * p1_local + delta * s * kappa * p2_draws_local
+        util = np.mean(crra_utility(income, gamma))
+        utilities.append(util)
+
+    return s_grid[np.argmax(utilities)]
+
+# Compute s*(γ) and prices for each common ε
+for eps in eps_common_values:
+    # Period-1 price and period-2 price draws with common ε
+    p1_local = eps / (eps + theta1)
+    p2_draws_local = eps / (eps + theta2_draws)
+
+    p1_values[eps] = p1_local
+    expected_p2_common[eps] = np.mean(p2_draws_local)
+
+    for gamma in gamma_grid:
+        s_star = optimize_s_common(theta2_draws, gamma, eps)
+        results_eps_common[eps].append(s_star)
+
+# Optional: print implied p1 and E[p2]
+print("\n=== Case with ε1 = ε2 = ε ===")
+for eps in eps_common_values:
+    print(
+        f"eps = {eps:.2f}, p1(eps) ≈ {p1_values[eps]:.4f}, "
+        f"E[p2(eps)] ≈ {expected_p2_common[eps]:.4f}"
+    )
+
+# --------------------------------
+# Plotting new 2-panel figure
+# --------------------------------
+colors_common = plt.cm.Greens(np.linspace(0.3, 1, len(eps_common_values)))
+fig2, axes2 = plt.subplots(1, 2, figsize=(18, 7))
+
+# Panel (a): s* vs gamma with ε1 = ε2 = ε
+for i, eps in enumerate(eps_common_values):
+    axes2[0].plot(
+        gamma_grid,
+        results_eps_common[eps],
+        label=fr"$\varepsilon_1 = \varepsilon_2 = {eps:.2f}$",
+        color=colors_common[i],
+        linewidth=3
+    )
+
+axes2[0].set_xlabel(r"Risk aversion $\gamma$")
+axes2[0].set_ylabel(r"Optimal storage share $s^*$")
+axes2[0].set_title(
+    r"(a) $s^*(\gamma)$ when $p_1$ and $p_2$ both depend on $\varepsilon$"
+)
+axes2[0].legend(loc="upper right")
+axes2[0].grid(True, linewidth=0.6)
+
+# Panel (b): bar plot of p1(ε) and E[p2(ε)]
+eps_indices = np.arange(len(eps_common_values))
+width = 0.35
+
+p1_list = [p1_values[eps] for eps in eps_common_values]
+p2_list = [expected_p2_common[eps] for eps in eps_common_values]
+
+bars1 = axes2[1].bar(
+    eps_indices - width / 2,
+    p1_list,
+    width=width,
+    label=r"$p_1(\varepsilon)$",
+    color=colors_common,
+    alpha=0.8
+)
+
+bars2 = axes2[1].bar(
+    eps_indices + width / 2,
+    p2_list,
+    width=width,
+    label=r"$\mathbb{E}[p_2(\varepsilon)]$",
+    color=colors_common,
+    alpha=0.4
+)
+
+axes2[1].set_xticks(eps_indices)
+axes2[1].set_xticklabels(
+    [fr"$\varepsilon = {eps:.2f}$" for eps in eps_common_values]
+)
+axes2[1].set_ylabel(r"Price")
+axes2[1].set_title(
+    r"(b) $p_1(\varepsilon)$ and $\mathbb{E}[p_2(\varepsilon)]$ "
+    + rf"($\theta_1={theta1}$, $E[\theta_2]={mu_fixed}$)"
+)
+axes2[1].legend(loc="lower right")
+axes2[1].grid(axis="y", linewidth=0.6)
+
+# Add value labels
+for rect in list(bars1) + list(bars2):
+    height = rect.get_height()
+    axes2[1].text(
+        rect.get_x() + rect.get_width() / 2,
+        height + 0.005,
+        f"{height:.3f}",
+        ha="center",
+        va="bottom",
+        fontsize=16
+    )
+
+fig2.suptitle(
+    r"Common Supply Elasticity Across Periods: "
+    r"$p_t = \frac{\varepsilon}{\varepsilon + \theta_t}$"
+    + "\n"
+    + rf"($E[\theta_2]={mu_fixed}$,  $Var(\theta_2)={variance}$,  $\theta_1={theta1}$,  $\kappa={kappa}$)",
+    y=1.02
+)
+
+plt.tight_layout()
+plt.savefig(
+    os.path.join(
+        target_dir,
+        "sensitivity_to_gamma_eps_common_both_periods.png"
+    ),
     dpi=300,
     bbox_inches="tight"
 )
