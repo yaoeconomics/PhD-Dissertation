@@ -1,5 +1,5 @@
 \noindent
-This chapter is the first study to reveal the dynamics of time-varying oligopsonistic competition and storage adoption, and their impacts on smallholder farmers' welfare. While existing research explores storage incentives like risk preferences and trading costs, it overlooks the advantages of quality-preserving technologies for accessing markets over time that might vary in their competitiveness. Cold storage adoption, especially for semi-perishable crops, helps farmers overcome trading-time limitations. By constructing a two-period post-harvest management model for a storable cash crop, I find that temporal changes in buyer power alone can suffice for farmers to benefit from storage. This work has broader relevance to settings with multiple input suppliers selling to a limited set of traders involved in market division and price fixing over time.
+Buyer power is most often framed as a static structural characteristic of agricultural-product procurement markets, but especially in developing-country settings, is a dynamic phenomenon based on trader activity and behavior in local markets. This paper reframes oligopsony power in farm-product procurement markets as a time-varying rather than fixed phenomenon. Farmers with capacity to store their production relatively efficiently may benefit in these settings from accessing more competitive market conditions than prevail at harvest. Commodity storage in these settings is more than a vehicle for arbitrage of predictable demand and supply shifts. It is also a means to potentially countervail harvest-period buyer power. To study this behavior, I build a two-period model in which buyer power is time-varying and farmers with storage access can possibly attain more competitive selling windows into the future. The framework illuminates how expectations about future competitive conditions contribute to determining farmer storage choices and realized selling conditions. I show that temporal changes in buyer power alone can suffice for farmers to benefit from storage. Data-driven simulations map farmers' storage efficiency, risk attitudes, knowledge of harvest-period market conditions, and expectations for future competitive conditions to optimal storage behavior and welfare outcomes. The analysis quantifies conditions when waiting and storage pay and shows how risk aversion and inefficient storage suppress storage and potential welfare gains. Policies that increase farmers' access to efficient storage or reduce effective risk aversion can work to increase farmer incomes.
 
 %--------------------------------------------------------%
 \section{Introduction}
@@ -26,78 +26,57 @@ The outcomes of this study hold substantial implications for policymakers and fa
 
 
 
-\section{Base Model}
-\noindent I develop a two-period dynamic model to analyze how smallholder farmers strategically utilize storage in response to time-varying buyer power exerted by middlemen. The model is set in a rural area of a developing country, where farmers market a cash crop to itinerant traders. Harvest quantity is treated as exogenous, and the analysis focuses exclusively on farmers' storage and sales decisions within a single crop cycle. To sharpen focus on the impact of market structure and trading dynamics, product quality is assumed homogeneous across farmers.
+%----------------------------------------------------------------%
+%----------------------------------------------------------------%
+\section{Model}
+\noindent
+We consider a two-period framework to analyze how smallholder farmers with access to storage may use it strategically in response to time-varying buyer power within a marketing season. Output at harvest time is exogenous and is normalized to one unit of homogeneous quality for each farmer. Farmers exhibit risk preferences ranging from risk neutrality to significant risk aversion. Risk preferences are represented by a von Neumann-Morgenstern utility function,\footnote{An alternative mean-variance framework, presented in Appendix \ref{Appendix: mean-variance approach}, yields similar insights. However, due to limited empirical guidance on calibrating the risk aversion coefficient within agricultural supply chains for the mean-variance framework, our primary analysis relies on the expected utility framework and, specifically, on the CRRA utility function.} $U_i(\pi_i)$, with $U_i' > 0$ and $U_i'' \leq 0$, where $\pi_i$ is the farmer's net income from crop sales. Farmers aim to maximize the expected utility of income across two trading periods.
 
-Farmers exhibit risk preferences ranging from risk neutrality to moderate risk aversion and value own consumption at market prices. Each farmer is represented by a von Neumann-Morgenstern utility function,\footnote{An alternative mean-variance framework, presented in Appendix~\ref{Appendix: mean-variance approach}, yields similar insights. However, due to limited empirical guidance on calibrating the risk aversion coefficient within agricultural supply chains for the mean-variance framework, my primary analysis relies on the expected utility framework.} $U_i(\pi_i)$, with $U_i' > 0$ and $U_i'' \leq 0$, where $\pi_i$ is the farmer's net income from crop sales. Farmers aim to maximize the expected utility of income across two trading periods.
+A farmer's decision at harvest is determining the proportion of the crop to store, denoted by $s \in [0,1]$, where by default $s=0$ for farmers who lack access to storage. Farmers with storage access observe farm-gate price offers from traders and infer the current buyer power, $\theta_1$. They form expectations about future market conditions, specifically the extent of buyer power, $\theta_2$. To maintain focus on the role of time-varying competition conditions, we assume that future market demand and supply conditions are predictable. In this setting, absent changes in market competition over time, farm price and downstream prices would rise between periods 1 and 2 to exactly compensate the costs of efficient period 1 to 2 storage. However, small-scale, on-farm storage or even storage organized at the village level may not be efficient relative to commercial storage facilities or facilities operated by downstream agents.\footnote{The extent, if any, to which farmers discount future income at a greater rate than other supply-chain actors also causes $\kappa <1$} With efficient storage denoted by $\kappa = 1$, decrements in farmer storage efficiency are indicated by $\kappa$ values less than 1.0.
 
-The central decision is determining the proportion of the crop stored at harvest, denoted by $s \in [0,1]$. This choice is made under uncertainty about future market conditions, specifically future buyer power dynamics in the subsequent trading period. I will represent buyer power in each period $t$ by the parameter $\theta_t$ and will later show that I can bound $\theta_t$ in the unit interval.
-
-In the initial trading period, farmers observe farm-gate price offers from middlemen. Based on the frequency and magnitudes of these offers, farmers infer the current buyer power. represented by $\theta_1$. Greater competition among buyers, characterized by lower $\theta_1$, correlates with higher farm-gate prices, $p_1$. Anticipating continuity in the inverse relationship between buyer power and prices across periods, farmers strategically allocate harvest between immediate sale and storage, incorporating expectations about future competition, captured by the random variable $\theta_2$.
-
-Temporal demand variations downstream, such as seasonal consumption shifts, are presumed to be fully internalized by the market as a whole, including both farmers and intermediaries. Since intermediaries may engage in storage, anticipated demand fluctuations over the marketing season should already be reflected in the prices they offer at harvest. Accordingly, buyer power remains the primary source of intertemporal price variability in this model.
-
-The model assumes symmetric information and negligible transaction costs in each trading period, ensuring farmers have complete and instantaneous access to prevailing farm-gate prices.
-
-Formally, each farmer seeks to maximize expected utility over two trading periods by selecting storage share $s \in [0,1]$. Given a normalized harvest quantity $q = 1$, the optimization problem is:
+Formally, each farmer seeks to maximize expected utility over two trading periods by selecting storage share $s$. Given harvest quantity $q = 1$, the optimization problem is:
 \begin{equation}
 \label{eq:starting objective}
-\max_{s \in [0,1]} \mathbb{E} \left(U\left[ (1 - s) p_1 + s \cdot p_{2,\text{net}} \right]\right).
+\max_{s \in [0,1]} \mathbb{E} \left(U\left[ (1 - s) p_1 + s \cdot \kappa p_{2} \right]\right)
 \end{equation}
-where $p_1$ is the farm-gate price at harvest and $p_{2,\text{net}}$ is the second-period price adjusted for storage costs.
+where $p_1$ is the observed farm-gate price at harvest and $p_{2}$ is expected price in period 2, which is discounted to the extent farmer storage is inefficient, $\kappa < 1$.
 
 
+\subsection{Trader Market Structure and Farm-Gate Price Formation} \label{Section: Middlemen Market Structure and Farm-Gate Price Formation}
+\noindent
+Following the framework of the FOOM model \citep{karp1996dynamic,sexton2001assessment,saitone2009flexible,Perekhozhuk_2017, hamilton2021joint}, farm-gate price, $p_t$, in any period is determined by the product's net value of marginal product in that period ($VMP_t$), but $p_t$ is reduced below $VMP_t$ by the exercise of buyer oligopsony power, $\theta_t$. The price decrement due to buyer power is also influenced by the price elasticity of the farm product supply, $\epsilon_t$, with markdowns due to buyer power made more extreme the less elastic is the farm product supply. 
 
-\subsection{Middlemen Market Structure and Farm-Gate Price Formation} \label{Section: Middlemen Market Structure and Farm-Gate Price Formation}
-\noindent To analyze farmers' strategic use of storage as a form of intertemporal bargaining, it is essential to model farm-gate price formation in a manner that flexibly incorporates the degree of competition among middlemen.
+We assume traders act as perfect competitors in their downstream sales and incur constant per-unit marginal costs, $c_t$, in acquiring farm product and selling to downstream buyers. Let $P_t$ denote the downstream price, in which case the farm product's net value of marginal product is $VMP_t = P_t-c_t$. The farmgate price, accounting for buyer power is then:\footnote{The derivation of Equation~(\ref{farm_price-t}) follows directly from the FOOM model for settings where intermediaries exercise only buyer power. Details are provided in Appendix \ref{Appendix: Derivation of Farm Price under the FOOM Framework}. }
 
-I adopt the \textit{Flexible Oligopoly/Oligopsony Market (\textit{FOOM})} framework to model farm-gate pricing as a function of buyer market power. Under the assumption that downstream markets, wholesale or retail, where traders sell the farm products they procure, are perfectly competitive, the farm-gate price $p_{f,t}$ in each period $t$ is determined as:
 \begin{equation}
-p_{f,t} = \frac{p_{r,t} - mc_t}{1 + \frac{\theta_t}{\varepsilon_t}},
-\end{equation}
-where $p_{r,t}$ is the downstream price and $mc_t$ denotes the buyers' marginal cost in period $t$, $\theta_t$ captures the degree of buyer power in period $t$, and $\varepsilon_t$ represents the farm supply elasticity facing buyers in period $t$.\footnote{For a detailed derivation, see Appendix~\ref{Appendix: Derivation of Farm Price under the FOOM Framework}.}
-
-
-For simplicity, supposing the downstream price net of marginal cost is constant across periods and normalizing it to unity ($p_{r,t} - mc_t = 1$), the farm-gate price reduces to:
-\begin{equation}
-p_{f,t} = \frac{\varepsilon_t}{\varepsilon_t + \theta_t}.
+\label{farm_price-t}
+p_{t} = \frac{VMP_t}{1 + \frac{\theta_t}{\varepsilon_t}}.
 \end{equation}
 
-
-Although total harvest quantity is fixed at the time of the first-period decision, supply in that period remains somewhat elastic due to farmers' ability to store part of their output. In period 2, supply is also elastic, as farmers can divert unsold produce to alternative buyers such as fruit-processing firms. To simplify the analysis while preserving these features, I assume a baseline supply elasticity of $\varepsilon_t = 1$ for both periods. This assumption serves as a plausible starting point and will be relaxed in subsequent analysis. Thus, farm-gate prices reduce further to:
+Given the assumptions, $VMP_1 = VMP_2$ because $P_2$ must rise in equilibrium to exactly compensate higher transaction costs in period 2 relative to period 1 ($c_2 > c_1$) due to efficient commodity storage. Without loss of generality, we normalize $VMP_t = 1, t = 1, 2$. Given this normalization, equation~(\ref{farm_price-t}) can be re-expressed as:
 \begin{equation}
-p_{f,t} = \frac{1}{1+\theta_t}, \quad \theta_t \in [0,1] \text{ and } t \in \{1,2\},
+\label{simplified-price}
+p_{t} = \frac{\varepsilon_t}{\varepsilon_t + \theta_t}.
+\end{equation}
+Although total harvest is fixed, market supply at harvest is elastic, $\varepsilon_1 > 0$, based upon the opportunity to store the product or divert it to alternative markets, e.g., fresh versus processing or domestic versus export. Storage is no longer an option at period 2, but elasticity in supply is still retained through the ability to sell outside the primary market, e.g., to the juice processing sector in the case of Fuji apples studied by \citet{ma2025timevarying}.
+
+Although the two-period model developed here suffices to parsimoniously establish our key points regarding farmer incentives to store commodity to access time-varying market competition, it creates a technical issue in the form of a ``final-period problem'' in that farmers lose the option for further storage at period 2. However, in reality farmers who have committed a product to storage gain access to multiple market windows, where a final-period problem is not an issue. 
+
+To capture the effect of supply elasticity parsimoniously and avoid an artificial final-period problem, we assume a baseline market supply elasticity of $\varepsilon_t = 1$ in both periods.\footnote{This normalization preserves a transparent mapping from buyer power to prices and avoids mechanical intertemporal asymmetries. Allowing $\varepsilon_t$ to vary does not alter the core mechanisms of the model. It simply rescales the markdowns implied by buyer power: higher elasticity compresses the markdown and lifts the corresponding price schedule, whereas lower elasticity expands the markdown and depresses prices.}
+We relax this assumption by allowing $\varepsilon_t$ to vary either across periods in Appendix~\ref{Appendix: Sensitivity to relative Supply Elasticity}, or jointly over time in Appendix~\ref{Appendix: Sensitivity to common Supply Elasticity change}. Under this further simplification, farm-gate prices across the two periods simplify to
+\begin{equation}
+p_{t} = \frac{1}{1+\theta_t}, \qquad \theta_t \in [0,1], \; t \in \{1,2\}.
 \label{Eq: price formation by buyer power}
 \end{equation}
-where $\theta_t=0$ corresponds to perfect competition among buyers and $\theta_t=1$ denotes pure monopsony. Forms of oligopsony competition, such as Cournot competition, are represented by intermediate values of $\theta_t$, with higher values denoting progressively greater departures from competition \citep{karp1996dynamic,sexton2001assessment, saitone2009flexible, hamilton2021joint}.
-
-Assuming farmers believe that this price formation rule persists across periods, period-specific prices are determined as $p_t = \frac{1}{1+\theta_t}, \quad t=1,2$. At harvest time, farmers observe $p_1$ and infer the contemporaneous buyer power, $\theta_1 = \frac{1 - p_1}{p_1}$. They then form expectations about the second-period buyer power, $\theta_2 \in [0,1]$, which is stochastic, and its distribution can be independent or based on the observation of $\theta_1$ under further assumptions. Thus, the second-period price can be expressed as:
+Accounting for storage costs, the expected net second-period price is
 \begin{equation}
-p_2(\theta_2) = \frac{1}{1+\theta_2} 
-\label{Eq: p_2 of buyer power change}
+    \kappa\, p_2(\theta_2)
+= \frac{\kappa}{1+E[\theta_2]}.
 \end{equation}
 
-
-To incorporate the economic cost of storage--including physical storage expenses, intertemporal discounting, and potential quality deterioration--I define the second-period price in net terms using a storage efficiency parameter $\kappa \in [0,1]$, which captures the overall storability of the commodity. Rather than modeling storage cost as a fixed deduction, I assume that storage frictions reduce the realized price proportionally, so that the farmer receives only a fraction $\kappa$ of the gross second-period price. This formulation captures a broad class of storage frictions, such as spoilage, shrinkage, and financing costs, that scale with the value of the commodity. It also reflects how farmers often perceive post-harvest losses: as a proportional reduction in potential revenue. From an analytical standpoint, the proportional specification preserves tractability under the Constant Relative Risk Aversion (CRRA) preferences, where utility is homogeneous of degree one and sensitive to relative rather than absolute changes in income. Accordingly, I define the net second-period price as:
-$$
-p_{2,\text{net}}(\theta_2) = \kappa \cdot p_2(\theta_2),
-$$
-where the gross second-period price remains $p_2(\theta_2) = \frac{1}{1 + \theta_2}$. Thus, the full expression becomes:
-$$
-p_{2,\text{net}}(\theta_2) = \frac{\kappa}{1 + \theta_2}.
-$$
-This setup ensures that the incentive to store responds coherently to economic fundamentals while allowing for an intuitive interpretation of $\kappa$: when $\kappa = 0$, the product is perfectly perishable and yields no second-period returns; when $\kappa = 1$, the product is perfectly storable with no loss in value.
+Farmers' intertemporal storage decisions depend critically on their expectations about future buyer power, $E[\theta_2]$, which directly shape their expectations of the net second-period price, $E[p_{2}] = E\!\left[\frac{\kappa}{1+\theta_2}\right]$. Farmers form beliefs about the distribution of $\theta_2$ potentially informed by first-period buyer conduct, $\theta_1$, and observations of the evolution of market conditions from prior experience. These expectations determine the perceived price differential between immediate sale and deferred sale through storage, thereby linking market-structure uncertainty to individual storage decisions.
 
 
-In this framework, farmers' intertemporal storage decision critically depends on their expectations about future buyer power, $E[\theta_2]$, which directly shape their expectations of the net second-period price, $E[p_{2,\text{net}}] = E\!\left[\frac{\kappa}{1+\theta_2}\right]$. Since $\theta_2$ is uncertain at the time of harvest, farmers form beliefs about its distribution, potentially informed by first-period buyer conduct ($\theta_1$) or/and past trading experiences. These expectations determine the perceived intertemporal price differential between immediate sale and deferred sale through storage, thereby linking market-structure uncertainty to individual storage incentives.
-
-
-
-
-
-\subsection{Final Objective Function}
-
-\noindent The economic environment at harvest is summarized in Table~\ref{tab:baseline model parameter table}, capturing both observed and unobserved determinants of the farmer's storage decision over two periods.
 
 \begin{table}[H]
 \centering
@@ -112,137 +91,91 @@ First-period price & $p_1$ & Observed \\
 First-period buyer power & $\theta_1 = \frac{1 - p_1}{p_1}$ & Inferred from $p_1$ \\
 Second-period buyer power & $\theta_2$ & Stochastic \\
 Second-period price & $p_2 = \frac{1}{1 + \theta_2}$ & Derived \\
-Storage efficiency factor & $\kappa \in [0,1]$ & Observed \\
-Second-period net price & $p_{2,\text{net}} = \frac{\kappa}{1 + \theta_2}$ & Derived \\
-CRRA risk aversion & $\gamma \in [0,10]$ & Observed \\
+Storage efficiency factor & $\kappa \le 1$ & Observed \\
+Second-period net price & $\kappa p_2 = \frac{\kappa}{1 + \theta_2}$ & Derived \\
+CRRA coefficient & $\gamma \in [0,10]$ & Observed \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\noindent The farmer allocates a share $s \in [0,1]$ of output to the second-period sale and retains the remainder for immediate sale at price $p_1$. Without a specific assumption on the utility functional form, substituting the expressions for $p_1$ and $p_{2,\text{net}}$, a farmer's maximization problem becomes:
+
+
+\subsection{Farmer Optimization}
+
+\noindent The economic environment for a farmer at harvest is summarized in Table~\ref{tab:baseline model parameter table}. A farmer allocates a share $s \in [0,1]$ of output to the second-period sale and retains the remainder for immediate sale at price $p_1$. Substituting the expressions for $p_1$ and $p_{2}$, a farmer's maximization problem becomes:
 \begin{equation}
 \label{eq:final objective}
 \max_{s \in [0,1]} \mathbb{E} \left\{U\left[\underbrace{\frac{1-s}{1+\theta_1}}_{\text{First-period income}} + \underbrace{s \cdot \frac{\kappa}{1+\theta_2}}_{\text{Adjusted second-period income}} \right]\right\}.
 \end{equation}
+We assume farmer risk preferences follow CRRA:
+\begin{equation}
+    U(\pi)=\left\{
+    \begin{array}{ll}
+    \pi & \text { if } \gamma = 0 \\
+    \frac{\left(\pi^{1-\gamma}-1\right)}{(1-\gamma)} & \text { if } \gamma > 0 \text { and } \gamma \neq 1 \\
+    \ln (\pi) & \text { if } \gamma=1
+    \end{array}\right.
+\label{eq: CRRA}
+\end{equation}
+where $\gamma$ denotes the CRRA coefficient and $\pi$ represents the net income realized over two periods. 
 
+
+CRRA implies a constant degree of relative risk aversion across income levels, consistent with standard models of choice under uncertainty. Empirically, household portfolio studies show that the share of risky assets remains stable across wealth levels despite income fluctuations, supporting CRRA as a reasonable approximation \citep{chiappori2011relative, Berger2020Characterizing, zavala2024unfair}. The unitless risk-aversion coefficient $\gamma$ further allows meaningful comparisons of risk preferences across contexts \citep{Szpiro1986Relative, hardaker2000some}. A recent meta-analysis by \citet{Irsova2025Relative} estimates average relative risk aversion near 1 in general applications and between 2 and 7 in financial settings, values consistent with field observations for the apple-producing regions in China \citep{jin2024losses}. We allow $\gamma$ to vary over $[0,10]$, spanning risk-neutral to highly risk-averse preferences to capture a full picture of how risk attitudes shape storage decisions.
 
 \subsection{Risk Neutrality: Closed-Form Solution}
-\noindent Under the case of risk neutrality, the utility function becomes linear: $U(\pi) = \pi$. The objective simplifies to:
+\noindent Under risk neutrality, $U(\pi) = \pi$, the objective simplifies to:
 \begin{equation}
 \max_{s \in [0,1]} \; 
 (1 - s) \cdot \frac{1}{1 + \theta_1} 
 + 
 s \cdot \kappa \cdot \mathbb{E} \left[ \frac{1}{1 + \theta_2} \right].
 \end{equation}
-The solution simply depends on a comparison of marginal returns:
+The solution, $s^*$, depends solely on a comparison of marginal returns:
 \begin{equation}
 s^*( \gamma = 0) =
 \begin{cases}
 1 & \text{if } \kappa \cdot \mathbb{E} \left[ \frac{1}{1 + \theta_2} \right] > \frac{1}{1 + \theta_1}, \\
-0 & \text{if } \kappa \cdot \mathbb{E} \left[ \frac{1}{1 + \theta_2} \right] < \frac{1}{1 + \theta_1}, \\
-\text{any } s \in [0,1] & \text{if equality}.
+0 & \text{if } \kappa \cdot \mathbb{E} \left[ \frac{1}{1 + \theta_2} \right] \leq \frac{1}{1 + \theta_1}.
 \end{cases}
 \label{Eq: risk-neutrality solution}
 \end{equation}
 
-\noindent Under risk neutrality, the farmer evaluates only expected monetary payoff. The decision reduces to a pure binary choice: if the net expected second-period price exceeds the normalized first-period price, then storage is optimal; otherwise, immediate sale dominates. Indifference arises only when the two expected returns are equal.
+\noindent The risk-neutral farmer evaluates only the expected monetary payoff, and the storage decision reduces to a binary choice: if the net expected second-period price exceeds the first-period price, full storage is optimal; otherwise, full sale at harvest is optimal.
+%Indifference arises only when the two expected returns are equal.
 
 
 \subsection{Risk Aversion: Numerical Approach Needed}
-\noindent In the presence of risk aversion---that is, when the utility function is strictly concave---analytical solutions to the farmer's maximization problem are generally unattainable. This intractability arises from the fact that risk aversion embeds the random second--period buyer-power parameter, $\theta_2$, inside a nonlinear transformation.  With a strictly concave utility function $U(\cdot)$, the marginal utility term that enters the first-order condition is $U'\!\left[\frac{1-s}{1+\theta_1}+ s\frac{\kappa}{1+\theta_2}\right]$.  Because $s$ appears both outside and inside the expectation, the optimality condition requires solving
-$$
-\mathbb{E}\!\left\{\,U'\!\Bigl[\cdot\Bigr]\!\left[-\frac{1}{1+\theta_1}+\frac{\kappa}{1+\theta_2}\right]\right\}=0,
-$$
-which is a Fredholm integral equation. For generic concave $U$ (e.g., CRRA, CARA, or quadratic utility outside the linear range), the integral has no closed-form anti-derivative, because $U'$ must be evaluated at every realization of $\theta_2$ and then averaged over its distribution. Only by imposing knife-edge assumptions---such as risk neutrality ($U''=0$), degenerate $\theta_2$, or special affine-transform utility---does the expectation reduce to an algebraic expression that can be inverted to solve for $s$.
-
-Even when the distribution of $\theta_2$ is simple, analytic integration remains elusive. The ratio $\kappa/(1+\theta_2)$ introduces a hyperbolic term inside $U$, so the composition $U'\circ g(\theta_2)$ usually lacks a primitive.  Consequently, the derivative of the expected utility cannot be written as a finite combination of elementary functions, precluding a closed-form solution for the interior optimum. 
-
-Moreover, the introduction of risk aversion couples the mean and higher-order moments of $\theta_2$ together. The comparative-static effects of skewness or variance on $s^{*}$ therefore enter through higher-order derivatives of $U$, which are inseparable from the integral above.  This dependence further limits traceability.
-
-
-These complications drive me to employ numerical analysis, specifically, the Monte Carlo evaluation of the expectation, to approximate the optimal storage share $s^{*}$ while respecting the corner constraints $s\in[0,1]$.
-
-
-
-
-
-\section{Numerical Analysis} \label{Section: Base Model Numerical Analysis}
-\noindent To examine how risk preferences and storage efficiency shape farmers' intertemporal marketing decisions under buyer power uncertainty, I numerically solve for the optimal storage share $s^*$ across a range of parameter values. This section describes the simulation design and computational procedure employed to approximate the farmer's decision problem under Constant Relative Risk Aversion (CRRA) utility.
-
-
-\subsection{Setup and Parameterization}
-\noindent Without much loss of generality, a farmer is assumed to observe a moderate level of first-period buyer power $\theta_1 = 0.5$, the midpoint of the support. The choice of $\theta_1 = 0.5$ serves as a representative benchmark rather than a substantive restriction. The objective here is not to analyze the effect of a specific level of contemporaneous buyer power, but to illustrate how changes in the mean and variance of future buyer power, $\theta_2$, around the first-period observation influence farmers' storage incentives. Similar qualitative insights would arise under alternative values of $\theta_1$, as the key mechanism operates through how expectations about $\theta_2$ evolve relative to the observed market condition, rather than through the absolute level of $\theta_1$ itself.
-
-
-Second-period buyer power $\theta_2$ is stochastic and modeled using Beta distributions bounded on the unit interval $[0,1]$, allowing for flexible skewness and kurtosis while maintaining economically relevant support.
-
-I consider eight distinct Beta distributions defined by a full factorial combination of:
-\begin{itemize}
-\item \textbf{Four means}: $\mu_{(\theta_2)} \in {0.2,,0.4,,0.5,,0.8}$, and
-\item \textbf{Two variances}: $\sigma^2_{(\theta_2)} \in {0.02,,0.05}$, representing low and high uncertainty respectively.
-\end{itemize}
-
-For each $(\mu_{(\theta_2)}, \sigma^2_{(\theta_2)})$ pair, the corresponding unique pair of Beta distribution shape parameters $(\alpha, \beta)$ is computed using the standard moment-matching formulas:
-
-$$
-\alpha = \mu_{(\theta_2)} \left( \frac{\mu_{(\theta_2)}(1 - \mu_{(\theta_2)})}{\sigma^2_{(\theta_2)}} - 1 \right), \quad
-\beta = (1 - \mu_{(\theta_2)}) \left( \frac{\mu_{(\theta_2)}(1 - \mu_{(\theta_2)})}{\sigma^2_{(\theta_2)}} - 1 \right).
-$$
-
-I simulate 2,000 independent realizations of $\theta_2$ for each Beta distribution to approximate the expectation operator in the farmer's objective function.
-
-
-
-
-\subsection{Numerical Strategy}
-\noindent The computational approach exploits a simplification under risk neutrality ($\gamma = 0$). In this case, the utility function becomes linear and the farmer's decision reduces to the binary rule as shown in Equation~\ref{Eq: risk-neutrality solution}.
-
-For all $\gamma > 0$, I numerically evaluate a farmer's utility under the Constant Relative Risk Aversion (CRRA) functional form:
+\noindent In the presence of risk aversion, the CRRA utility function is strictly concave, and a closed-form solution to the farmer's maximization problem is generally not available. The difficulty arises because the random second-period buyer–power parameter $\theta_2$ enters inside a nonlinear utility transformation. With strictly concave $U(\cdot)$, the first-order condition (FOC) for interior solution is
 \begin{equation}
-U(\pi)=\left\{\begin{array}{ll}
-\frac{\left(\pi^{1-\gamma}-1\right)}{(1-\gamma)} & \text { if } \gamma \neq 1 \\
-\ln (\pi) & \text { if } \gamma=1
-\end{array},\right.
-\label{eq: CRRA}
+    \mathbb{E}\!\left\{
+U'\!\left[\frac{1-s}{1+\theta_1}
++ s\frac{\kappa}{1+\theta_2}\right]
+\left[-\frac{1}{1+\theta_1}+\frac{\kappa}{1+\theta_2}\right]
+\right\}=0.
+\label{Eq: Optimization FOC}
 \end{equation}
-where $\gamma$ denotes the coefficient of relative risk aversion, and $\pi$ represents the net income realized over two periods. 
 
-The adoption of the Constant Relative Risk Aversion (CRRA) utility function is supported by both theoretical appeal and empirical evidence. Theoretically, CRRA maintains a constant degree of relative risk aversion across income levels, aligning with microeconomic models of choice under uncertainty. Empirically, panel data studies consistently find that the share of risky assets in household portfolios remains stable across wealth levels even amid substantial income fluctuations, supporting the CRRA assumption \citep{Berger2020Characterizing, chiappori2011relative, zavala2024unfair}. The unitless nature of the CRRA coefficient $\gamma$ enables meaningful comparisons of risk preferences across settings and countries \citep{Szpiro1986Relative, hardaker2000some}. A recent meta-analysis by \citet{Irsova2025Relative} finds that, after adjusting for publication bias, the average coefficient of relative risk aversion centers around 1 in general economic applications and between 2 and 7 in financial contexts, figures that align closely with my field observations.
+For standard concave preferences (e.g., CRRA) and a nondegenerate distribution for $\theta_2$, the first-order condition does not simplify to an algebraic expression that can be solved explicitly for $s$. Even when the distribution of $\theta_2$ is simple, analytic integration of the first-order condition is generally not available. The second-period net return $\kappa/(1+\theta_2)$ is hyperbolic, and its composition with a nonlinear marginal utility function $U'$ does not yield an expectation that simplifies to an algebraic expression in $s$. As a result, no closed-form expression for an interior optimum exists for the baseline parametric preferences used in this paper.
 
-Moreover, this utility form aligns well with observed farmer behavior in regions proximate to my study sites. For example, \citet{jin2024losses} document persistent risk-averse decision-making among apple growers in areas that substantially overlap with the geographic scope of my fieldwork.
-
-
-To ensure the model remains broadly applicable beyond the context of apple production, I adopt a general range for the storage efficiency coefficient, $\kappa \in [0.6, 1.0]$, in the simulations. This parameter captures the combined effects of physical quality loss, storage costs, and intertemporal discounting in carrying product fro period 1 to period 2.
-
-For apple growers in particular, empirical evidence suggests that post-harvest quality decline is modest within a single marketing season due to the use of cold storage, implying that quality deterioration is likely minimal. Storage costs are present but not prohibitive, and the dominant component affecting $\kappa$ may therefore be discounting. Drawing on literature from developing-country settings (e.g., \cite{frederick2002time, tanaka2010risk, bauer2012behavioral, saitone2018price, Belissa2019Liquidity, liu2020delayed, Umar2025Drivers}), relevant discount rates can be substantial, yet still consistent with values that keep $\kappa$ well above 0.6. Present bias is not considered here, as intra-seasonal decisions are assumed to follow time-consistent preferences. This range thus offers a realistic and flexible foundation for analyzing storage behavior under varying economic conditions.
+Risk aversion also implies that the optimality condition depends jointly on the mean and higher-order moments of $\theta_2$. The effects of variance, skewness, or higher moments on $s^{*}$ enter through higher derivatives of $U$, which remain embedded inside the expectation operator in Equation~(\ref{Eq: Optimization FOC}) and cannot be separated into moment-specific terms. This interaction between utility function curvature and the full distribution of $\theta_2$ further limits tractability and reinforces the need for numerical methods. We therefore approximate the solution to Equation~(\ref{Eq: Optimization FOC}) using Monte Carlo draws of $\theta_2$ and solve for the optimal storage share $s^{*}$, while respecting the corner constraints $s \in [0,1]$. Appendix \ref{Section: Special Cases: Explicit Competition Forms} recasts the model using standard forms of noncooperative oligopsony behavior---price-setting (Bertrand-Nash) competition and quantity-setting (Cournot-Nash) competition.
 
 
 
 
 
 
-\subsection{Simulation Grid}
-\noindent Therefore, the numerical analysis is conducted over the following two-dimensional grid:
-\begin{itemize}
-\item \textbf{Risk aversion}: $\gamma \in [0, 10]$, discretized over 30 evenly spaced points.
-\item \textbf{Storage efficiency}: $\kappa \in [0.6, 1.0]$, discretized over 20 points.
-\end{itemize}
+\section{Numerical Analysis} \label{Section: Base Model Numerical Analysis} 
+\noindent This section describes the simulation design and computational procedure employed to approximate the farmer's decision problem under CRRA utility. We set first-period buyer power to a representative value of $\theta_1 = 0.5$, the midpoint of its support. This choice is made with little loss of generality because results depend primarily on how the mean and variance of future buyer power $\theta_2$ shape storage incentives for a given value of $\theta_1$, and the qualitative patterns are unchanged for other values of $\theta_1$. What matters is how expectations about $\theta_2$ evolve relative to harvest-time conditions, not the absolute level of $\theta_1$.
 
-This design spans a broad range of economically plausible values-from risk neutrality to strong risk aversion, and from low to perfect storage efficiency.
+Second-period buyer power $\theta_2$ is modeled as a Beta-distributed random variable on $[0,1]$, providing flexible control over its mean, variance, and skewness and maintaining supports on the unit interval consistent with the FOOM model. We examined eight Beta distributions formed by a full factorial of four mean values for $\theta_2$, 
+$\mu_{\theta_2} \in \{0.2, 0.4, 0.5, 0.8\}$, and two variances, 
+$\sigma^2_{\theta_2} \in \{0.02, 0.05\}$, corresponding to low and high uncertainty regarding future buyer power.\footnote{For each $(\mu_{\theta_2}, \sigma^2_{\theta_2})$ pair, the corresponding unique pair of Beta distribution shape parameters $(\alpha, \beta)$ are computed using the standard moment-matching formulas: $\alpha = \mu_{\theta_2} \left( \frac{\mu_{\theta_2}(1 - \mu_{\theta_2})}{\sigma^2_{\theta_2}} - 1 \right), \quad \beta = (1 - \mu_{\theta_2}) \left( \frac{\mu_{\theta_2}(1 - \mu_{\theta_2})}{\sigma^2_{\theta_2}} - 1 \right).$}$^,$\footnote{Each admissible $(\mu,\sigma^2)$ implies unique parameters $(\alpha,\beta)$ for the Beta distribution.} We simulate the optimal storage share $s^*$ by drawing 5{,}000 realizations of $\theta_2$ from the Beta distribution for each of the eight $(\mu_{\theta_2}, \sigma^2_{\theta_2})$ scenarios and searching a 100-point grid over $s \in [0,1]$ to identify the value, $s^*$, that maximizes expected CRRA utility of two-period income for every $(\gamma,\kappa)$ pair that defines a specific farmer.
 
-Each candidate $s$ is evaluated over the 2,000 simulated values of $\theta_2$, and the resulting utilities are averaged to approximate expected utility. The maximizer of this set yields $s^*$ for the given $(\gamma, \kappa)$ configuration.
-
-For each grid point $(\gamma, \kappa)$, I solve the farmer's problem by computing expected utility over a discrete set of 25 candidate storage shares $s \in [0, 1]$. The optimal share $s^*$ is the value that maximizes expected utility given the simulated distribution of $\theta_2$.
-
+We set the range for the farmer storage-efficiency parameter $\kappa \in [0.6,1.0]$, capturing quality loss, storage costs, and discounting between periods relative to the efficient storage benchmark, $\kappa = 1$. Although evidence concerning efficiency decrements of small-scale, on-farm storage relative to commercial storage is not readily available, evidence from developing-country settings shows substantial farmer discounting of future income streams: \citet{jin2024losses} report present values for delayed payments ranging from 22--96\% among apple growers and \citet{ding2021time} estimate an annual value around 85\% for grape growers in China. Even U.S. farmers exhibit sizable discounting, with annual present values of roughly 70--78\% \citep{duquette2012farmer}.\footnote{For comparability across studies, we convert standard discount rates $r$ into present-value factors using $\alpha = 1/(1+r)$, where $r = \left(\frac{\text{Future Value}}{\text{Present Value}}\right)^{1/t} - 1$. For instance, $r = 0.17$ implies $\alpha = 1/1.17 \approx 0.85$.} Given that $\kappa$ incorporates both time discounting and physical or financial storage frictions, allowing values as low as 0.6 is empirically well grounded.
 
 
 \subsection{3D Visualization and Interpretation}
-\noindent To present results, I construct a 4-by-4 panel as shown in Figure~\ref{Figure:3D_formulation}. The layout is organized as follows:
-\begin{itemize}
-\item \textbf{Top and bottom rows} plot the probability density functions (PDFs) of the eight Beta distributions used to simulate $\theta_2$. Each panel is annotated with its corresponding mean and variance, $(\mu_{(\theta_2)}, \sigma^2_{(\theta_2)})$ and the implied shape parameters,  $(\alpha, \beta)$.
-\item \textbf{Middle two rows} display 3D surfaces of the optimal storage share $s^*$ as a function of $\gamma$ and $\kappa$, separately for low-variance (second row) and high-variance (third row) distributions.
-\end{itemize}
-Each 3D plot is rendered with a consistent viewing angle such that the origin, corresponding to the lowest values of both $\gamma$ and $\kappa$, appears closest to the observer. These simulation surfaces depict key mechanisms driving intertemporal storage and marketing choices under local market-structural uncertainty in agriculture.
+\noindent To present results, we use a 4-by-4 panel (Figure~\ref{Figure:3D_formulation}). The top and bottom rows show the PDFs of the eight Beta distributions for $\theta_2$, each labeled with its mean--variance pair $(\mu_{\theta_2}, \sigma^2_{\theta_2})$ and implied shape parameters $(\alpha, \beta)$. The middle two rows plot 3D surfaces of the optimal storage share $s^*$ over $(\gamma, \kappa)$, separately for low-variance (second row) and high-variance (third row) cases. The columns from left to right denote increasing values for $\mu_{\theta_2}$. All 3D plots share a common viewing angle, with the lowest $\gamma$ and $\kappa$ values ``closest'' to the observer. These surfaces summarize how intertemporal storage responds to uncertainty in local buyer power.
 
 \begin{figure}[ht!]
 \centering
@@ -251,25 +184,22 @@ Each 3D plot is rendered with a consistent viewing angle such that the origin, c
 \label{Figure:3D_formulation}
 \end{figure}
 
-In general, when the farmer expects buyer power to be stronger in the future than at harvest-that is, when $\mathbb{E}[\theta_2] > \theta_1$-the incentive to store totally disappears. In other words, farmers would never store when $\mu > 0.5$ in our simulation here. As illustrated in the far-right column of the panel, the optimal strategy across all risk and efficiency levels is to sell immediately ($s^* = 0$).
+In general, when the farmer expects buyer power to be stronger in the future than at harvest, that is, when $\mathbb{E}[\theta_2] > \theta_1$, a farmer has no incentive to store the harvest. Thus, farmers will not store when $\mu > 0.5$. As illustrated in the far-right column of the panel ($\mu_{\theta_2}=0.8$), the optimal strategy across all risk and efficiency levels is to sell immediately ($s^* = 0$).
 
-Even when $\mathbb{E}[\theta_2] = \theta_1$, a farmer may still find storage worthwhile when he or she has a super high storage efficiency. This arises because the expected second-period price $\mathbb{E}[p_2] = \mathbb{E}\!\left[\frac{1}{1+\theta_2}\right]$ slightly exceeds the deterministic benchmark $\frac{1}{1+\mathbb{E}[\theta_2]} = p_1$, owing to the concavity of the price function in $\theta_2$. In other words, uncertainty in buyer power is beneficial from the farmer's perspective: random fluctuations in $\theta_2$ generate an upward Jensen effect on expected prices. Consequently, even when the mean level of buyer power is unchanged across periods, the convexity of payoffs with respect to price risk induces modest positive storage in expectation.
+When $\mathbb{E}[\theta_2] = \theta_1$ (center-right column), a farmer with high storage efficiency and little risk aversion may still find storage worthwhile. This arises because the expected second-period price $\mathbb{E}[p_2] = \mathbb{E}\!\left[\frac{1}{1+\theta_2}\right]$ slightly exceeds the deterministic benchmark $p_1= \frac{1}{1+\theta_1}$, owing to the convexity of the price function in $\theta_2$. Consequently, even when the mean level of buyer power is unchanged across periods, the convexity of payoffs with respect to price risk may induce positive storage adoption, as illustrated in the center-right column in Figure~\ref{Figure:3D_formulation}.
 
-In contrast, when expectations about future buyer power are favorable ($\mathbb{E}[\theta_2] < \theta_1$), the decision becomes more nuanced. Interior solutions ($0 < s^* < 1$) emerge over a meaningful range of risk preferences and storage efficiencies. Moreover, as the expected buyer power $\mathbb{E}[\theta_2]$ declines, both the scope for interior solutions and the frequency of corner solutions with full storage ($s^* = 1$) expand, reflecting the improved relative attractiveness of deferring sales.
+ When expectations about future buyer power are favorable ($\mathbb{E}[\theta_2] < \theta_1$), interior solutions ($0 < s^* < 1$) emerge over a narrow range of risk preferences and storage efficiencies. Moreover, as the expected buyer power $\mathbb{E}[\theta_2]$ declines, both the scope for interior solutions and the frequency of full storage ($s^* = 1$) expand.
 
-
-
-Within each simulated surface, $s^*$ is non-increasing in $\gamma$. This pattern is especially pronounced when future buyer power is moderate-that is, when expected second-period prices are only marginally higher than those in the first period. The underlying mechanism is intuitive: risk-averse farmers increasingly value certainty over potentially higher but uncertain future payoffs. As $\gamma$ rises, the disutility associated with price risk begins to outweigh the intertemporal arbitrage opportunity, especially when those gains are compressed by relatively high buyer power.
+Within each simulated surface, $s^*$ is non-increasing in $\gamma$. This pattern is especially pronounced when future buyer power is moderate-that is, when expected second-period prices are only marginally higher than those in the first period. Risk-averse farmers value certainty over potentially higher but uncertain future payoffs. As $\gamma$ rises, the disutility associated with price risk tends to outweigh the option value of storage, especially when those gains are modest due to expectations of relatively higher buyer power in period 2. This point is illustrated by the center left column where $\mu_{\theta_2}$ = 0.4. Although a more competitive market is forecast in period 2, storage inefficiency and risk aversion cause $s^*=0$ for many farmers.
 
 
-
-In contrast, storage efficiency $\kappa$ plays a reinforcing role. For a given level of risk aversion, increases in $\kappa$ make storage more attractive by reducing the effective cost of waiting. Accordingly, $s^*$ is non-decreasing in $\kappa$. The responsiveness of $s^*$ to $\kappa$ weakens at higher values of $\gamma$, suggesting that even highly efficient storage systems cannot fully offset the behavioral costs of risk exposure when farmers are strongly averse to uncertainty. 
-
-
-Cross-panel comparisons further illustrate how changes in the distribution of second-period buyer power affect storage incentives. As the mean future buyer power $\mu_{(\theta_2)}$ increases (moving left to right across the panels), expected second-period prices decline, rendering storage less attractive in expected-value terms. Accordingly, the optimal storage share $s^*$ shifts downward across the entire surface. This effect is especially pronounced for risk-neutral or mildly risk-averse farmers, who condition decisions almost exclusively on expected returns. The lower the expected future price, the more immediate sale becomes the dominant strategy.
+To no surprise, greater storage efficiency supports a positive storage decision. For a given level of risk aversion, increases in $\kappa$ make storage more attractive by increasing the expected net second-period price. The responsiveness of $s^*$ to $\kappa$ weakens at higher values of $\gamma$, suggesting that even access to highly efficient storage cannot fully offset the behavioral costs of risk exposure when farmers are strongly averse to it. Even in the settings most conducive to profitable storage, such as $\mu_{\theta_2} = 0.2, \sigma^2= 0.02$, inefficient storage ($\kappa < 0.78$) makes storage suboptimal for farmers.
 
 
-Variance in buyer power exerts a subtler yet systematic influence. Comparing the second and third rows of the panel, low versus high variance cases, shows that greater dispersion in future buyer power ($\sigma^2$) consistently discourages storage, especially among the most risk-averse farmers. The mechanism is straightforward: higher variance increases downside risk in second-period returns, and with concave utility, this uncertainty weighs more heavily for those with stronger risk aversion. While highly risk-averse farmers are already reluctant to store, an increase in variance further reinforces their preference for immediate sale. By contrast, at low or moderate levels of $\gamma$, the marginal effect of variance is smaller, as these farmers are less sensitive to additional risk.
+Cross-panel comparisons further illustrate how changes in the distribution of second-period buyer power affect storage incentives. As the mean future buyer power $\mu_{\theta_2}$ increases (moving left to right across the panels), expected second-period prices decline, rendering storage less attractive. Accordingly, the optimal storage share $s^*$ shifts downward across the entire surface. This effect is especially pronounced for risk-neutral or mildly risk-averse farmers, who condition decisions mostly or exclusively on expected returns. The lower the expected future price, the more immediate sale becomes the dominant strategy.
+
+
+Variance in farmers' expectations of future buyer power exerts a subtle yet systematic influence. Comparing the second and third rows of the panel, low versus high variance cases, shows that greater dispersion in expectations of future buyer power ($\sigma^2$) discourages storage in general, especially among the most risk-averse farmers. Higher variance increases downside risk in second-period returns, and with concave utility this uncertainty weighs more heavily for those with stronger risk aversion. While highly risk-averse farmers are already reluctant to store, an increase in variance further reinforces their preference for immediate sale. By contrast, at low or moderate levels of $\gamma$, the marginal effect of variance on $s^*$ is smaller, as these farmers are less sensitive to additional risk.
 
 
 
@@ -353,6 +283,90 @@ This graphical structure complements prior results showing $s^*$ as a function o
 
 
 
+\subsection{Sensitivity Analysis: Impacts of Supply Elasticity on Optimal Storage}
+\noindent Results in the main text assumed a constant farm supply elasticity, $\varepsilon_1 = \varepsilon_2 = 1$ across both periods. In this appendix, we first consider how results are impacted when the farm supply elasticity changes across periods, considering possibilities that period 2 supply is less elastic, $\varepsilon_1 > \varepsilon_2$ or more elastic, $\varepsilon_1 < \varepsilon_2$, than harvest period elasticity. We then consider impacts when $\varepsilon_1 = \varepsilon_2$ but the common supply elasticity is greater or less than the unitary elasticity assumed in the main text.
+
+
+
+\subsubsection{Optimal Storage When Supply Elasticity Changes across Periods} 
+\label{Appendix: Sensitivity to relative Supply Elasticity}
+\noindent
+We consider how farmers' optimal storage responds when farm supply is either more or less elastic in the second period. Either condition is possible. $\varepsilon_2 < \varepsilon_1$ is plausible because availability of the storage option in period 1 but not period 2 can make period 1 supply more elastic than in period 2. $\varepsilon_2 > \varepsilon_1$ is also plausible because, as noted, moving product into central storage facilities may expand selling options.
+
+
+
+To isolate the impacts of changing price elasticity, we fix the distribution of second-period buyer power at $\theta_2 \sim \text{Beta}(\mu,\sigma^2)$ with $\mu = 0.2$ and $\sigma^2 = 0.05$ and vary only the second-period supply elasticity $\varepsilon_2 \in \{0.75,1.00,1.25\}$. The first-period elasticity is set at $\varepsilon_1 = 1$, so that any change in intertemporal incentives 
+is driven entirely by how $\varepsilon_2$ reshapes the mapping from buyer power to price in period 2.
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=\linewidth]{model_figures/sensitivity_to_gamma_eps2_with_p2_panel.png}
+    \caption{Comparative Sensitivity of Storage and Price to Second-Period Supply Elasticity}
+    \label{fig: sensitivity_to_supply_elasticity}
+\end{figure}
+
+Figure~\ref{fig: sensitivity_to_supply_elasticity} summarizes the results. 
+Panel~(a) shows that $s^*(\gamma)$ is non-decreasing with the second-period supply elasticity: the schedule for $\varepsilon_2 = 1.25$ lies above 
+that for $\varepsilon_2 = 1.00$, which lies above that for $\varepsilon_2 = 0.75$. Greater elasticity dampens the price markdown associated with period 2 buyer power, raising $p_2(\theta_2,\varepsilon_2)$ for any given $\theta_2$. This increases the expected payoff from waiting, lowers the risk-aversion threshold at which storage becomes profitable, and yields higher optimal storage shares throughout the range of~$\gamma$.
+
+Panel~(b) makes this mechanism explicit by plotting the implied expected second-period price,
+$$
+    \mathbb{E}[p_2]
+    \;=\;
+    \mathbb{E}\!\left[\frac{\varepsilon_2}{\varepsilon_2 + \theta_2}\right],
+$$
+for each elasticity value. Because $p_2(\theta_2,\varepsilon_2)$ is strictly increasing in $\varepsilon_2$ for all $\theta_2 \geq 0$, the distribution of second-period prices shifts upward as supply becomes more elastic. In our calibration, moving from $\varepsilon_2 = 0.75$ to $\varepsilon_2 = 1.25$ raises $\mathbb{E}[p_2]$ by a nontrivial amount, and this upward shift in expected revenue accounts for the higher storage shares in Panel~(a).
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=\linewidth]{model_figures/3D_formulation_supply_elasticity.png}
+    \caption{Optimal Storage Share for Different Second-period Mean Buyer Power and Supply Elasticity}
+    \label{fig: 3D_supply_elasticity}
+\end{figure}
+
+
+In addition to the one-dimensional storage schedules, Figure~\ref{fig: 3D_supply_elasticity} provides a fuller visualization of the interaction between risk aversion, storage efficiency, the mean of second-period buyer power, and the supply elasticity. Each row holds fixed a value of $\varepsilon_2 \in \{0.75,1.00,1.25\}$, while each column varies the mean of future buyer power $\mu \in \{0.2,0.4,0.5,0.8\}$. 
+
+Comparing rows reveals the key elasticity mechanism: increasing $\varepsilon_2$ uniformly lifts the entire $s^*(\gamma,\kappa)$ surface. Because higher second-period supply elasticity compresses the markdown generated by any realization of $\theta_2$, the second-period price schedule shifts upward, and so even moderate levels of risk aversion now justify delaying sales for a broader set of $(\gamma,\kappa)$ combinations.
+
+
+Overall, the sensitivity analysis confirms that the model's qualitative comparative statics are robust to reasonable variation in supply elasticity. Allowing $\varepsilon_2 \neq 1$ simply rescales the expected second-period price path: more elastic supply under buyer power (higher $\varepsilon_2$) strengthens the incentive to store by raising expected future prices, whereas less elastic supply (lower $\varepsilon_2$) dampens storage incentives by lowering those prices. The underlying mechanism---storage as a response to time-varying buyer power---remains unchanged.
+
+
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=\linewidth]{model_figures/grid_sensitivity_gamma_eps_common_by_mu.png}
+    \caption{Storage Share and Prices under Different Second-period Mean Buyer Power and Supply Elasticity}
+    \label{fig: GRID_common_supply_elasticity_across_periods}
+\end{figure}
+
+
+\subsubsection{Sensitivity of Optimal Storage to Common Supply Elasticity Changes Across Periods}
+\label{Appendix: Sensitivity to common Supply Elasticity change}
+\noindent
+Figure~\ref{fig: GRID_common_supply_elasticity_across_periods} summarizes how farmers' optimal storage behavior responds to common changes in farmers' supply elasticity across periods. Each row corresponds to a different expected level of future buyer power, $E[\theta_2]\in\{0.20,0.30,0.35\}$, holding period 1 buyer power constant at $\theta_1 = 0.5$ and $\kappa = 0.9$. Each subplot traces the optimal storage share $s^*(\gamma)$ for three values of the common elasticity $\varepsilon\in\{0.75,1.00,1.25\}$. A change in $\varepsilon$ simultaneously alters the harvest-time price $p_1$ and the entire distribution of future prices $p_2(\theta_2)$.
+
+
+A feature of Figure~\ref{fig: GRID_common_supply_elasticity_across_periods} is that the ordering of the three $s^*(\gamma)$ curves by $\varepsilon$ is not stable across rows. When expected future buyer power is low ($E[\theta_2]=0.20$), the curve for the highest elasticity ($\varepsilon=1.25$) lies slightly above the curves for lower elasticities, indicating that a more elastic supply environment encourages farmers to store more. When $E[\theta_2]$ increases to 0.30 or 0.35, however, the ranking reverses: the highest-elasticity curve shifts below the others, implying a lower storage propensity as $\varepsilon$ increases. This reversal is systematic and reflects how a joint change in elasticity affects the \emph{relative} movements of $p_1$ and $\mathbb{E}[p_2]$ across periods.
+
+
+The underlying economic mechanism is that increasing $\varepsilon$ raises both $p_1$ and $p_2$, but not at the same rate. When future buyer power is low (small $\theta_2$), $p_2$ is already relatively high, and a marginal increase in $\varepsilon$ proportionally boosts $p_2$ more than $p_1$. The intertemporal price ratio,
+$\frac{\kappa\,\mathbb{E}[p_2(\varepsilon,\theta_2)]}{p_1(\varepsilon,\theta_1)},$
+rises, strengthening the return to waiting. In this region, higher elasticity naturally leads to higher storage, and the $\varepsilon=1.25$ curve lies above the others.
+
+
+As expected future buyer power rises and approaches the harvest-time level ($\theta_1=0.5$), the two periods become more similar. In this environment, increases in $\varepsilon$ tend to raise $p_1$ more rapidly than $\mathbb{E}[p_2]$. Intuitively, when both periods face comparable buyer power, a high-elasticity environment disproportionately improves the return to selling immediately at harvest. The intertemporal price ratio then declines, reducing the value of waiting and lowering optimal storage. Consequently, the high-elasticity curve falls below the others in the lower rows of Figure~\ref{fig: GRID_common_supply_elasticity_across_periods}.
+
+
+The grid thus illustrates that supply elasticity does not exert a monotonic or uniform influence on intertemporal marketing decisions. Its effect depends critically on the expected path of buyer power. When future competitive conditions are favorable, higher elasticity amplifies the gains from waiting; when future and current conditions converge, higher elasticity primarily raises the attractiveness of immediate sale. This non-monotonicity arises naturally once both $p_1$ and $p_2$ co-move with the same elasticity parameter, underscoring that storage incentives hinge on \emph{relative}, rather than absolute, price movements across periods.
+
+
+
+
+
+
+
 \section{Policy Implications}
 \noindent
 Whether in developing or advanced economies, policymakers care deeply about farm incomes. A common response has been direct interventions, such as minimum support prices or income transfers, that boost incomes but often at the cost of market distortions, fiscal burden, and misallocation of resources. The model here suggests an alternative emphasis: improve the environment in which farmers make intertemporal selling decisions. Three margins emerge from the analysis, competition, storage efficiency, and risk aversion, each capable of lifting expected incomes without direct price manipulation.
@@ -430,7 +444,7 @@ It is worth-noting that such mechanisms often simultaneously reduce effective ri
 
 \subsection{Reducing Effective Risk Aversion}
 
-\textbf{Mechanism.} Building on this complementarity, we turn to the role of risk preferences themselves. While intrinsic attitudes toward risk are relatively stable, \emph{effective} risk aversion can decline as farmers gain financial security through liquidity, insurance, or wealth accumulation. A lower coefficient of relative risk aversion ($\gamma$) shifts behavior toward the risk-neutral benchmark, with the largest effects concentrated in the region where storage is only marginally profitable in expectation.
+\textbf{Mechanism.} Building on this complementarity, I turn to the role of risk preferences themselves. While intrinsic attitudes toward risk are relatively stable, \emph{effective} risk aversion can decline as farmers gain financial security through liquidity, insurance, or wealth accumulation. A lower coefficient of relative risk aversion ($\gamma$) shifts behavior toward the risk-neutral benchmark, with the largest effects concentrated in the region where storage is only marginally profitable in expectation.
 
 
 \begin{figure}[ht!]
@@ -468,141 +482,40 @@ Consequently, policies that expand farmers' financial security operate on both m
 
 
 
+\section{Optimal Storage under Cournot and Bertrand Competition}\label{Section: Special Cases: Explicit Competition Forms}
+\noindent
+Whereas buyer competition was represented flexibly in the main text based on values for the parameter $\theta$ consistent with the FOOM model, in this appendix we recast the model using the baseline models of noncooperative behavior from the industrial organization literature, symmetric Cournot-Nash (quantity) competition and Bertrand-Nash (price) competition. Both models allow buyers to exercise unilateral market power, but do not consider the possibility of buyer collusive behavior.
 
-\section{Special Cases: Explicit Competition Forms}\label{Section: Special Cases: Explicit Competition Forms}
-\noindent In the base framework, buyer power was represented in a reduced-form manner typical of \textit{FOOM} models, where buyer power $\theta$ was treated as a latent, abstract variable inferred from observed farm-gate prices through a nonlinear transformation. Conceptually, $\theta$ can be thought of as a sufficient statistic for market structure and conduct: at one extreme, it may correspond to the number of downstream buyers $N$ (with higher $N$ implying weaker buyer power), while more generally it can capture the distribution of buyer market shares as well as the intensity of competition. For example, a low $\theta$ could reflect either many symmetric buyers competing aggressively, or a few large buyers that nonetheless compete rather than collude; conversely, a high $\theta$ could arise from concentrated market shares, tacit collusion, or explicit coordination. 
+These models of symmetric competition assume buyers are identical, i.e., they operate with the same marginal costs, $c$ and are able to sell downstream at the same price $P$. Farmers observe the number of buyers present in the village in period 1, $N_1$, and form expectations about buyer presence in the second period, $\mathbb{E}[N_2]$.
 
-To move beyond this abstraction, I now introduce explicit models of non-cooperative buyer competition---namely, Bertrand (price-setting) and symmetric-buyer Cournot (quantity-setting) frameworks---thus ignoring for this analysis possible buyer collusion. These models provide structural microfoundations for $\theta$ by linking it to primitive features of market structure and strategic interaction.
-
-
-Suppose farmers observe the number of buyers present in the village at harvest time in the first period, denoted by $N_1$, and form expectations about buyer presence in the second period, $\mathbb{E}[N_2]$. The number of buyers in each period is a discrete variable bounded between zero and a finite upper limit.
-
-Bertrand and Cournot models offer contrasting benchmarks for non-cooperative buyer behavior. In the classic Bertrand setting, even a small number of buyers (as few as two) can generate highly competitive outcomes, a result often referred to as the ``Bertrand paradox.'' Translated into the present framework of traders purchasing from farmers, this implies that competition among a small set of buyers is sufficient to bid up the farm-gate price to the competitive benchmark---namely, the crop's \textbf{net marginal value product}, which by normalization equals 1.0 in the base model. In contrast, under Cournot competition the relationship between the number of buyers $N$ and the equilibrium farm-gate price is more gradual: as $N$ increases, buyer market power declines smoothly, and the farm-gate price converges to the competitive benchmark only asymptotically as $N \to \infty$.
-
-
-To ground the discussion, I draw on my fieldwork among apple growers in Yanchang County, Central China, during the 2024-2025 agricultural year. According to my survey of the targeted 15 buyers, including the top five most influential local traders, the number of buyers visiting a village at harvest ranges from zero in remote areas to a maximum of nine.\footnote{In Figure~\ref{Figure: buyer count at harvest}, 26\% of farmers appear to forecast fewer than zero buyers in the future, which is clearly nonsensical. This artifact arises because my sample of 15 buyers does not exhaustively cover the entire population of potential buyers, only the majority of the most frequently observed ones. Hence, farmers expressing highly pessimistic expectations experienced buyer visits from buyers outside my sample.} The mean first-period buyer count is 3.34, with a median of 3. As shown in Figure~\ref{Figure: buyer count at harvest}, fewer than 7\% of surveyed growers reported no buyer presence during harvest (for simplicity, the Bertrand analysis excludes this case), while over 80\% experienced at least two buyer visits. Most farmers reported between two and five buyers, motivating my assumption of a Poisson distribution for second-period buyer counts in the Cournot analysis.
-
-Importantly, farmers' expectations about second-period buyer presence appear weakly correlated with observed first-period buyer counts. This is illustrated by the color segments within each bar in Figure~\ref{Figure: buyer count at harvest}, which show considerable heterogeneity in forward-looking beliefs conditional on current buyer exposure.
-
-\begin{figure}[ht!]
-\centering
-\includegraphics[width=\textwidth]{figures/buyer_count_distribution.png}
-\caption{Observed Buyer Count at Harvest with Farmers' Expectations About Future Buyers}
-\label{Figure: buyer count at harvest}
-\end{figure}
-
-
-\subsection{Price-Setting Competition: Bertrand--Nash Equilibrium}
-\noindent In the price-setting environment, buyers set the price they offer to farmers. If there are no capacity constraints, the standard Bertrand logic applies: even two buyers suffice to drive the purchase price up to the competitive benchmark, which is normalized to 1 under our derived price formation rule in Equation~\ref{Eq: price formation by buyer power}. This outcome, often referred to as the Bertrand Paradox, corresponds here to a Bertrand--Nash equilibrium in which perfectly competitive outcomes ($\theta_t=0$) arise as long as $N_t \geq 2$.
-
-Therefore, under Bertrand conditions, according to Equation~\ref{Eq: price formation by buyer power}, the farm-gate price received by farmers can be modeled as:
-\begin{equation}
-p_t = 
-\begin{cases}
-0.5, & N_t = 1 \\
-1, & N_t \geq 2
-\end{cases}
-\label{Eq: Bertrand Price Schedule}
-\end{equation}
-\noindent where $0.5$ denotes the monopsonistic price paid when only one buyer is present. The transition from a single-buyer market to a multi-buyer market results in a discontinuous shift in price.
-
-Here, I assume that farmers observe the first-period price at harvest, and the number of traders at a specific village in the second trading period ($N_2$) is stochastic, with the probability of one middleman being $\rho$, i.e., $Pr(n_2=1)=\rho$. So, the probability of multiple intermediaries appearing in village $j$ is $Pr(n_2 \geq 2) = 1-\rho$.
-
-Therefore, a farmer's optimization problem in Equation~\ref{eq:final objective} could be written as follows:
-\begin{equation}
-\max_{s \in [0,1]} \psi(\cdot) = \rho U((1-s)p_1 + \kappa s \cdot 0.5) + (1-\rho) U \left( (1-s)p_1 +  \kappa s \cdot 1 \right)
-\end{equation}
-where the first expression on the right-hand side reflects the utility from storing $s$ share of production to the second period in the monopsonistic case, and the second term represents the utility in the case of perfect competition among buyers. 
-
-Since all farmers would sell immediately at harvest when multiple buyers are present ($p_1 = 1$), the problem can be further simplified by setting the first-period price as the monopsonistic price ($p_1 = 0.5$), yielding:
-\begin{equation}
-\label{eq:Bertrand objective}
-\max_{s \in [0,1]} \psi(\cdot) = \rho U((1-s)\cdot0.5 + \kappa s \cdot 0.5) + (1-\rho) U \left( (1-s)\cdot0.5 +  \kappa s \cdot 1 \right)
-\end{equation}
-
-Differentiating Equation~\ref{eq:Bertrand objective} with respect to $s$ gives the marginal utility gain from reallocating one unit of output from immediate sale to storage:
-
-\begin{equation}
-g(\cdot) = \frac{d\psi}{ds} = \rho U^{\prime}(\pi_L(s)) \cdot 0.5(\kappa-1) + (1 - \rho) U^{\prime}(\pi_H(s)) \cdot (\kappa-0.5)
-\label{Eq: bertrand FOC}
-\end{equation}
-where $\pi_L(s) = (1 - s)\cdot 0.5 + \kappa s \cdot 0.5$ and $\pi_H(s) = (1 - s)\cdot 0.5 + \kappa s$ denote net income under low and high second-period prices, respectively.
-
-Evaluated at $s = 0$-i.e., no storage-the marginal utility becomes:
-$$
-\left.\frac{d\psi}{ds}\right|_{s=0} = U^{\prime}(0.5) \cdot \left[\kappa(1 - 0.5\rho ) - 0.5\right]
-$$
-The bracketed term reflects the expected second-period price, net of storage loss. Since $U'(\cdot) > 0$, the sign of this expression determines whether storing is utility-improving. In particular, the farmer finds storage profitable ($s^* > 0$) if and only if:
-$$
-\kappa(1 - 0.5\rho) > 0.5
-$$
-That is, expected gains from delayed sale, adjusted for storage inefficiency, must exceed the current price. If this inequality holds, deviating from zero storage increases expected utility. Then we can derive the following three lemmas:
-\begin{lemma}
-    The condition $\kappa (1 - 0.5\rho) < 0.5$ is necessary and sufficient for the farmer to sell the entire harvest in the first period, $s^*=0$.
-        \label{lemma: Bertrand no storage solution}
-\end{lemma}
-\begin{proof}
-    From Equation~\ref{Eq: bertrand FOC}, we can derive the second-order condition $\frac{d^2 \psi}{d s^2} = \rho U^{\prime \prime}\left(\pi_L(s)\right) \cdot\left(-0.5+ \kappa \cdot 0.5\right)^2+(1-\rho) U^{\prime \prime}\left(\pi_H(s)\right) \cdot\left(-0.5+\kappa\right)^2$. Since $U^{\prime\prime}(\cdot)\leq0$, the entire RHS expression is non-positive. Therefore, when $\kappa (1-0.5\rho) < 0.5 $, the $\frac{d \psi(s=0)}{d s}$ would never be positive.
-\end{proof}
-
-
-\begin{lemma}
-     When $\kappa (1-0.5\rho) > 0.5 $ and $\frac{d \psi(s=1)}{d s}>0$, then the farmer maximizes utility by storing the entire harvest for second-period sale, $s^*=1$.
-    \label{lemma: Bertrand full storage solution}
-\end{lemma}
-\begin{proof}
-    As $\kappa (1-0.5\rho) > 0.5 $ secures a positive storage share proven above, $\frac{d \psi(s=1)}{d s}>0$ ensures that expected utility is increasing in $s$. Therefore, at any given point of $s$, it would be optimal for the farmer to store more to get higher utility till $s$ reaches its upper bound of 1.0.
-\end{proof}
-
-
-\begin{lemma}
-    A farmer optimally adopts partial storage strategy (i.e., marketing production through both periods, $s^*\in (0,1)$) when the conditions $g(\cdot)  =  \frac{d \psi}{d s} = 0$ and $g^\prime(\cdot) = \frac{d^2 \psi}{d s^2} < 0 $ (implying a strictly risk-averse farmer), are satisfied in the range $0<s<1$.
-    \label{lemma: Bertrand Interior solution}
-\end{lemma}
-\begin{proof}
-    This is a standard interior optimum: the first-order condition holds and the second-order condition ensures a local maximum. Strict risk aversion ($U^{\prime\prime} < 0$) guarantees concavity and uniqueness.
-\end{proof}
-
-These three lemmas establish a complete characterization of the farmer's storage behavior under monopsony at harvest ($p_1 = 0.5$): sell immediately, store fully, or split output across periods.  
-
-Under monopsonistic first-period pricing, local comparative statics can be derived using the implicit function theorem. Let $g(s) = \frac{d\psi}{ds}$ denote the first-order condition for interior optimality. Then for any parameter $\xi \in {\rho, \kappa}$, the sensitivity of the optimal storage share satisfies:
-$$
-\frac{\partial s^*}{\partial \xi}= -\frac{\frac{\partial g}{\partial \xi}}{\frac{\partial g}{\partial s}}
-$$
-Since the second-order condition ensures $\partial g / \partial s = \frac{d^2\psi}{ds^2} < 0$, the sign of $\frac{\partial s^*}{\partial \xi}$ is governed by the sign of $\partial g / \partial \xi$. Hence, storage is increasing in storage efficiency factor $\kappa$-where lower storage cost unambiguously increases storage. However, the comparative static with respect to $\rho$ is not signed deterministically. This limits the interpretive power of local sensitivity analysis, especially given the narrow parameter region where an interior solution $s^* \in (0,1)$ arises, as shown in the previous section.
-
-
-
-
+Under Cournot competition the equilibrium farm-gate price increases smoothly in $N$, with $p$ converging to the competitive benchmark asymptotically as $N \to \infty$. In contrast, in the classic Bertrand setting, as few as two symmetric buyers engaged in price competition generate a Nash equilibrium equivalent to the competitive outcome, $p = VMP= P-c=1$, a result often referred to as the ``Bertrand's paradox.''
 
 
 
 \subsection{Quantity-Setting Competition: Cournot--Nash Equilibrium}
-\noindent In the quantity-setting environment, each homogeneous and symmetric buyer simultaneously chooses a purchase quantity, taking others' decisions as given. The resulting Cournot-Nash equilibrium reflects strategic quantity-setting behavior. Unlike in the Bertrand case, prices are not binary but vary smoothly with the number of active buyers.
+\noindent In the quantity-setting environment, each homogeneous and symmetric buyer simultaneously chooses a purchase quantity, taking others' purchase decisions as given. The resulting Cournot-Nash equilibrium reflects strategic quantity-setting behavior. Unlike in the Bertrand case, prices are not binary but vary smoothly with the number of active buyers.
 
-Maintaining the linear demand structure introduced in Equation~\ref{Eq: price formation by buyer power}, the farm-gate price in each period $t$ under quantity-setting competition is given by:
+Maintaining the linear demand structure introduced in Equation~(\ref{Eq: price formation by buyer power}), the farm-gate price in each period $t$ under quantity-setting competition is given by:
 \begin{equation}
-p_t = \max\left\{\frac{N_t}{N_t + 1}, \underline{p} \right\}, \quad t = 1,2,
+p_t = \frac{N_t}{N_t + 1}, \quad t = 1,2, \text{ and } N_t \geq 1
 \end{equation}
-where $N_t \in \mathbb{N}_0$ denotes the number of standard fresh-fruit buyers in period $t$, and $\underline{p} \in (0,0.5)$ represents the low reservation price offered by fallback channels-typically processing facilities that accept any produce regardless of quality, but at steeply discounted rates. When at least one standard buyer is active ($N_t \geq 1$), the equilibrium price is strictly increasing in $N_t$, approaching the competitive limit of 1. When no such buyers are present ($N_t = 0$), the farmer receives $\underline{p}$ by selling to the outside option.
+where $N_t$ denotes the number of buyers in period $t$. The price is strictly increasing in $N_t$, approaching the competitive limit of 1 as $N_t$ becomes very large.
 
-This formulation ensures continuity of the farmer's problem and captures the floor imposed by fallback markets. Although Figure~\ref{Figure: buyer count at harvest} includes a small number of reported instances with zero buyers, these are likely due to limitations in survey coverage, which focused on 15 standard fresh-fruit buyers and may have missed informal or processors' purchasing activity.
-
-Accordingly, the farmer's maximization problem under Cournot competition becomes:
+Thus, the farmer's maximization problem under Cournot competition becomes:
 \begin{equation}
 \label{eq:Cournot objective function}
 \max_{s \in [0,1]} \mathbb{E} \left\{ U \left[ 
 \underbrace{(1-s) \cdot p_1(N_1)}_{\text{First-period income}} 
-+ \underbrace{s \cdot \kappa \cdot p_2(N_2)}_{\text{Adjusted second-period income}} 
++ \underbrace{s \cdot \kappa \cdot p_2(N_2)}_{\text{Net second-period income}} 
 \right] \right\},
 \end{equation}
-where $N_1$ is observed at harvest, $N_2$ is stochastic, and 
-$p_t(N_t) = \max\left\{ \tfrac{N_t}{N_t + 1}, \underline{p} \right\}$ for $t = 1,2$. 
+where $N_1$ is observed at harvest and $N_2$ is stochastic. 
 
+We model the second-period buyer count $N_2$ as a Poisson random variable truncated to $[1,9]$, with the first-period count fixed at $N_1 = 2$, so $p_1 = 0.667$, same as our baseline in the main text with $\theta_1=0.5$. Farmers have CRRA preferences.
 
-In simulation, I model second-period buyer availability $N_2$ as a discrete Poisson-distributed random variable truncated to the interval $[0,9]$, reflecting uncertainty over the presence of standard buyers while allowing for the possibility of no such buyers appearing. In the event that $N_2 = 0$, farmers can sell to a processing facility at a reservation price $\underline{p} = 0.1$, which serves as an outside option and places a floor on the farm-gate price. The first-period buyer count is fixed at $N_1 = 3$. As in Section~\ref{Section: Base Model Numerical Analysis}, farmers are assumed to exhibit constant relative risk aversion (CRRA) preferences.
+We consider four Poisson means, $\mu \in \{8,6,3,1\}$, capturing alternative expectations about second-period market competition. For each mean, we simulate 5{,}000 draws of $N_2$ to construct the $2\times4$ panel in Figure~\ref{Fig: 3D Cournot}. The top row reports the resulting probability mass functions; the bottom row displays 3D surfaces of the optimal storage share $s^*$ over $\gamma \in [0,10]$ and $\kappa \in [0.6,1.0]$, applying a closed-form solution when $\gamma = 0$. 
 
-Four different Poisson means, $\mu \in \{8, 6, 3, 1\}$, are considered, each representing different expectations about second-period market thickness. For each case, I simulated 5,000 realizations of $N_2$ and constructed a $2\times4$ panel plot in Figure~\ref{Fig: 3D Cournot}. The top row of the panel displays the probability mass functions (PMFs) of the Poisson distributions, illustrating how buyer count uncertainty is distributed under each mean. The bottom row presents 3D surface plots of the optimal storage share $s^*$ as a function of risk aversion $\gamma \in [0,10]$ and storage efficiency $\kappa \in [0.6, 1.0]$. The CRRA utility framework was applied, with a closed-form solution used when $\gamma = 0$. The results show that $s^*$ increases with both higher storage efficiency and lower risk aversion. Moreover, when the expected number of second-period buyers is low (e.g., $\mu = 1$), farmers optimally store less, particularly if they are risk averse.
+Storage increases with higher efficiency and lower risk aversion. When expected buyer presence in period 2 is low (e.g., $\mu = 1$), risk-averse farmers store substantially less.
 
 \begin{figure}[ht!]
     \centering
@@ -617,7 +530,7 @@ Four different Poisson means, $\mu \in \{8, 6, 3, 1\}$, are considered, each rep
     
     \begin{subfigure}{\textwidth}
         \centering
-        \includegraphics[width=\textwidth, keepaspectratio=true]{model_figures/buyer_count_sensitivity_cournot.png}
+        \includegraphics[width=0.8\textwidth, keepaspectratio=true]{model_figures/buyer_count_sensitivity_cournot.png}
         \caption{Sensitivity to Expected Second-Period Buyer Presence ($\kappa=0.9$)}
         \label{Fig: Cournot sensitivity}
     \end{subfigure}
@@ -625,102 +538,118 @@ Four different Poisson means, $\mu \in \{8, 6, 3, 1\}$, are considered, each rep
     \caption{Numerical Analysis under Cournot Competition}
 \end{figure}
 
+To examine how expectations about second-period buyer power interact with risk aversion, we varied the expected second-period buyer count $\mathbb{E}[N_2]$ from 1 to 8 in increments of 1 using truncated Poisson simulations. For each value of $\mathbb{E}[N_2]$, we computed the optimal storage share $s^*$ under five risk-aversion levels, $\gamma \in \{0, 0.5, 2, 4, 7\}$, holding storage efficiency fixed at $\kappa = 0.9$. Figure~\ref{Fig: Cournot sensitivity} plots the resulting curves $s^*(\mathbb{E}[N_2])$, with darker lines indicating higher risk aversion. A vertical dashed line marks $\mathbb{E}[N_2] = N_1$, highlighting the benchmark of symmetric market conditions across periods. For all $\gamma$, $s^*$ rises with expected buyer presence in period~2, but more risk-averse farmers require stronger second-period prospects to justify storage.
 
+A central finding is that even under favorable conditions---a relatively efficient storage technology ($\kappa = 0.9$) and moderate competition at harvest ($N_1 = 2$)---storage becomes attractive only once farmers expect a substantially greater competition in period 2 as manifest by $\mathbb{E}[N_2]$. In particular, $s^*>0$ emerges only when $\mathbb{E}[N_2] \ge 4$, corresponding to an expected price increase from $p_1 = 0.667$ to $p_2 = \tfrac{4}{5} = 0.800$. This price increase is just sufficient to offset the $10\%$ effective loss from storage inefficiency.
 
-Figure~\ref{Fig: Cournot sensitivity} presents a three-panel sensitivity analysis of farmers' optimal storage share $s^*$ under Cournot competition when the second-period number of buyers follows a truncated Poisson distribution on $[0,9]$. The horizontal axis in each panel reports the expected value of $N_2$, and the vertical axis shows the corresponding optimal storage share. Each curve traces $s^*$ for a different level of risk aversion $\gamma \in \{0,0.5,2,4,7\}$, with darker shades of blue indicating higher $\gamma$. A vertical dashed line marks the benchmark case where the expected number of second-period buyers equals the observed first-period value, $\mathbb{E}[N_2]=N_1=3$. The three panels vary the assumed reservation price floor, $p_{\mathrm{reserve}} \in \{0.10,0.25,0.40\}$, which represents the outside option available if no standard buyers are present. This design allows direct comparison of how the outside option shifts storage incentives across risk preferences and market competitive scenarios.
+The underlying mechanism reflects the concave price function $p(N) = \tfrac{N}{N+1}$: as $N$ grows, price increments from an additional buyer diminish rapidly, so even risk-neutral farmers need relatively optimistic expectations about period-2 competition to undertake intertemporal arbitrage.
 
-Introducing a reservation price $p_{\text{reserve}}$ shifts the whole schedule upward in a economically intuitive way. A better fallback (from $0.10$ to $0.25$ to $0.40$) weakly lowers the threshold $\mathbb{E}[N_2]$ at which storage becomes attractive and increases $s^*$ at any given $\mathbb{E}[N_2]$-with the effect most pronounced for high $\gamma$, because the floor insures the downside of thin buyer markets. In short: more expected buyers and a stronger outside option both raise the optimal storage share, while greater risk aversion tempers that response.
+By contrast, when buyer competition at harvest is weak, incremental increases in buyer presence generate much larger price improvements. For example, moving from $N_1=1$ to $N_2=2$ raises the price from $p_1=\tfrac{1}{2}$ to $p_2=\tfrac{2}{3}$, a substantial jump relative to the much smaller increase obtained when moving from $N_1=4$ to $N_2=5$. These discrete jumps can readily incentivize storage. Thus, the strong threshold effect above is most pronounced when the harvest market already displays moderate competition.
 
-On any particular curve plot in Figure~\ref{Fig: Cournot sensitivity}, increases in the expected second-period buyer count improve the attractiveness of storage. However, this does not always translate into a smooth rise in $s^*$: over a wide range of values for $N$, especially under high risk aversion, the optimal storage share remains at zero. Only once market prospects become sufficiently favorable does $s^*$ begin to increase, with less risk-averse farmers responding more readily to such improvements.
-
-
-A key insight is that even under relatively favorable conditions-such as a low composite storage cost ($\kappa = 0.9$) and a moderately competitive harvest market ($N_1 = 3$)-storage becomes an attractive option only when farmers anticipate a substantially more buyer-presence market in the second period. Specifically, storage is only worthwhile when the expected number of buyers in period 2 reaches or exceeds 6, implying an expected price increase from $p_1 = \frac{3}{4} = 0.75$ to $p_2 = \frac{6}{7} \approx 0.857$. This 10.7 percentage point gain is sufficient to offset the 10\% effective loss due to storage inefficiency.
-
-
-This result reflects the concave nature of the price function $p(N) = \tfrac{N}{N+1}$: as $N$ increases beyond 3, marginal improvements in price diminish. Therefore, even risk-neutral farmers require a strongly optimistic expectation of increased buyer presence to justify intertemporal arbitrage through storage. 
-
-By contrast, when $N_1$ is very small (e.g., 1 or 2), the incremental price gains from attracting just one or two additional traders are much larger. For instance, moving from $N_1=1$ to $N_2=2$ raises the farm-gate price from $p_1=\tfrac{1}{2}=0.50$ to $p_2=\tfrac{2}{3}\approx 0.67$, while moving from $N_1=2$ to $N_2=3$ increases it further to $p_2=\tfrac{3}{4}=0.75$. Such discrete jumps can be large enough to incentivize storage. Thus, the stark threshold effect documented above is most relevant when the harvest market already exhibits moderate competition.
+Re-specification of the model in the Cournot-Nash framework confirms that the mechanisms in the main text are not tied to the FOOM specification. With a smooth price schedule, storage responds in the same qualitative way to $\kappa$, $\mathbb{E}[N_2]$, and $\gamma$, reinforcing the robustness of the baseline insights.
 
 
 
-
-%----------------------------------------------------%
-%----------------------------------------------------%
-
-
-
-\section{Aggregate Welfare Simulation}\label{subsec:agg_welfare}
+\subsection{Price-Setting Competition: Bertrand--Nash Equilibrium}
 \noindent
-This section shifts from the simulation analysis of individual storage decisions (Sections~\ref{Section: Base Model Numerical Analysis} to \ref{Section: Special Cases: Explicit Competition Forms}) to aggregate welfare. A central implication of our base storage-decision model is that policies which reduce the effective cost of storage can generate direct income and welfare gains. To formalize this insight, I extend the baseline framework by allowing both first- and second-period buyer power to be stochastic. In this environment, farmers' incentives to store depend not only on realized first-period and expected second-period prices but also on their heterogeneous attitudes toward risk and patience. I therefore construct a simulated ``village'' of farmers who are identical in production but only vary in risk preferences, and analyze how shifts in the storage efficiency parameter $\kappa$---interpretable as policy-driven reductions in storage costs, improvements in storage technology or lower farmer discount rates---translate into higher expected incomes and certainty-equivalent welfare.
+Thin local markets are widespread in smallholder economies. For example, \citet{Barrett_WD_1997} reports that in Madagascar only 29\% of rice farmers faced more than one buyer, meaning the majority was forced to sell into a monopsony setting. Under Bertrand-Nash price competition, the market outcome hinges critically upon whether multiple competing buyers are present. Under Bertrand competition, according to Equation~(\ref{Eq: price formation by buyer power}), the farm-gate price received by farmers can be modeled as:
+\begin{equation}
+p_t = 
+\begin{cases}
+0.5, & N_t = 1 \\
+1, & N_t \geq 2
+\end{cases}
+\label{Eq: Bertrand Price Schedule}
+\end{equation}
+\noindent where $0.5$ denotes the monopsony price paid when only one buyer is present. The transition from a single-buyer market to a multi-buyer market results in a discontinuous shift in price.
+
+Here, we assume that farmers observe the first-period price at harvest, and the number of traders at a specific village in the second trading period ($N_2$) is stochastic, with the probability of one middleman being $\rho$, i.e., $Pr(N_2=1)=\rho$. So, the probability of multiple intermediaries appearing in village $j$ is $Pr(N_2 \geq 2) = 1-\rho$.
+
+Because all farmers would sell immediately when multiple buyers are present at harvest ($p_1 = 1$), we focus on the monopsony case with $p_1 = 0.5$. The farmer's problem in Equation~(\ref{eq:final objective}) then specializes to
+\begin{equation}
+\label{eq:Bertrand objective}
+\max_{s \in [0,1]} \psi(s)
+= \rho\, U(\pi_L(s)) + (1-\rho)\, U(\pi_H(s)),
+\end{equation}
+
+where
+$$
+\pi_L(s) = (1-s)\cdot 0.5 + \kappa s \cdot 0.5,
+\qquad
+\pi_H(s) = (1-s)\cdot 0.5 + \kappa s
+$$
+denote net income under low and high second-period prices, respectively.
+
+Differentiating Equation~(\ref{eq:Bertrand objective}) with respect to $s$ gives the marginal utility gain from reallocating one unit of output from immediate sale to storage:
+
+\begin{equation}
+g(\cdot) = \frac{d\psi}{ds} = \rho U^{\prime}(\pi_L(s)) \cdot 0.5(\kappa-1) + (1 - \rho) U^{\prime}(\pi_H(s)) \cdot (\kappa-0.5)
+\label{Eq: bertrand FOC}
+\end{equation}
+Evaluated at $s = 0$, i.e., no storage-the marginal utility becomes:
+$$
+\left.\frac{d\psi}{ds}\right|_{s=0} = U^{\prime}(0.5) \cdot \left[\kappa(1 - 0.5\rho ) - 0.5\right]
+$$
+The bracketed term reflects the expected second-period price, net of storage loss. Since $U'(\cdot) > 0$, the sign of this expression determines whether storage is utility-improving. In particular, the farmer finds storage profitable ($s^* > 0$) if and only if:
+\begin{equation}
+\kappa(1 - 0.5\rho ) > 0.5.
+\label{eq:Bertrand threshold}
+\end{equation}
+Equation~(\ref{eq:Bertrand threshold}) offers the same interpretation as that generated from the FOOM framework in the main text. Expected second-period gains net of storage loss must exceed the harvest period monopsony price for storage to be attractive. Here, competition enters via the probability ($1-\rho$) of avoiding monopsony procurement in period~2, rather than through a continuous buyer-power index.
+
+
+Under risk aversion ($U^{\prime\prime}<0$), $\psi(s)$ is strictly concave, so Equation~(\ref{Eq: bertrand FOC}) delivers a unique optimum. The storage policy can then be summarized as follows: If $N_1 \ge 2$, so $p_1 = 1$, store nothing ($s^*=0$). If $N_1=1$ and $\kappa(1 - 0.5\rho)\leq 0.5$, marginal utility at $s=0$ is non-positive and the farmer optimally sells the entire harvest at harvest ($s^*=0$). If $\kappa(1 - 0.5\rho)$ is sufficiently large that $g(1)\geq 0$, marginal utility remains non-negative throughout $[0,1]$ and full storage is optimal ($s^*=1$). For intermediate parameter values that render $g(0)>0$ and $g(1)<0$, there exists a unique interior solution $s^*\in(0,1)$ solving $g(s^*)=0$.
+
+Local comparative statics with respect to storage efficiency $\kappa$ and the monopsony probability $\rho$ follow directly from the implicit function theorem applied to $g(s^*)=0$. Because $\partial g/\partial s = d^2\psi/ds^2<0$, we have
+$$
+\frac{\partial s^*}{\partial \xi} = -\,\frac{\partial g / \partial \xi}{\partial g / \partial s},
+\qquad
+\xi \in \{\kappa,\rho\}.
+$$
+An increase in storage efficiency ($\kappa$) unambiguously raises the marginal payoff to storing, so $\partial s^*/\partial \kappa>0$, consistent with findings in the main text. By contrast, the sign of $\partial s^*/\partial \rho$ is not determinate in general, reflecting the discrete nature of price jumps from monopsony to competitive pricing in Equation~(\ref{Eq: Bertrand Price Schedule}). This again parallels the FOOM specification: storage reacts smoothly and positively to better expected competitive conditions, but the precise response to changes in the distribution of buyer competition is best studied numerically. To summarize, the Bertrand-Nash formulation of buyer competition also yields the same qualitative predictions as in the main model: storage increases with higher expected competition and better storage efficiency, and declines with risk aversion.
 
 
 
-\subsection{Simulation Process}
-\noindent 
-The objective is to simulate how optimal storage translates into aggregate welfare relative to a no-storage benchmark across a range of competitive conditions and storage-cost environments. Welfare is measured by (i) the percentage change in average village income and (ii) the percentage change in certainty equivalent (CE), computed under farmer risk preferences and then aggregated and averaged.
+\section{Aggregate Welfare Impacts}\label{subsec:agg_welfare}
+\noindent
+We now move from studying individual farmer storage decisions to investigating aggregate welfare implications from competition-induced commodity storage. Across developing and advanced economies alike, policymakers are deeply concerned with farm incomes. Traditional tools---price supports, input subsidies, or direct transfers---can raise incomes but cause market distortions and/or carry high fiscal costs. We highlight here the income benefits from improving the environment in which farmers make intertemporal selling decisions.
+
+A key implication of the model is that eliciting stronger buyer competition through commodity storage can deliver income and welfare gains without distorting market signals. To quantify these gains, we extend the baseline framework by allowing stochastic buyer power in both periods and simulating a representative village of 100 farmers who share identical production conditions but differ in risk aversion. This structure allows us to evaluate how access to storage, along with intertemporal changes in buyer power or storage efficiency translate into aggregate welfare changes. We compute (i) the percentage change in income and (ii) the percentage change in certainty equivalent (CE) income for each farmer given their risk preferences and then aggregate welfare effects to the village level.
 
 \paragraph{Environments and buyer power.}
-Buyer power in periods 1 and 2, denoted $\theta_1$ and $\theta_2$, is modeled as Beta-distributed with a common variance $\sigma^2$ but distinct means $\mu_1$ and $\mu_2$. For each $(\mu,\sigma^2)$ pair, I parameterize $\theta\sim\text{Beta}(\alpha,\beta)$ using the mean-variance mapping,\footnote{For Beta distributions, each admissible mean-variance pair corresponds uniquely to a pair $(\alpha,\beta)$.} imposing \emph{strict feasibility}: $\alpha>0$ and $\beta>0$, equivalently $\sigma^2<\mu(1-\mu)$. Expectations about future competition are encoded by a mean gap $g\in\{0.00,0.05,0.15\}$, such that $\mu_2=\mu_1-g$. This enables the simulation to depict settings wherein farmers might rationally anticipate an improvement in period 2 competitive conditions for reasons that were discussed earlier in this chapter.
+Buyer power in periods 1 and 2, $\theta_1$ and $\theta_2$, is modeled as Beta-distributed with common variance $\sigma^2$ but potentially different means $\mu_1$ and $\mu_2$. For each admissible $(\mu,\sigma^2)$ pair, we recover $(\alpha,\beta)$ using the standard mean–variance mapping. Expectations about future competitive conditions are introduced through a mean gap $g\in\{0.00,0.05,0.15\}$, such that $\mu_2=\mu_1-g$. This framework captures cases in which farmers anticipate improved competition in the second period.
 
-Storage policy is varied through efficiency levels $\kappa\in\{0.95,0.90,0.85,0.80\}$, while uncertainty is captured by variances $\sigma^2\in\{0.02,0.05,0.10,0.15\}$. For each $(\sigma^2,g)$ combination, $\mu_1$ is swept over a $0.05$ grid, subject to the feasibility requirement that both $(\mu_1,\sigma^2)$ and $(\mu_1-g,\sigma^2)$ remain admissible. Feasible mean intervals for each variance are documented in Figure~\ref{fig:parameter_range_Beta_distribution}.
-
-\begin{figure}[ht!]
-    \centering
-    \includegraphics[width=0.90\linewidth]{model_figures/parameter_range_Beta_distribution.png}
-    \caption{Feasible Mean Intervals for Beta Distributions at Fixed Variances}
-    \label{fig:parameter_range_Beta_distribution}
-\end{figure}
-
-Figure~\ref{fig:beta_pdf_cdf_grid} displays Beta probability density functions (top) and cumulative distribution functions (bottom) for four alternative variance levels specified above. Within each panel, curves correspond to four alternative means, $\mu \in \{0.2, 0.4, 0.6, 0.8\}$, with darker shades representing higher means.
-
-
-\begin{figure}[ht!]
-    \centering
-    \includegraphics[width=\linewidth]{model_figures/beta_dist_PDF_CDF_grid_2x4.png}
-    \caption{Beta Distributions with Alternative Means and Variances}
-    \label{fig:beta_pdf_cdf_grid}
-\end{figure}
+We vary storage policy through efficiency levels $\kappa\in\{0.95,0.90,0.85,0.80\}$ and uncertainty through variances $\sigma^2\in\{0.02,0.05,0.10,0.15\}$. For each $(\sigma^2,g)$ pair, $\mu_1$ is swept over a $0.05$ grid, subject to feasibility of both $(\mu_1,\sigma^2)$ and $(\mu_1-g,\sigma^2)$.\footnote{Feasible mean ranges for each variance appear in Figure~\ref{fig:parameter_range_Beta_distribution}.}$^,$ \footnote{Figure~\ref{fig:beta_pdf_cdf_grid} illustrates the corresponding Beta PDFs (top) and CDFs (bottom) across four variance levels and means $\mu\in\{0.2,0.4,0.6,0.8\}$. Darker curves denote higher means.}
 
 
 
-\paragraph{Individual decision and numerical solution.}
+
+\paragraph{Individual storage decision.}
 The simulated village consists of $N=100$ farmers with CRRA preferences who differ only in risk aversion coefficient $\gamma_i\sim \mathrm{Uniform}[0,10]$ (drawn once and held fixed).
 
-For a given $(\theta_1,\text{dist}(\theta_2),\kappa,\gamma)$, each farmer's optimal share $s^*(\theta_1,\gamma)$ solves
-\[
-\max_{s\in[0,1]} \; \mathbb{E}_{\theta_2}\!\left[\,U\!\big((1-s)p_1+s\,\kappa\,p_2\big)\right],
-\qquad p_t=\frac{1}{1+\theta_t}.
-\]
-Expectations over $\theta_2$ are evaluated by 12-point Gauss--Legendre quadrature mapped to the Beta distribution. The one-dimensional problem is solved by golden-section search. To economize on computation, for each $\kappa$ and $(\mu_2,\sigma^2)$, I precompute $s^*$ on a $30\times 30$ grid in $(\theta_1,\gamma)$ and bilinearly interpolate for arbitrary realizations of $\theta_1$.\footnote{When $\gamma\approx 0$, I use the standard risk-neutral shortcut: $s^*\in\{0,1\}$ depending on whether $\kappa\,\mathbb{E}[p_2]>p_1$.}
+For a given $(\theta_1,\text{dist}(\theta_2),\kappa,\gamma)$, each farmer's optimal storage share $s^*(\theta_1,\gamma,\kappa)$ solves Equation~(\ref{eq:final objective}). Expectations over $\theta_2$ are evaluated by a 12-point Gauss--Legendre quadrature mapped to the Beta distribution. For each $\kappa$ and $(\mu_2,\sigma^2)$, we precompute $s^*$ on a $30\times 30$ grid in $(\theta_1,\gamma)$ and bi-linearly interpolate for arbitrary realizations of $\theta_1$. \footnote{When $\gamma\approx 0$, we use the standard risk-neutral shortcut: $s^*\in\{0,1\}$ depending on whether $\kappa\,\mathbb{E}[p_2]>p_1$.}
 
 \paragraph{World simulation and aggregation.}
-For every triplet $(\mu_1,\sigma^2,g)$, I simulate $R=20{,}000$ worlds.\footnote{I fix random seeds for reproducibility and (where applicable) reuse common random numbers across $\mu_1$ within a given $(\sigma^2,g)$ to improve comparability.} In world $r$, $(\theta_{1r},\theta_{2r})$ are drawn from their Beta distributions. Each farmer $i$ observes $\theta_{1r}$, knows the distribution of $\theta_2$, and determines the optimal storage share, $s^*_i(\theta_{1r},\gamma_i)$. Realized income is
+For every triplet $(\mu_1,\sigma^2,g)$, we simulate $R=20{,}000$ worlds.\footnote{we fix random seeds for reproducibility and reuse common random numbers across $\mu_1$ within a given $(\sigma^2,g)$ to improve comparability.} In world $r$, $(\theta_{1r},\theta_{2r})$ are drawn from their Beta distributions. Each farmer $i$ observes $\theta_{1r}$, knows the distribution of $\theta_{2r}$, and determines the optimal storage share, $s^*_i(\theta_{1r},\gamma_i,\kappa)$. Realized income is:
 $$
 y_{ir}=(1-s^*_{ir})\,p(\theta_{1r})+s^*_{ir}\,\kappa\,p(\theta_{2r}).
 $$
-I aggregate to the \emph{village mean} in each world, $\bar y_r=\frac{1}{N}\sum_i y_{ir}$. The no-storage benchmark in world $r$ is $\bar y^{\,\text{no}}_r=\frac{1}{N}\sum_i p(\theta_{1r})$.
+We aggregate to the village mean in each world, $\bar y_r=\frac{1}{N}\sum_i y_{ir}$, $N=100$. The no-storage benchmark in world $r$ is $\bar y^{\,\text{no}}_r=\frac{1}{N}\sum_i p(\theta_{1r})$.
 
 
 
 \paragraph{Income gain metric.}  
-To quantify the effect of storage opportunities on farm revenues, I first construct a percentage income gain measure. For a given environment $(\kappa,\sigma^2,g)$ and initial mean $\mu_1$, the expected average income with storage, relative to the no-storage benchmark, is  
+To quantify the effect of storage on aggregate revenues, we first construct a percentage income gain measure. For a given environment $(\kappa,\sigma^2,g)$ and initial mean $\mu_1$ buyer power, the expected proportional increase in average income with storage relative to the no-storage benchmark is:
 \begin{equation}
-\text{Expected Income Gain}(\mu_1;\kappa,\sigma^2,g)
-=100\times
+\mathbb{E}[\Delta y_r](\mu_1;\kappa,\sigma^2,g)
+=100\%\times
 \frac{\frac{1}{R}\sum_{r=1}^R \bar y_{r}-\frac{1}{R}\sum_{r=1}^R \bar y^{\,\text{no}}_{r}}
 {\frac{1}{R}\sum_{r=1}^R \bar y^{\,\text{no}}_{r}}.
 \end{equation}
-This measure captures the average proportional improvement in farm income arising from intertemporal arbitrage: farmers allocate harvests across periods to exploit expected price improvements, net of composite storage costs. The magnitude reflects both the degree of price variability and the distributional assumptions on buyer power.
-
-
+%which captures the average proportional improvement in farm income arising from intertemporal arbitrage to cope with time-varying buyer power.
 
 \paragraph{Certainty–equivalent (CE) metric.}  
-Because risk preferences are central to farmer welfare, I complement the income-based comparison with a certainty-equivalent (CE) measure grounded in CRRA utility. For farmer $i$, expected utility is computed as  
-\begin{equation}
-\mathrm{EU}_i
-=\frac{1}{R}\sum_{r=1}^R U(y_{ir};\gamma_i),
-\end{equation}
-where $\gamma_i$ denotes the coefficient of relative risk aversion. Using the closed-form inverse of CRRA utility, the farmer-level CE income is  
+Because risk preferences are central to welfare, we complement income-based comparisons with a certainty-equivalent (CE) measure derived from CRRA utility. For farmer $i$, expected utility is $\mathrm{EU}_i=\frac{1}{R}\sum_{r=1}^R U(y_{ir};\gamma_i)$, and the corresponding CE income follows from the inverse function of CRRA utility,
 \begin{equation}
 \mathrm{CE}_i=
 \begin{cases}
@@ -728,146 +657,73 @@ where $\gamma_i$ denotes the coefficient of relative risk aversion. Using the cl
 \exp\!\left(\frac{1}{R}\sum_{r=1}^R \ln y_{ir}\right), & \gamma_i=1.
 \end{cases}
 \end{equation}
-The village-level CE is then the equal-weight mean across all farmers,  
+Village-level welfare is the simple average, $\overline{\mathrm{CE}}=\frac{1}{N}\sum_{i=1}^N \mathrm{CE}_i$, with an analogous benchmark $\overline{\mathrm{CE}}^{\,\text{no}}$ based on immediate sale, $y^{\text{no}}_{ir}=p(\theta_{1r})$.  
+The welfare effect of storage is then:
 $$
-\overline{\mathrm{CE}}=\frac{1}{N}\sum_{i=1}^N \mathrm{CE}_i.
-$$
-An analogous benchmark, $\overline{\mathrm{CE}}^{\,\text{no}}$, is computed under the no-storage outcome $y^{\text{no}}_{ir}=p(\theta_{1r})$. The welfare change from adopting storage is expressed as  
-\begin{equation}
 \mathrm{CE\text{-}Gain}(\mu_1;\kappa,\sigma^2,g)
-=100\times
+=100\% \times
 \frac{\overline{\mathrm{CE}}-\overline{\mathrm{CE}}^{\,\text{no}}}{\overline{\mathrm{CE}}^{\,\text{no}}}.
-\end{equation}
+$$
 
-By construction, the certainty equivalent for any given risky policy satisfies $\mathrm{CE}_i<\mathbb{E}[y_i]$ for risk-averse farmers.  
-However, when comparing two policies---such as optimal storage versus selling immediately---the difference in CE can exceed the difference in mean income.  
-This occurs because  
+By construction, $\mathrm{CE}_i<\mathbb{E}[y_i]$ for any risk-averse farmer. But when comparing two policies---optimal storage versus no storage---the CE difference can exceed the difference in mean income. Writing
 $$
 \Delta \mathrm{CE}
-=\Delta \mathbb{E}[y]
--\Delta \mathrm{RP},
-\text{ where }
+=\Delta \mathbb{E}[y] - \Delta \mathrm{RP},
+\qquad 
 \mathrm{RP}=\mathbb{E}[y]-\mathrm{CE},
 $$
-and the simulations below indicate $\Delta \mathrm{RP}<0$. The mechanism is insurance: the state-contingent mix $(1-s)p_1 + s\kappa p_2$ has lower variance than $p_1$ because $(1-s)^2 + (s\kappa)^2 < 1$ for $\kappa < 1$ and $s \in (0,1)$. Optimal choices concentrate storage in low-price states, truncating downside tails and dampening upside exposure, which reduces the risk premium.
+the simulations show $\Delta\mathrm{RP}<0$.  
+The reason is insurance: the payoff $(1-s) p_1 + s\kappa p_2$ has lower variance than $p_1$ whenever $\kappa<1$ and $s\in(0,1)$, and optimal choices place more weight on the future precisely in low-price states. This truncates downside tails and dampens upside exposure, reducing the risk premium.
 
-In other words, compared with no-storage benchmark, storage not only changes expected revenue but also lowers income variance and thus the risk premium. Optimal storage shares act like a portfolio between current and future prices, which compresses outcome dispersion.  
-
-Therefore, the CE-Gain measure captures both the rise in mean income and the sizable ``insurance dividend'' from risk smoothing, providing a richer welfare indicator than the income-gain metric alone.
-
+Thus, relative to the no-storage benchmark, storage raises expected income and simultaneously smoothens risk. The CE-Gain measure captures both effects---a mean-income improvement plus an ``insurance dividend''---and therefore provides a more complete welfare metric than income gains alone.
 
 
 \begin{figure}[ht!]
     \centering
     \includegraphics[width=\linewidth]{model_figures/gainpct_grid_4x4.png}
-    \caption{Percent Mean Income Gain vs No-Storage}
+    \caption{Percent Mean Income Gain vs. No-Storage}
     \label{fig: Income gains}
 \end{figure}
 
 
+
 \subsection{Welfare versus No-Storage Benchmark}
 \noindent 
-Figure~\ref{fig: Income gains} presents a $4\times4$ grid of panels that quantify percentage income gains from intertemporal storage relative to the no-storage benchmark. The design varies two key parameters. Along the vertical dimension, rows correspond to alternative storage efficiencies, $\kappa$, declining from 0.95 at the top to 0.80 at the bottom. Along the horizontal dimension, columns represent different levels of buyer-power uncertainty, with the variance parameter $\sigma^2$ increasing from 0.02 on the left (low uncertainty) to 0.15 on the right (high uncertainty). Within each panel, the horizontal axis reports the mean of first-period buyer power, $\mu_1$, while the vertical axis shows the average percentage income gain at the village level when storage is available.  
+Figure~\ref{fig: Income gains} reports a $4\times4$ grid of percentage income gains from intertemporal storage relative to the no-storage benchmark. Rows correspond to storage efficiencies $\kappa$ (from $0.95$ at the top to $0.80$ at the bottom). Columns reflect buyer-power uncertainty, with the variance $\sigma^2$ rising from $0.02$ (left) to $0.15$ (right). Within each panel, the horizontal axis plots the mean first-period buyer power $\mu_1$, and the vertical axis reports the resulting average village-level percent income gain from enabling storage.
 
-Each panel traces three curves that capture different expectations about second-period buyer power. The dark-gray line depicts $\mu_2=\mu_1$, implying a stable distribution across periods. The lighter green line represents $\mu_2=\mu_1-0.05$, while the darker green line reflects $\mu_2=\mu_1-0.15$. Both of these scenarios correspond to expectations of weaker buyer power in period 2, which in turn imply higher expected future prices. The vertical spread among curves therefore provides a measure of how sensitive welfare gains from storage are to changes in intertemporal beliefs.
-
-\medskip
-\noindent 
-Several insights emerge from this set of panels:
-
+Each panel includes three curves corresponding to alternative expectations about second-period buyer power. The dark-gray line sets $\mu_2=\mu_1$ (no expected change), while the light- and dark-green lines impose $\mu_2=\mu_1-0.05$ and $\mu_2=\mu_1-0.15$, respectively, to capture expectations of weaker buyer power in period 2. The vertical distance between curves therefore reflects sensitivity of income gains from storage to intertemporal beliefs about competition. Several insights emerge from this set of panels:
 \begin{enumerate}
-    \item \textit{Storage Efficiency effect.} Across all levels of buyer-power uncertainty, higher storage efficiency translates directly into larger income gains. This manifests as an upward shift of the entire set of curves when moving from lower to higher values of $\kappa$. Put differently, technological improvements that reduce storage losses substantially magnify the welfare benefits from intertemporal arbitrage.  
-    \item \textit{Role of intertemporal buyer power mean change.} When farmers can rationally anticipate weaker mean buyer power in the future, storage becomes systematically more profitable. The vertical distance between the dark-gray and green curves reveals the incremental gain from expecting higher second-period prices, with the gap widening as the expected deterioration in buyer power becomes more pronounced.  
-    \item \textit{Impact of buyer power volatility.} Increasing variance in buyer power distributions raises all curves, reflecting the convexity of $p(\theta)=1/(1+\theta)$ and the option value of storage under uncertainty. The option to store has greater value under more volatile competitive environments. Greater variance also amplifies the differences across expectation scenarios, highlighting how risk interacts with beliefs to shape welfare outcomes.  
-    \item \textit{Mean buyer power across periods.} Holding uncertainty/variance fixed, higher average first-period buyer power ($\mu_1$), as well as the associated second-period buyer power ($\mu_2$), generally reduces storage gains.  
-    \item \textit{Non-monotonicity under certain conditions.} An important exception arises when storage efficiency is high and uncertainty is large. In these settings, the relationship between $\mu_1$ and storage gains becomes non-monotonic, taking the form of an inverted-U. This pattern indicates that modest levels of first-period buyer power create the greatest scope for welfare improvements from storage, whereas extremely high or extremely low buyer power attenuates the relative benefit.
+    \item \textit{Storage efficiency.}  
+    For any level of buyer-power uncertainty, higher storage efficiency ($\kappa$) yields larger income gains, shifting all curves upward. Reducing storage losses strengthens the returns to intertemporal arbitrage.
+    
+    \item \textit{Intertemporal buyer-power expectations.}  
+    When farmers expect weaker buyer power in period 2 (higher expected $p_2$), storage becomes systematically more profitable. The vertical gap between the dark-gray and green curves quantifies this effect and widens as the anticipated deterioration in buyer power increases.
+
+    \item \textit{Buyer-power volatility.}  
+    Larger variance in buyer power raises all curves, reflecting the convexity of $p(\theta)=1/(1+\theta)$ and the option value of storage under uncertainty. Greater volatility also amplifies differences across expectation scenarios, showing how risk interacts with beliefs to shape welfare gains.
+
+    \item \textit{Average buyer power.}  
+    Holding variance fixed, higher first-period mean buyer power ($\mu_1$), and the associated $\mu_2$, generally lowers the gains from storage because of the convexity of the $p(\theta)$ price schedule. When the base value of buyer power is high, the opportunity to generate significant price improvements from storage is limited, although greater volatility in buyer power increases the potential to attain a competitive outcome that will generate a significant price increase in period 2.
+
+    \item \textit{Non-monotonicity.}  
+    With high storage efficiency and large uncertainty, the relationship between $\mu_1$ and income gains becomes non-monotonic, generating an inverted-U shape.\footnote{The economic and mathematical underpinnings of the inverted-U in Figure~\ref{fig: Income gains} are discussed in Appendix~\ref{Section: Why Inverted U shapes in some Expected-Income-Gain Curves?}.} Moderate buyer power creates the greatest scope for welfare improvements, while very low or very high buyer power dampens the benefit of storage.
+
+    \item \textit{Benefits to storage exist even when $\mu_1=\mu_2$}. Access to commodity storage can yield income gains even when there is no expectation of improved competition in period 2. Storage access protects farmers against a bad ``draw'' in buyer competition in the harvest period. This benefit becomes increasingly important as the variability in competitive outcomes becomes greater, i.e., as one moves from left to right in the figure~\ref{fig: Income gains} panels.
 \end{enumerate}
 
+
+Figure~\ref{fig:CE gains} reports certainty-equivalent (CE) gains relative to the no-storage benchmark. The qualitative patterns parallel those for expected income: higher storage efficiency, stronger expectations of future buyer competition, and greater uncertainty all raise the value of storage. The key distinction lies in how CE gains respond to mean buyer power. Whereas expected-income gains can exhibit an inverted-U in $\mu_1$ when efficiency and uncertainty are high, CE gains decline monotonically in $\mu_1$ across all environments. Once risk aversion is incorporated, the non-monotonicity disappears: farmer welfare gains from storage fall steadily as first-period buyer power (and, hence, expectations for second period buyer power) strengthen.
+
+
+
+%----------------------------------------------------%
+\subsection{Welfare Effects of Storage Efficiency Improvements}
 \noindent 
-A closely related design underlies Figure~\ref{fig:CE gains}, which reports certainty-equivalent (CE) gains relative to the no-storage benchmark. The qualitative patterns largely mirror those for expected income gains: higher storage efficiency, more favorable expectations about future buyer power, and greater market uncertainty all reinforce the value of storage. One important difference, however, emerges in the role of mean buyer power across periods. Whereas expected income gains can display a non-monotonic, inverted-U relationship with $\mu_1$ under high efficiency and uncertainty, CE gains decline monotonically in $\mu_1$ across all parameter configurations. This contrast highlights the disciplining role of risk aversion: once the curvature of utility is taken into account, farmers' welfare is consistently lower when buyer power is stronger in the first period, and the non-monotonicity observed for expected gains vanishes.
+The preceding analysis shows that access to storage can generate sizable welfare gains when buyer power is time-varying. In many settings, however, the binding constraint is not the absence of storage but its high effective cost from low storage efficiency.
 
-\paragraph{Policy lessons.} 
-The simulation suggests a straightforward prioritization of generic ``enable-storage'' investments toward contexts where they yield the greatest welfare gains. First, raising storage efficiency ($\kappa$) is universally beneficial and should be the backbone of policy. Second, when decisions are guided by expected income, prioritize locales with nontrivial buyer-power volatility ($\sigma^2$) and middling first-period buyer power ($\mu_1$); uncertainty raises the option value of storage and moderate $\mu_1$ maximizes incremental gains. Third, once welfare is assessed through certainty equivalents, the non-monotonicity disappears and CE gains decline in $\mu_1$, implying a shift in priority toward areas with lower $\mu_1$. Finally, because expected gains rise when farmers anticipate weaker future buyer power ($\mu_2<\mu_1$, i.e., higher expected future prices), complementary policies that enhance buyer competition---thereby credibly tilting intertemporal beliefs---further amplify the payoff to storage investments.
+Improvements in $\kappa$ can arise through multiple channels: improved access to credit that reduces farmer discounting, better rural roads that reduce transport losses to storage facilities, warehouse-receipt or inventory-financing schemes that ease liquidity constraints, or improved storage technologies that curb spoilage. Increasing $\kappa$ generates two distinct effects: a pure income transfer to infra-marginal storers,\footnote{Direct per-unit subsidies to storage costs to raise $\kappa$ disproportionately benefit infra-marginal storers, who are likely to be among the wealthier members of rural villages.} and it shifts the \emph{marginal storage threshold}, inducing some farmers who otherwise would sell at harvest to undertake storage. These marginal storers gain access to a second-period market that may feature weaker buyer power, amplifying the welfare impact beyond the transfer component. In this sense, raising $\kappa$ produces a super-additive effect, lowering effective costs and enabling more farmers to access improved competitive conditions.
 
-
-
-
-
-\begin{figure}[ht!]
-    \centering
-    \includegraphics[width=\linewidth]{model_figures/cegain_grid_4x4.png}
-    \caption{Percent Certainty-Equivalent Gain vs No-Storage}
-    \label{fig:CE gains}
-\end{figure}
-
-
-\subsubsection{Why Inverted U shapes in some Expected-Income-Gain Curves?}
-\noindent
-Consider the risk--neutral benchmark ($\gamma=0$). The storage decision is binary: a farmer stores all or none depending on whether the discounted expected future price exceeds today's price. The farmer stores if
-\[
-\kappa\,\mathbb{E}\!\left[p(\theta_2)\right] \;>\; p(\theta_1), 
-\qquad \theta_1,\theta_2\stackrel{i.i.d.}{\sim}\mathrm{Beta}\!\left(\alpha(\mu),\beta(\mu)\right),
-\]
-where $(\alpha(\mu),\beta(\mu))$ are the Beta-Distribution parameters associated with mean $\mu$ and variance $\sigma^2$.\footnote{Throughout, $\sigma^2$ is the variance target used to pin down $(\alpha,\beta)$ given $\mu$. ``Compactness'' refers to how concentrated the implied Beta density is under $(\alpha(\mu),\beta(\mu))$.}
-
-Define the benchmark cutoff
-\[
-A(\mu)\;\equiv\; \kappa\,\mathbb{E}_{\mu}\!\left[p(\theta)\right], 
-\quad \text{with } \theta\sim\mathrm{Beta}\!\left(\alpha(\mu),\beta(\mu)\right),
-\]
-and let $P_1=p(\theta_1)$ have cdf $F(\cdot;\mu)$ and density $f(\cdot;\mu)$. The expected gain relative to no storage is
-\[
-G(\mu) \;=\; \int_{0}^{A(\mu)} \big(A(\mu)-p\big)\,f(p;\mu)\,dp
-\;=\; A(\mu)\,F\!\left(A(\mu);\mu\right)-\int_{0}^{A(\mu)} p\,f(p;\mu)\,dp,
-\]
-where the second equality follows by integration by parts. This representation makes clear that $G(\mu)$ is the area between the constant benchmark $A(\mu)$ and the (truncated) price distribution for $P_1$ up to $A(\mu)$.
-
-\paragraph{Two forces behind the hump.}
-Differentiating under the integral sign gives
-\[
-\frac{dG}{d\mu}
-\;=\; A'(\mu)\,F\!\left(A(\mu);\mu\right)
-\;+\; \int_{0}^{A(\mu)} \!\big(A(\mu)-p\big)\,\partial_{\mu} f(p;\mu)\,dp.
-\]
-The sign of $dG/d\mu$ reflects two distinct forces:
-
-\medskip
-\noindent\emph{(i) Curvature (marginal--gain) channel.} Since $p'(\theta)=-1/(1+\theta)^2<0$ and $p''(\theta)=2/(1+\theta)^3>0$, $p(\theta)$ is decreasing and convex. Decreasing $\theta$ (moving to lower buyer power) yields larger price gains when $\theta$ is low than when it is high. As $\mu$ rises, the distribution of $\theta$ shifts right, diminishing $\mathbb{E}[p(\theta)]$ and thus $A(\mu)$; formally $A'(\mu)<0$. This lowers $G(\mu)$ (the first term above). Intuitively, when buyer power is centered at low levels, the payoff to getting an even better draw in period~2 is large because of the convexity of $p(\cdot)$. As $\mu$ moves to higher buyer power, marginal price gains from an improvement in $\theta$ shrink.
-
-\medskip
-\noindent\emph{(ii) Compactness (probability--mass) channel.} The second term captures how the shape of the Beta distribution (hence the induced $P_1$ distribution) varies with $\mu$ for a given $\sigma^2$. For the variance ranges we use, the implied Beta tends to be relatively compact (concentrated) when $\mu$ is near the boundaries and more diffuse at moderate $\mu$. Holding the cutoff fixed, a more diffuse distribution places more mass below $A$, making it more likely that $p(\theta_1)$ falls under the benchmark and that storage pays. Thus, as $\mu$ increases from low to moderate values, the probability of realizing a meaningfully better second--period draw rises, raising $G(\mu)$.
-
-\paragraph{Putting the channels together.}
-These two forces move in opposite directions over the $\mu$ range, and with sufficiently high storage efficiency they may jointly generate an interior maximum. When $\mu$ is low, the curvature channel suggests that the payoff from an improvement in $\theta$ is large. However, the compactness channel works against it: with a tight Beta distribution concentrated near low $\mu$, the probability of drawing a substantially lower $\theta_2$ than $\theta_1$ is small. As a result, expected gains remain modest despite the large marginal payoff. As $\mu$ increases to moderate levels, the curvature channel weakens---marginal gains from better $\theta$ are smaller than when $\mu$ was low---but the compactness channel flips in favor of storage. The Beta distribution becomes more diffuse, boosting the probability of a materially better second--period draw. The higher likelihood of improvement dominates the smaller per--unit payoff, so $G(\mu)$ rises and reaches a peak. At high $\mu$, both channels suppress gains. The cutoff $A(\mu)$ collapses as $\mathbb{E}[p(\theta)]$ declines, while the Beta distribution again grows compact with most mass at high $\theta$. In this range, marginal gains from improving $\theta$ are small, and the chance of a large improvement is low. Consequently, $G(\mu)$ falls, completing the inverted-U shape.
-
-The result is a potential inverted-U relationship between $G(\mu)$ and $\mu$, driven by the interaction of the \emph{convex} price mapping $p(\theta)$ and (b) the \emph{compactness} of the Beta distribution induced by $(\mu,\sigma^2)$.
-
-
-\paragraph{Role of storage efficiency $\kappa$.}
-Higher $\kappa$ linearly scales the benchmark $A(\mu)$ upward, expanding the region where storage is profitable and accentuating the hump (larger area under the truncated region). When $\kappa$ is low, $A(\mu)$ is compressed toward zero, so even with a favorable draw in $\theta_2$ the realized payoff after storage is eroded; the entire $G(\mu)$ curve shifts down and can look flatter or even weakly monotone.
-
-\medskip
-\noindent\textit{With Risk Aversion.} Under risk neutrality, the analytics above fully characterize the hump logic. With risk aversion ($\gamma>0$), the same two channels operate but are filtered through concavity in our utility setting, amplifying downside-risk considerations and potentially shifting the location and height of the peak.
-
-%----------------------------------------------------%
-
-
-
-
-
-
-
-
-
-%----------------------------------------------------%
-\subsection{Welfare Effects of Storage Efficiency Improvements by Initial Efficiency}
-\noindent The preceding analysis has shown that policies or investments enabling storage can generate substantial welfare gains for farmers facing time-varying oligopsonistic power. In practice, the more common constraint is not a complete absence of storage facilities---as in remote interior villages---but rather the presence of storage at relatively high composite costs. These costs reflect not only actual costs of renting or operating storage space and physical deterioration of product but also discounting, transportation costs, and other frictions, resulting in low effective storage efficiency. 
-
-Such improvements in storage efficiency can arise through multiple channels: investment in rural road infrastructure, access to warehouse-receipt or inventory-financing schemes that relax credit constraints, or better post-harvest management practices. While a direct per-unit cash subsidy to storage costs could in principle raise $\kappa$, it is only one of many mechanisms, and it would raise concerns about distributional targeting, potentially favoring larger, already-storing farmers over smaller, liquidity-constrained ones.
-
-Conceptually, an increase in $\kappa$ could have two distinct effects. First, it acts as a \emph{transfer} to infra-marginal farmers who already store: by lowering their effective holding cost, it raises their expected returns one-for-one. Second, and more importantly, it shifts the \emph{marginal storage threshold}, inducing additional farmers to store who previously sold at harvest. These newly storing farmers can then access a second-period market that may be more competitive, yielding an income gain beyond the direct transfer component. In this sense, raising $\kappa$ could generate a \emph{super-additive} welfare effect: not only reduces effective costs but also generates additional income gain by enabling farmers to access greater competitive outcomes among buyers.
-
-The magnitude and distribution of these welfare gains, however, are likely to be heterogeneous. For a given per-unit improvement in $\kappa$, benefits will differ systematically depending on farmers' initial efficiency levels and their degrees of risk aversion, implying that uniform efficiency-improvement policies may yield uneven welfare outcomes across heterogeneous producer groups.
+The magnitude and distribution of these gains are heterogeneous. A given improvement in $\kappa$ delivers very different benefits depending on farmers' initial efficiency levels and their risk preferences, implying that uniform efficiency-enhancing policies may lead to uneven welfare outcomes across producer groups.
 
 \begin{figure}[ht]
     \centering
@@ -876,21 +732,22 @@ The magnitude and distribution of these welfare gains, however, are likely to be
     \label{fig:storage_subsidy_gain_decomposition}
     \begin{tablenotes}[flushleft]
     \footnotesize
-    \item Note: Each panel reports results for one storage-efficiency contrast. For each buyer-power mean $\mu=\mu_1=\mu_2$, we simulate $R=5000$ worlds $(\theta_1,\theta_2)$ from Beta$(\mu,\sigma^2=0.10)$. Farmers ($N=100$) have heterogeneous risk preferences, with $\gamma \sim U[0,10]$ grouped into deciles. Bars show the decomposition of welfare gains into growth ($\Delta E[\pi]$) and insurance ($-\Delta RP$); the line shows the certainty-equivalent gain ($\Delta CE$). All values are averaged across $\mu \in [0.15,0.85]$ in steps of 0.05.
+    \item \textit{Notes:} Each panel reports results for one storage-efficiency contrast. For each buyer-power mean $\mu=\mu_1=\mu_2$, we simulate $R=5000$ worlds $(\theta_1,\theta_2)$ from Beta$(\mu,\sigma^2=0.10)$. Farmers ($N=100$) have heterogeneous risk preferences, with $\gamma \sim U[0,10]$ grouped into deciles. Bars show the decomposition of welfare gains into income growth ($\Delta E[\pi]$) and insurance ($-\Delta RP$); the line shows the certainty-equivalent gain ($\Delta CE$). All values are averaged across $\mu \in [0.15,0.85]$ in steps of 0.05.
     \end{tablenotes}
 \end{figure}
 
-In Figure~\ref{fig:storage_subsidy_gain_decomposition}, each panel corresponds to one contrast in storage efficiency, $\kappa \in \{0.75\to0.80,\,0.80\to0.85,\,0.85\to0.90,\,0.90\to0.95\}$. For each buyer-power mean $\mu=\mu_1=\mu_2 \in [0.15,0.85]$ (in steps of 0.05), I simulate $R=5000$ worlds of $(\theta_1,\theta_2)$ from Beta distributions with variance $\sigma^2=0.10$. Farmers are heterogeneous in risk preferences, with $N=100$ draws of $\gamma \sim U[0,10]$ grouped into deciles, where the horizontal axis indexes $\gamma$-decile 1 (least risk-averse) through 10 (most risk-averse). Within each decile I plot: (i) a bar for the change in expected income, $\Delta E[\pi]$ (``income growth''), (ii) a bar for the insurance gain, $-\Delta RP$ (the reduction in risk premium, shown as a positive quantity), and (iii) a line for the certainty equivalent effect, $\Delta CE$. Reported values are averages across all $\mu$ scenarios.
+In Figure~\ref{fig:storage_subsidy_gain_decomposition}, each panel corresponds to an efficiency improvement,
+$\kappa \in \{0.75\!\to\!0.80,\,0.80\!\to\!0.85,\,0.85\!\to\!0.90,\,0.90\!\to\!0.95\}$. For each mean buyer-power level $\mu=\mu_1=\mu_2 \in [0.15,0.85]$ (in 0.05 increments), we simulate $R=5000$ realizations of $(\theta_1,\theta_2)$ from Beta distributions with variance $\sigma^2=0.10$. $N=100$ farmers who differ in risk aversion are grouped into deciles, indexed on the horizontal axis. Within each decile, we plot: (i) the expected-income effect $\Delta E[\pi]$, from commodity storage, (ii) the insurance component $-\Delta RP$ (the reduction in risk premium), and (iii) the certainty-equivalent effect $\Delta CE$.
 
-The decomposition clarifies that the welfare effects of improving storage efficiency operate through two distinct channels---income growth and risk reduction. In most cases, $\Delta CE$ exceeds $\Delta E[\pi]$, implying $\Delta RP<0$: the improvement in storage technology reduces income variance and hence the risk premium. This arises because, for $\kappa<1$ and interior $s^\in(0,1)$, the income mix $(1-s^\star)p_1 + s^\star\kappa p_2$ has lower variance than the harvest-only benchmark, since $(1-s^\star)^2 + (s^\star\kappa)^2 < 1$. In other words, optimal storage functions as a state-contingent hedge: farmers store more in low-price states and less in high-price states, effectively truncating downside risk while tempering extreme upside realizations. Even when expected income gains are modest, the induced risk smoothing raises certainty-equivalent welfare.
+The decomposition shows that improvements in storage efficiency operate through two channels: income growth and risk reduction. In most cases, $\Delta CE$ exceeds $\Delta E[\pi]$, implying $\Delta RP<0$: better storage reduces income variance and hence the risk premium. This follows because, for $\kappa<1$ and interior $s^*\in(0,1)$, the payoff $(1-s^*)p_1 + s^*\kappa p_2$ has lower variance than $p_1$, since  
+$(1-s^*)^2 + (s^*\kappa)^2 < 1$. Optimal storage therefore acts as a hedge, shifting more weight to the future price in low-price states and trimming downside tails. Even modest expected-income gains can translate into sizable CE improvements through risk smoothing.
 
-When $\kappa$ is already relatively high, such as in the $0.90 \rightarrow 0.95$ contrast, the incremental welfare gains are larger than in the low-efficiency step $0.75 \rightarrow 0.80$. This convexity arises because higher storage efficiency strengthens both the intensive and extensive margins of storage. Farmers who were previously indifferent or weakly storing increase their storage share, while those already storing gain more from improved efficiency, so the aggregate response magnifies the value of each storage-efficiency increment.
+The magnitude of these gains varies with the initial efficiency level.  
+When $\kappa$ is already high (e.g., $0.90\!\to\!0.95$), incremental welfare gains are larger than in low-efficiency steps (e.g., $0.75\!\to\!0.80$). This convexity reflects reinforcement on both margins: infra-marginal storers benefit directly from lower holding costs, while marginal farmers expand storage, amplifying the total response.
 
-At lower baseline levels of $\kappa$, the gains are smaller in absolute value but dominated by insurance effects, concentrated among more risk-averse deciles. In the $0.75 \rightarrow 0.80$ step, for example, the reduction in risk premium ($- \Delta RP$) is relatively more pronounced. These early-stage improvements thus act as insurance subsidies, offering the largest proportional benefits to farmers with high $\gamma$, for whom risk smoothing is most valuable. By contrast, once $\kappa$ reaches higher levels, additional improvements reduce little risk and instead raise welfare almost exclusively through income growth. 
+At low baseline $\kappa$, gains are smaller in absolute value but dominated by insurance effects, particularly for highly risk-averse deciles. In the $0.75\!\to\!0.80$ step, most benefits arise through risk-premium reductions, effectively acting as insurance subsidies for vulnerable farmers. At higher $\kappa$, risk reduction plays a smaller role and welfare improvements stem primarily from income growth.
 
-Taken together, the results from Figure~\ref{fig:storage_subsidy_gain_decomposition} highlight a dual policy message: early-stage investments in storage efficiency provide risk protection to vulnerable farmers, while later-stage improvements generate amplifying income effects by enabling more farmers to benefit from expanding market access and higher second-period competition. This heterogeneity underscores the importance of targeting and calibrating $\kappa$-enhancing interventions to local conditions rather than adopting a one-size-fits-all approach. 
-
-
+Overall, Figure~\ref{fig:storage_subsidy_gain_decomposition} highlights a dual policy message:  efficiency improvements for low initial $\kappa$ mainly provide risk protection to highly risk-averse farmers, while improvements from high initial $\kappa$ generate stronger income gains by expanding storage participation and access to more competitive second-period markets. 
 
 
 \begin{figure}[ht]
@@ -900,43 +757,36 @@ Taken together, the results from Figure~\ref{fig:storage_subsidy_gain_decomposit
     \label{fig: storage_subsidy_gain_heatmap}
     \begin{tablenotes}[flushleft]
     \footnotesize
-    \item Note: Each row shows one storage-efficiency improvement contrast. Line charts (first column) plot changes in expected income ($\Delta E[\pi]$), certainty equivalent ($\Delta CE$), and insurance gain ($-\Delta RP$) against belief mean $\mu$. Heatmaps (columns 2--4) decompose these effects across $\gamma$-deciles, highlighting that welfare improvements are strongest for more risk-averse farmers and grow with the size of the improvement.
+    \item \textit{Notes:} Each row shows one storage-efficiency improvement contrast. Line charts (first column) plot changes in expected income ($\Delta E[\pi]$), certainty equivalent ($\Delta CE$), and insurance gain ($-\Delta RP$) against belief mean $\mu$. Heatmaps (columns 2--4) decompose these effects across $\gamma$-deciles, highlighting that welfare improvements are strongest for more risk-averse farmers and grow with the size of the improvement.
     \end{tablenotes}
 \end{figure}
 
-To dig deeper, Figure~\ref{fig: storage_subsidy_gain_heatmap}, organized as a $4 \times 4$ panel, explores how welfare effects unfold across the full range of buyer-power means ($\mu$, x-axis), holding variance fixed at 0.10. Each row corresponds to one increment contrast, consistent with Figure~\ref{fig:storage_subsidy_gain_decomposition}. The first column presents line plots of the three welfare components (expected income, certainty equivalent, and insurance gain) while the remaining columns display heatmaps that further decompose these outcomes by risk-aversion deciles ($\gamma$, y-axis). Lighter colors in the heatmaps indicate stronger welfare improvements of per-unit storage-efficiency increment, underscoring how both mean buyer power across two periods and farmers' heterogeneity in risk preferences shape distributional effects.
+To dig deeper, Figure~\ref{fig: storage_subsidy_gain_heatmap} examines how welfare effects vary across the full range of buyer-power means ($\mu$, x-axis), holding variance fixed at $0.10$. Each row corresponds to one storage-efficiency increment, consistent with Figure~\ref{fig:storage_subsidy_gain_decomposition}. The first column presents line plots for the three welfare components (expected income, certainty equivalent, and the insurance gain), while the remaining columns show heatmaps that further decompose outcomes by risk-aversion deciles ($\gamma$, y-axis). Lighter shades indicate stronger welfare improvements from each per-unit efficiency increment, highlighting how both mean buyer power across periods and heterogeneity in risk preferences shape distributional impacts.
 
-The line plots reveal that when buyer power is weak (low $\mu$), income growth and certainty-equivalent gains remain similar across all increment contrasts, regardless of initial storage efficiency. In contrast, as buyer power strengthens, increments allocated to environments with higher baseline efficiency ($\kappa$) yield disproportionately larger welfare improvements. This pattern is evident in the flattening slopes of the income and CE curves as one moves down the rows of column one. In other words, the incremental aggregate welfare gains highlighted in Figure~\ref{fig:storage_subsidy_gain_decomposition} are driven primarily by the stronger performance of high-efficiency villages under high buyer power in both periods, rather than by differences at the lower end of the buyer-power distribution.
-
-
-\paragraph{Policy lessons.}
-The welfare patterns uncovered here identifies where improvements in storage efficiency are likely to matter most---at low initial efficiency levels, primarily through risk smoothing, and at high levels, mainly through income growth. Translating these patterns into actionable policy is less about designing finely targeted subsidies and more about recognizing structural heterogeneity across production environments. In practice, the feasibility and cost-effectiveness of raising $\kappa$ depend on local infrastructure, financial access, and market integration rather than on farmer-specific traits such as $\gamma$. Hence, the model's relevance lies in clarifying \emph{which types of environments} generate the largest marginal welfare returns to efficiency gains. Empirically, this implies that investments improving storage reliability or reducing losses, whether through logistics, credit access, or cooperative facilities, can have different welfare payoffs depending on where they enter the efficiency spectrum, suggesting that context, not instrument design, is the central policy variable.
+The line plots show a clear pattern. When buyer power is weak (low $\mu$), income and CE gains are similar across all increments, largely independent of initial efficiency. As buyer power strengthens, however, improvements in storage efficiency applied at higher baseline efficiency deliver disproportionately larger gains. This is visible in the flattening slopes of the income and CE curves as one moves down the rows of column~1. In effect, the aggregate welfare differences highlighted in Figure~\ref{fig:storage_subsidy_gain_decomposition} arise primarily from the superior performance of high-storage-efficiency villages when buyer power is strong in both periods, rather than from differences at the low end of the buyer-power distribution.
 
 
 %----------------------------------------------------%
 \subsection{Welfare Effects of Lower Farmer Risk Aversion}
-\noindent Beyond storage subsidies, the aggregate welfare value of intertemporal storage depends critically on farmer risk preferences. Risk attitudes are partly innate, but they are also mediated by financial frictions: wealthier households typically exhibit lower effective risk aversion, and improved access to credit or insurance reduces the degree of prudence applied to marketing decisions.
+\noindent 
+Beyond storage subsidies, the aggregate welfare value of intertemporal storage depends critically on farmer risk preferences. Although risk attitudes are partly innate, they are also shaped by financial frictions, so improved access to credit can also reduce risk aversion.
 
-This subsection evaluates how lower risk aversion enhances the value of storage when second-period buyer power mirrors the first. Figure~\ref{fig: Income gains with RN case} reports village-average income gains from storage relative to the no-storage benchmark by heterogeneous risk aversion. The figure adopts the same $4\times4$ structure as Figure~\ref{fig: Income gains}, with rows varying storage efficiency $\kappa$ and columns varying the variance of buyer power $\sigma^2$. Within each panel, the horizontal axis shows the common mean buyer power, $\mu=\mu_1=\mu_2$. Three curves contrast alternative risk environments of our 100-farmer village: (i) the risk-neutral envelope ($\gamma=0$), (ii) moderately risk-averse farmers ($\gamma_i\sim \mathrm{Unif}[0,5]$), and (iii) more risk-averse farmers ($\gamma_i\sim \mathrm{Unif}[0,10]$). The vertical gap between the risk-neutral line and heterogeneous curves quantifies the income foregone due to prudence.
+We evaluate how reduced risk aversion in a village enhances the value of storage when expected buyer power is the same in both periods. Figure~\ref{fig: Income gains with RN case} reports village-average income gains from storage relative to the no-storage benchmark under heterogeneous risk preferences. The figure mirrors the structure of Figure~\ref{fig: Income gains}, with rows varying storage efficiency $\kappa$ and columns varying buyer-power variance $\sigma^2$. Within each panel, the horizontal axis plots the common mean buyer power, $\mu=\mu_1=\mu_2$. Three curves compare alternative risk environments in the 100-farmer village: (i) the risk-neutral envelope ($\gamma=0$); (ii) moderately risk-averse farmers ($\gamma_i\sim \mathrm{Unif}[0,5]$); and (iii) more risk-averse farmers ($\gamma_i\sim \mathrm{Unif}[0,10]$). The vertical distance between the risk-neutral and heterogeneous-risk curves measures the income lost to risk-averse behavior.
 
-\begin{figure}[ht]
+\begin{figure}[ht!]
     \centering
     \includegraphics[width=\linewidth]{model_figures/gainpct_grid_4x4_zero_gap_three_curves.png}
-    \caption{$\%$ Mean Income Gains under High, Median, and No Risk Aversion}
+    \caption{Percent Mean Income Gains under High, Median, and No Risk Aversion}
     \label{fig: Income gains with RN case}
     \begin{tablenotes}[flushleft]
     \footnotesize
-    \item Note: Panels show mean income gains from storage relative to no-storage under the zero-gap case ($\mu_2=\mu_1$). Rows vary storage efficiency and columns vary buyer-power variance. Curves compare heterogeneous farmers with $\gamma_i \sim \text{Unif}[0,10]$ (black solid) and $\gamma_i \sim \text{Unif}[0,5]$ (blue dashed) against the risk-neutral benchmark ($\gamma=0$, light-blue dash-dotted). Results average $R=20{,}000$ simulated worlds with $N=100$ farmers each.
+    \item \textit{Notes:} Panels show mean income gains from storage relative to no-storage under the zero-gap case ($\mu_2=\mu_1$). Rows vary storage efficiency and columns vary buyer-power variance. Curves compare heterogeneous farmers with $\gamma_i \sim \text{Unif}[0,10]$ (black solid) and $\gamma_i \sim \text{Unif}[0,5]$ (blue dashed) against the risk-neutral benchmark ($\gamma=0$, light-blue dash-dotted). Results average $R=20{,}000$ simulated worlds with $N=100$ farmers each.
     \end{tablenotes}
 \end{figure}
 
-Lower risk aversion systematically shifts the heterogeneous-$\gamma$ curves upward toward the risk-neutral envelope. Under higher buyer-power variance (right-hand columns), reducing village risk aversion yields additional income gains on the order of 1-5 percentage points, with the largest improvements realized when $\kappa$ is high and $\mu$ is interior (neither too close to 0 nor 1). By contrast, in low-return settings (bottom-left panels with low $\kappa$ and low $\sigma^2$), all curves converge near the axis at low $\mu$, and differences across risk profiles are economically negligible.
+Lower risk aversion shifts the heterogeneous--$\gamma$ curves upward toward the risk-neutral envelope. Under higher buyer-power variance (right-hand columns), reducing village risk aversion delivers additional income gains of roughly 1--5 percentage points, with the largest improvements occurring when $\kappa$ is high and $\mu$ lies in the interior of the range. By contrast, in low-return environments (bottom-left panels with low $\kappa$ and low $\sigma^2$), all curves cluster near zero at low $\mu$, and differences across risk profiles are economically minor.
 
-Two comparative statics emerge cleanly. First, holding $\sigma^2$ fixed, the divergence between risk-neutral and heterogeneous-$\gamma$ outcomes is increasing in $\kappa$. Greater storage efficiency magnifies the upside to reallocating revenue inter-temporally; risk-neutral farmers exploit this fully, whereas more risk-averse farmers shade down optimal storage $s^*$, leaving gains unrealized. Second, holding $\kappa$ fixed, the wedge is increasing in $\sigma^2$. Volatility raises the value of timing but also the exposure to downside realizations; prudence truncates this upside more aggressively when $\gamma$ is larger. Together, higher $\kappa$ and higher $\sigma^2$ amplify the stakes of the storage decision and widen the gap between cautious and risk-neutral behavior.
-
-
-\paragraph{Policy lessons.} 
-Interventions that effectively reduce $\gamma$ (for example, affordable short-term credit lines collateralized by inventories, partial revenue insurance contingent on ex-post prices, or group-based risk pooling) translate into measurable income gains in environments with sufficiently high $\kappa$ and/or $\sigma^2$. Where $\kappa$ is very low and price risk muted, altering $\gamma$ has little bite; lowering storage costs (raising $\kappa$) is then the first-order lever. Conversely, in high-$\kappa$, high-$\sigma^2$ markets, even modest reductions in effective risk aversion close much of the welfare gap relative to the risk-neutral frontier.
+Two comparative statics emerge clearly. First, holding $\sigma^2$ fixed, the gap between risk-neutral and heterogeneous $\gamma$ outcomes grows with $\kappa$. Higher storage efficiency increases the payoff to reallocating revenue inter-temporally; risk-neutral farmers take full advantage, while more risk-averse farmers optimally choose lower $s^*$ and leave potential income gains unrealized. Second, holding $\kappa$ fixed, the income gap between risk-neutral and risk-averse behavior rises with $\sigma^2$. Greater volatility in buyer competition raises the value of having multiple draws of competitive outcomes but also exacerbates the downside risk and deters accessing storage for the most risk averse. Thus, higher $\kappa$ and higher $\sigma^2$ jointly amplify the stakes of the storage decision and widen the gap between risk-averse and risk-neutral behavior.
 
 
 
@@ -944,19 +794,17 @@ Interventions that effectively reduce $\gamma$ (for example, affordable short-te
 
 
 \subsection{Numerical Outcomes under Identical Buyer Power Distributions}
-\noindent The preceding visualizations discover the relationships between storage efficiency, buyer power, and welfare outcomes. Table~\ref{tab:mu_cases_storage_outcomes} complements those insights by providing direct estimates for a non-favorable case in which buyer power in both periods is drawn from the same distribution, $\mu_1=\mu_2 \in {0.2,0.5,0.8}$. Even under this relatively restrictive environment, where intertemporal arbitrage opportunities are limited to variance rather than shifts in the mean, the positive role of storage for farmers is evident across welfare metrics. The observed patterns below are consistent with an option-value logic: storage delivers little when volatility is low or efficiency costs are high, but once either volatility or efficiency crosses a threshold, both adoption and welfare gains rise sharply.
+\noindent 
+Table~\ref{tab:mu_cases_storage_outcomes} complements the preceding results by examining a relatively unfavorable environment for producer storage in which buyer power in both periods follows the same distribution, $\mu_1=\mu_2\in\{0.2,0.5,0.8\}$. Intertemporal arbitrage opportunities here arise solely from volatility in competition rather than shifts in its mean. Even under these restrictive conditions, storage delivers meaningful welfare gains once either volatility or efficiency moves beyond low levels, consistent with our option-value logic.
 
-In terms of expected income (Panel~A), storage is most valuable when buyer power is low and moderate ($\mu=0.2,0.5$). Here, gains generally climb with volatility and with efficiency, reaching 7--8\% at high $\kappa$ and Var($\theta$). By contrast, when buyer power is severe on average ($\mu=0.8$), storage rarely pays unless efficiency is very high; many cells yield essentially zero. This shows that timing value cannot offset uniformly depressed price environments.
+Panel~A shows that expected-income gains are largest when buyer power is low to moderate ($\mu=0.2,0.5$). Gains rise with both efficiency and volatility, reaching 7--8\% at high $\kappa$ and Var($\theta$). When buyer power is uniformly strong ($\mu=0.8$), timing gains are minimal unless efficiency is very high, and many cells are essentially zero.
 
-Risk preferences alter this picture. The certainty-equivalent results in Panel~B show that storage is especially attractive to risk-averse farmers when average prices are reasonable ($\mu=0.2$). There, CE gains substantially exceed mean-income gains---up to 16\% versus 7\%---reflecting the insurance role of storage. Where market power is stronger ($\mu=0.8$), the insurance premium vanishes. The intermediate case ($\mu=0.5$) sits between these poles, with CE gains only modestly above expected income.
+Risk preferences shift this picture. Panel~B shows that certainty-equivalent (CE) gains substantially exceed mean-income gains when mean buyer power is low across periods ($\mu=0.2$): CE improvements reach 16\% versus roughly 7\% for mean income, highlighting the insurance value of storage. At high buyer power ($\mu=0.8$), this insurance premium disappears. The intermediate case ($\mu=0.5$) lies between these extremes, with only modest CE–income wedges.
 
-Panels~C and D distinguish the intensive and extensive margins of storage adoption. The share of adopters responds strongly to volatility and efficiency---at high $\mu$, participation jumps from near zero at low volatility to nearly 80\% at Var($\theta$)=0.15. Yet the mean storage share rises much more modestly. Many farmers adopt but store only a small portion, using storage as a contingent hedge rather than a bulk strategy. Where prices are favorable, higher volatility even reduces average storage shares, as farmers reallocate more selectively across states. This underscores that welfare gains are driven less by volume stored and more by the flexibility to reallocate at the margin.
-
-Overall, the evidence here points to three additional findings. First, storage pays most where efficiency is high and buyer power is not overwhelming. Second, risk aversion amplifies the value of storage when price levels are healthy but dampens it when average prices are low. Third, adoption is sometimes broad but shallow---many farmers engage, but the welfare effect stems from precise timing rather than large shifts in volume. These results highlight that policy instruments which improve storage efficiency or help farmers bear the fixed costs of adoption will generate the largest welfare returns where volatility is substantial and average buyer power is not too extreme.
+Panels~C and D separate extensive and intensive storage responses. The adoption share responds strongly to both volatility and efficiency: at high $\mu$, participation rises from near zero at low Var($\theta$)=0.02 to nearly 80\% at high Var($\theta$)=0.15. By contrast, mean storage shares increase more modestly. More farmers adopt storage but store only small amounts, using storage mainly as a contingent hedge. In favorable competitive market environments, greater volatility even lowers average storage shares, as farmers reallocate more selectively across states.
 
 
-%----------------------------------------------------%
-%----------------------------------------------------%
+
 
 
 \section{Further Extensions}
@@ -982,16 +830,14 @@ This dynamic mirrors the classic ``technology treadmill'' described by Cochrane 
 Supporting this notion, \cite{williams1989economic} demonstrates, through a quadratic form of total marketing costs, that farmers need to weigh the marginal revenue of later sales against the elevated costs incurred. This balance leads to a positive inventory, even without considering risk aversion. Instead of capturing the composite storage cost by a discounting factor, a well-designed mathematical model would allow other forms of storage costs, therefore, may give us other relevant real-world policy implications.
 
 
-\section{Conclusion}
-\noindent This chapter develops a conceptual framework to analyze farmers' storage behavior under buyer market power. Storage adoption creates an inter-temporal arbitrage margin that allows farmers to shift sales across periods, thereby mitigating the effects of oligopsony at harvest and enhancing their bargaining position. The model shows that even absent shifts in aggregate demand or supply, temporal variation in buyer competition alone can make storage a valuable marketing tool.
+\section{Conclusion and Policy Implications}
+\noindent This paper has developed a conceptual framework to study farmers' storage decisions when buyer market power varies within a marketing season. Storage gives farmers an option to shift sales from periods of relatively strong buyer power into potentially more competitive periods and, when used partially, provides an insurance mechanism by enabling sales to be allocated across time. By embedding a time-varying buyer conduct parameter into a two-period storage model, we show that temporal variation in buyer competition alone can make access to storage an income-enhancing tool for farmers.
 
-The model provides a theoretical basis for small-scale farmers' storage and marketing choices. It focuses on farmers' intra-seasonal strategies and the storing-decision process, where farmers observe farm-gate prices and market structure at harvest and decide whether to immediately sell some, all, or none of their crops. When farmers have insufficient bargaining power at a single point in time, the adoption of storage at lower storage costs would give them inter-temporal arbitrage opportunities.
+Prior work has emphasized the implications of spatial immobility of farm products for buyer market power, especially in developing-country settings, and the manner in which reducing transport costs can enhance competitive outcomes (e.g., \citet{MSS-transport}). To our knowledge, this paper is the first to focus on the implications of temporal immobility of farm products for buyer power and the manner in which improved access to storage can enable farmers to achieve more competitive market outcomes.
 
-Although motivated by the fresh-apple industry, the model's logic applies broadly across perishable commodities. Storage and inventory play a central role in agricultural marketing systems, not only smoothing demand-driven price fluctuations but also reshaping the strategic interaction between growers and buyers. Framing storage as a tool to navigate imperfect competition thus extends beyond post-harvest logistics to the core of market efficiency and farmer welfare.
+The individual- and village-level simulations yield multiple policy-relevant insights. Stronger buyer competition at harvest raises farm-gate prices. Storage allows farmers to benefit whenever competition improves within the selling window. Even when competitive conditions are stable on average over time, welfare gains from storage are possible depending on storage efficiency, volatility in buyer power, and farmers' risk aversion. Improving storage efficiency directly augments income for infra-marginal storers and converts at least some non-storers into choosing partial or full storage. Greater volatility in competition increases the option value of waiting, and certainty-equivalent gains are largest when harvest-period buyer power is initially strong and insurance value is high. Measures that effectively lower farmer risk aversion matter most when storage is relatively efficient or volatility is substantial.
 
-Policy implications follow directly from the analysis. First, lowering storage costs through subsidies, credit, or investment in modern facilities expands the set of circumstances under which farmers can profitably store and arbitrage across periods. Second, strengthening competition among buyers, via enforcement of antitrust rules, lower entry barriers for new buyers, or improved transparency in local markets, raises the effective price level and reduces the rents extracted by middlemen. Third, reducing the effective bite of risk aversion, through crop insurance, safety nets, or access to seasonal finance, encourages farmers to undertake storage when it is profitable in expectation but risky. Together these instruments highlight a policy strategy that does not rely on direct price support or costly procurement programs, but instead empowers farmers to use inter-temporal arbitrage to raise incomes and improve efficiency along the supply chain.
-
-
+In addition to policies that enhance farmers' access to efficient storage, policies that relax farmers' liquidity constraints or expand financial access also hold potential to raise farmer incomes through expanded use of storage. For example, policies that expand access to credit and insurance can reduce risk aversion and raise effective storage efficiency by lowering farmer discount rates, enhancing their willingness to defer sales into periods of greater competition and higher incomes.
 
 
 
