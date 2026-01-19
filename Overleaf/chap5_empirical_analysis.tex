@@ -321,6 +321,7 @@ The correlation matrix of control variables, presented in Figure \ref{Figure: Co
 
 \subsection{Time to Sell: Expected Buyer Movement}
 
+
 \subsubsection{Hazard Model with AFT}
 \noindent 
 To examine how farmers' expectations regarding buyer competition, price expectations, logistical factors, and external conditions influence the timing of their sales, I employ an accelerated failure-time (AFT) specification within a hazard model framework, following \cite{albuquerque2024market}. The AFT model is well-suited for analyzing interval-censored survival data, as it estimates the time until an event occurs---in this case, the sale of apples. This model assumes that covariates accelerate or decelerate the time to an event by a constant factor. A positive coefficient for a covariate indicates that it prolongs the time until the sale (delays selling), while a negative coefficient shortens it.
@@ -357,10 +358,10 @@ To control for unobserved location-specific factors such as weather conditions, 
 
 \subsubsection{Results}
 \noindent 
-Table \ref{tab: extended Survival AFT with controls} presents the results from the AFT Weibull survival model, which estimates the duration (storing time) until farmers sell their apples. Column (1) includes the full sample, while Column (2) focuses exclusively on farmers who utilize storage.
+Table \ref{tab: extended Survival AFT with controls} presents the results from the AFT Weibull survival model, which estimates the duration (storing time) until farmers sell their apples. Column (1) includes the full sample, while Column (2) focuses exclusively on farmers who utilize storage. The key result found here is that optimistic expectation of buyer competition does lead farmers to store, while does not have estimating power in how long the produce would be in storage.
 
 \begin{enumerate}
-    \item \textbf{Expected Buyer Competitiveness and Time to Sell:} Farmers' expectations about future buyer competition exhibit distinct effects on their marketing timing. In the full sample (Column 1), anticipating more buyers in the future significantly prolongs the time to sell ($\beta = 0.50, p<0.01$), suggesting that farmers expecting increased competition among buyers delay sales, likely in anticipation of higher farm-gate prices. This aligns with the theoretical expectation that greater buyer competition enhances farmers' bargaining power, incentivizing them to wait for more favorable market conditions.
+    \item \textbf{Expected Buyer Competitiveness and Time to Sell:} Farmers' expectations about future buyer competition exhibit distinct effects on their marketing timing. In the full sample (Column 1), anticipating more buyers in the future significantly prolongs the time to sell ($\beta = 0.50, p<0.01$), suggesting that farmers expecting increased competition among buyers delay sales to later periods through storage, in anticipation of higher farm-gate prices. This aligns with the theoretical expectation that greater future buyer competition incentivizes farmers to wait for more favorable market conditions.
     
     However, among storage users (Column 2), the coefficient on expecting more buyers is smaller and statistically insignificant ($\beta = 0.12, p>0.1$), indicating that for farmers already engaged in storage, expectations of further increased competition do not further delay their sales. This suggests that these farmers are already positioned to take advantage of higher prices and are less responsive to incremental changes in buyer expectations.
 
