@@ -20,7 +20,7 @@ theta1 = 0.5
 p1 = 1 / (1 + theta1)
 delta = 1.0
 s_grid = np.linspace(0, 1, 100)
-gamma_grid = np.linspace(0, 10, 50)
+gamma_grid = np.linspace(0, 5, 50)
 kappa_grid = np.linspace(0.6, 1.0, 50)
 num_draws = 5000
 
@@ -91,20 +91,20 @@ for i in range(4):
     X, Y = np.meshgrid(kappa_grid, gamma_grid)
     Z = surface_plots_low[i]
     ax.plot_surface(X, Y, Z, cmap="viridis", edgecolor='none')
-    ax.set_title(f"$s^*$ (Low Variance)")
-    ax.set_xlabel("$\\kappa$")
-    ax.set_ylabel("$\\gamma$")
-    ax.set_zlabel("$s^*$")
+    ax.set_title(f"$s^*$ (Low Variance: 0.02)")
+    ax.set_xlabel("$\\kappa$: storage efficiency", fontsize=14, labelpad=10)
+    ax.set_ylabel("$\\gamma$: risk aversion", fontsize=14, labelpad=10)
+    ax.set_zlabel("$s^*$", fontsize=14, labelpad=10)
     ax.view_init(elev=30, azim=-135)
     ax.set_zlim(0, 1)
 
     ax = fig.add_subplot(gs[2, i], projection='3d')
     Z = surface_plots_high[i]
     ax.plot_surface(X, Y, Z, cmap="viridis", edgecolor='none')
-    ax.set_title(f"$s^*$ (High Variance)")
-    ax.set_xlabel("$\\kappa$")
-    ax.set_ylabel("$\\gamma$")
-    ax.set_zlabel("$s^*$")
+    ax.set_title(f"$s^*$ (High Variance: 0.05)")
+    ax.set_xlabel("$\\kappa$: storage efficiency", fontsize=14, labelpad=10)
+    ax.set_ylabel("$\\gamma$: risk aversion", fontsize=14, labelpad=10)
+    ax.set_zlabel("$s^*$", fontsize=14, labelpad=10)
     ax.view_init(elev=30, azim=-135)
     ax.set_zlim(0, 1)
 

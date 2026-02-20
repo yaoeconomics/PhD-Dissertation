@@ -21,7 +21,7 @@ plt.rcParams.update({
 # -----------------------------
 kappa_fixed = 0.9
 N1_fixed = 2                        # <-- N1 = 2, so p1 = 2/3
-gamma_values = [0, 0.5, 2, 4, 7]
+gamma_values = [0, 0.5, 2, 4]
 mu_params = np.arange(1, 9, 1)      # Poisson parameter; we'll compute E[N2] under truncation
 s_grid = np.linspace(0, 1, 25)
 support = np.arange(1, 10)          # support {1,...,9}

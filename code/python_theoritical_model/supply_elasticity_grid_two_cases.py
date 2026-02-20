@@ -52,7 +52,7 @@ eps_common_values = [0.75, 1.00, 1.25]
 mu_values = [0.20, 0.30, 0.35]
 
 # Risk-aversion grid
-gamma_grid = np.linspace(0, 10, 100)
+gamma_grid = np.linspace(0, 5, 100)
 
 # --------------------------------
 # Helper functions
@@ -161,7 +161,7 @@ for row_idx, mu in enumerate(mu_values):
     ax_left.grid(True, linewidth=0.6)
     ax_left.set_ylim(0, 1.02)
     if row_idx == 0:
-        ax_left.legend(loc="upper right")
+        ax_left.legend(loc="lower left")
 
     # --- Panel (b) in this row: bar chart of E[p2] ---
     ax_right = axes1[row_idx, 1]
@@ -263,7 +263,7 @@ for row_idx, mu in enumerate(mu_values):
     ax_left.grid(True, linewidth=0.6)
     ax_left.set_ylim(0, 1.02)
     if row_idx == 0:
-        ax_left.legend(loc="upper right")
+        ax_left.legend(loc="lower left")
 
     # --- Panel (b) in this row: bar plot of p1(ε) and E[p2(ε)] ---
     ax_right = axes2[row_idx, 1]

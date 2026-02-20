@@ -34,7 +34,7 @@ p1 = 1 / (1 + theta1)
 delta = 1.0
 
 s_grid = np.linspace(0, 1, 100)
-gamma_grid = np.linspace(0, 10, 50)
+gamma_grid = np.linspace(0, 5, 50)
 kappa_grid = np.linspace(0.6, 1.0, 50)
 num_draws = 5000
 

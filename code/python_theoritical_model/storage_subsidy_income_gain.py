@@ -62,14 +62,14 @@ rng = np.random.default_rng(314)
 
 # Farmers & worlds
 N = 100
-gammas = rng.uniform(0.0, 10.0, size=N); gammas.sort()
+gammas = rng.uniform(0.0, 5.0, size=N); gammas.sort()
 # gammas = 10.0 * rng.beta(1, 5, size=N); gammas.sort()
 
 R = 20000  # <-- The number of Worlds
 
 # s*(θ1,γ) interpolation grid
 theta1_grid = np.linspace(0.001, 0.999, 30)
-gamma_grid  = np.linspace(0.0, 10.0, 30)
+gamma_grid  = np.linspace(0.0, 5.0, 30)
 
 # Quadrature nodes on [0,1] for Eθ2 when solving s*
 nodes, weights = leggauss(12)
@@ -389,7 +389,7 @@ def run_and_plot():
     )
 
     # Footer metadata
-    footer = (f"N={N} farmers; R= {R} worlds; γ~Uniform[0,10]; "
+    footer = (f"N={N} farmers; R= {R} worlds; γ~Uniform[0,5]; "
               "s* via golden-section; Beta(μ,σ²) strict feasibility; "
               "markers aid B/W reproduction.")
     fig.text(0.5, 0.018, footer, ha="center", va="center", fontsize=12)

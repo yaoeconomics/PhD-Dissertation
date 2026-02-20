@@ -39,13 +39,13 @@ KAPPAS = [0.80, 0.90, 0.95]
 STORE_THRESHOLD = 0.01
 
 THETA1_GRID = np.linspace(0.001, 0.999, 35)
-GAMMA_GRID  = np.linspace(0.0, 10.0, 35)
+GAMMA_GRID  = np.linspace(0.0, 5.0, 35)
 
 nodes, weights = leggauss(12)
 X_NODES = 0.5 * (nodes + 1.0)
 W_NODES = 0.5 * weights
 
-GAMMAS = rng.uniform(0.0, 10.0, size=N)
+GAMMAS = rng.uniform(0.0, 5.0, size=N)
 GAMMAS.sort()
 
 # -----------------------------
@@ -251,7 +251,7 @@ def main():
     latex_footer = r"""\
 \begin{tablenotes}[flushleft]
 \footnotesize
-\item Notes: $N=100$, $R=5000$, $\gamma\sim U[0,10]$. Prices $p=1/(1+\theta)$. $\theta_1,\theta_2\sim \text{Beta}(\alpha,\beta)$ calibrated to $(\mu,\sigma^2)$. Policy $s^*(\theta_1,\gamma)$ solved by golden-section; expectation over $\theta_2$ by 12-point Gauss–Legendre quadrature. Adopters: $s^*>0.01$.
+\item Notes: $N=100$, $R=5000$, $\gamma\sim U[0,5]$. Prices $p=1/(1+\theta)$. $\theta_1,\theta_2\sim \text{Beta}(\alpha,\beta)$ calibrated to $(\mu,\sigma^2)$. Policy $s^*(\theta_1,\gamma)$ solved by golden-section; expectation over $\theta_2$ by 12-point Gauss–Legendre quadrature. Adopters: $s^*>0.01$.
 \end{tablenotes}
 \end{threeparttable}
 \end{table}

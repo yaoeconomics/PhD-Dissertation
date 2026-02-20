@@ -45,9 +45,9 @@ rng = np.random.default_rng(314)  # reproducible
 mu_grid = np.arange(0.15, 0.86, 0.05)
 sigma2 = 0.10
 N = 100
-gammas = rng.uniform(0, 10, size=N); gammas.sort()
+gammas = rng.uniform(0, 5, size=N); gammas.sort()
 # gammas = 10.0 * rng.beta(1, 5, size=N); gammas.sort()
-deciles = pd.qcut(gammas, 10, labels=False)  # 0..9
+deciles = pd.qcut(gammas, 5, labels=False)  # 0..9
 kappa_scenarios = [0.75, 0.80, 0.85, 0.90, 0.95]
 kappa_pairs = [(0.75, 0.80), (0.80, 0.85), (0.85, 0.90), (0.90, 0.95)]
 R = 5000  # worlds per μ
@@ -161,7 +161,7 @@ for mu in mu_grid:
 
     # Grids for precompute
     theta1_grid = np.linspace(0.001, 0.999, 15)
-    gamma_grid  = np.linspace(0.0, 10.0, 15)
+    gamma_grid  = np.linspace(0.0, 5.0, 15)
 
     # Precompute s*(θ1,γ | κ) for all κ scenarios
     s_cache = precompute_cache(kappa_scenarios, theta1_grid, gamma_grid,
@@ -260,7 +260,7 @@ def run_mu_contrast(mu, k0, k1, nodes_cache, worlds_cache, reuse_worlds):
         theta2_worlds = beta.rvs(ak, bk, size=R, random_state=rng)
 
     theta1_grid = np.linspace(0.001, 0.999, 15)
-    gamma_grid  = np.linspace(0.0, 10.0, 15)
+    gamma_grid  = np.linspace(0.0, 5.0, 15)
 
     s_cache = precompute_cache([k0, k1], theta1_grid, gamma_grid,
                                theta2_nodes, w_nodes, E_inv1p_theta2)

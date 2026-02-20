@@ -63,14 +63,14 @@ rng = np.random.default_rng(314)
 # Farmers & worlds
 N = 100
 # Two heterogeneous γ draws (fixed across panels for comparability)
-gammas_10 = rng.uniform(0.0, 10.0, size=N); gammas_10.sort()
-gammas_5  = rng.uniform(0.0,  5.0, size=N); gammas_5.sort()
+gammas_5 = rng.uniform(0.0, 5.0, size=N); gammas_5.sort()
+gammas_2  = rng.uniform(0.0,  2.0, size=N); gammas_2.sort()
 
 R = 20000  # increase for smoother curves
 
 # s*(θ1,γ) interpolation grid
 theta1_grid = np.linspace(0.01, 0.99, 24)
-gamma_grid  = np.linspace(0.0, 10.0, 24)   # covers both Unif[0,10] and Unif[0,5]
+gamma_grid  = np.linspace(0.0, 5.0, 24)   # covers both Unif[0,10] and Unif[0,5]
 
 # Quadrature nodes on [0,1] for Eθ2 when solving s*
 nodes, weights = leggauss(12)
@@ -90,10 +90,10 @@ col_base_ranges = {
 }
 
 # Styles
-LINE_HET10 = dict(color="#000000", linestyle="-",  marker="o",  linewidth=2.0, markersize=3,
-                  label="Heterogeneous γ ~ Unif[0,10]")
-LINE_HET5  = dict(color="#1f77b4", linestyle="--", marker=None, linewidth=2.0,
+LINE_HET5 = dict(color="#000000", linestyle="-",  marker="o",  linewidth=2.0, markersize=3,
                   label="Heterogeneous γ ~ Unif[0,5]")
+LINE_HET2  = dict(color="#1f77b4", linestyle="--", marker=None, linewidth=2.0,
+                  label="Heterogeneous γ ~ Unif[0,2]")
 LINE_RN    = dict(color="#6baed6", linestyle="-.", marker=None, linewidth=2.0,
                   label="Risk-neutral (γ=0)")
 
@@ -272,7 +272,7 @@ def run_and_plot():
         for c_idx, sigma2 in enumerate(sigma2_cols):
             mu1_grid = build_mu1_grid(sigma2)
             mu_vec, pct_hi, pct_lo, pct_rn = compute_zero_gap_gains_three_series(
-                kappa, sigma2, mu1_grid, gammas_10, gammas_5
+                kappa, sigma2, mu1_grid, gammas_5, gammas_2
             )
             results[(r_idx, c_idx)] = {
                 "mu": mu_vec,
@@ -314,8 +314,8 @@ def run_and_plot():
             ax.set_ylim(*y_lim)
 
             # Three curves
-            ax.plot(mu, het10, **LINE_HET10, zorder=3)
-            ax.plot(mu, het5,  **LINE_HET5,  zorder=3)
+            ax.plot(mu, het10, **LINE_HET5, zorder=3)
+            ax.plot(mu, het5,  **LINE_HET2,  zorder=3)
             ax.plot(mu, rn,    **LINE_RN,    zorder=3)
 
             # Titles & labels
@@ -333,9 +333,9 @@ def run_and_plot():
     # Figure legend
     legend_handles = [
         Line2D([0], [0],
-               **{k: LINE_HET10[k] for k in ["color", "linestyle", "marker", "linewidth", "markersize"]}),
+               **{k: LINE_HET5[k] for k in ["color", "linestyle", "marker", "linewidth", "markersize"]}),
         Line2D([0], [0],
-               **{k: LINE_HET5[k] for k in ["color", "linestyle", "linewidth"]}),
+               **{k: LINE_HET2[k] for k in ["color", "linestyle", "linewidth"]}),
         Line2D([0], [0],
                **{k: LINE_RN[k] for k in ["color", "linestyle", "linewidth"]}),
     ]
@@ -347,7 +347,7 @@ def run_and_plot():
     )
     fig.legend(
         handles=legend_handles,
-        labels=[LINE_HET10["label"], LINE_HET5["label"], LINE_RN["label"]],
+        labels=[LINE_HET5["label"], LINE_HET2["label"], LINE_RN["label"]],
         loc="upper center",
         bbox_to_anchor=(0.5, 0.905),
         ncols=3,
@@ -359,7 +359,7 @@ def run_and_plot():
     )
 
     footer = (f"N={N} farmers; R={R} worlds; "
-              "Heterogeneous curves use fixed γ samples: Unif[0,10] and Unif[0,5]; "
+              "Heterogeneous curves use fixed γ samples: Unif[0,5] and Unif[0,2]; "
               "RN curve treats all farmers as γ=0.")
     fig.text(0.5, 0.018, footer, ha="center", va="center", fontsize=12)
 

@@ -36,7 +36,7 @@ p1 = 1 / (1 + theta1)
 kappa = 0.9
 delta = 1.0
 num_draws = 5000
-variance = 0.02
+variance = 0.05
 s_grid = np.linspace(0, 1, 100)
 
 # CRRA utility function
@@ -67,8 +67,8 @@ def compute_beta_params(mu, sigma2):
     return alpha, beta_param
 
 # --- Main Simulation ---
-mu_values_focus = [0.2, 0.25, 0.3, 0.35, 0.4]
-gamma_grid = np.linspace(0, 10, 100)
+mu_values_focus = [0.20, 0.25, 0.30, 0.35, 0.40]
+gamma_grid = np.linspace(0, 5, 100)
 results_focus = {mu: [] for mu in mu_values_focus}
 
 for mu in mu_values_focus:

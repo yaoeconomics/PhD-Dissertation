@@ -86,7 +86,7 @@ def compute_beta_params(mu, sigma2):
 # Main Simulation
 # --------------------------------
 mu_fixed = 0.20
-gamma_grid = np.linspace(0, 10, 100)
+gamma_grid = np.linspace(0, 5, 100)
 results_eps2 = {eps2: [] for eps2 in eps2_values}
 expected_p2 = {}
 
@@ -126,7 +126,7 @@ for i, eps2 in enumerate(eps2_values):
 axes[0].set_xlabel(r"Risk aversion $\gamma$")
 axes[0].set_ylabel(r"Optimal storage share $s^*$")
 axes[0].set_title(r"(a) $s^*(\gamma)$ under different $\varepsilon_2$")
-axes[0].legend(loc="upper right")
+axes[0].legend(loc="lower left")
 axes[0].grid(True, linewidth=0.6)
 
 # Panel (b): implied expected p2 for each ε2

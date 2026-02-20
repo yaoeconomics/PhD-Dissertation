@@ -33,9 +33,9 @@ plt.rcParams.update({
 # ---------------------- Primitives & Grids ----------------------
 theta1, kappa, delta = 0.5, 0.9, 1.0
 p1 = 1 / (1 + theta1)
-variance = 0.02
-mu_values = np.arange(0.05, 0.951, 0.01)   # E[theta2]
-gammas    = [0.5, 2, 4, 7]                 # risk-averse levels
+variance = 0.05
+mu_values = np.arange(0.10, 0.601, 0.01)   # E[theta2]
+gammas    = [0.5, 2, 4]                 # risk-averse levels
 num_draws = 20000
 s_grid    = np.linspace(0, 1, 50)
 

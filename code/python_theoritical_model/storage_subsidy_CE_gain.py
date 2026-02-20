@@ -51,13 +51,13 @@ rng = np.random.default_rng(314)
 
 # Farmers & worlds
 N = 100
-gammas = rng.uniform(0.0, 10.0, size=N); gammas.sort()
+gammas = rng.uniform(0.0, 5.0, size=N); gammas.sort()
 
 R = 20000  # <-- Number of Worlds
 
 # s*(θ1,γ) interpolation grid
 theta1_grid = np.linspace(0.001, 0.999, 30)
-gamma_grid  = np.linspace(0.0, 10.0, 30)
+gamma_grid  = np.linspace(0.0, 5.0, 30)
 
 # Quadrature nodes on [0,1] for Eθ2 when solving s*
 nodes, weights = leggauss(12)

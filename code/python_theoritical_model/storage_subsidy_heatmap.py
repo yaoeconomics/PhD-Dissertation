@@ -30,7 +30,7 @@ rng = np.random.default_rng(304)
 mu_grid = np.arange(0.15, 0.86, 0.05)
 sigma2 = 0.10
 N = 100
-gammas = rng.uniform(0, 10, size=N); gammas.sort()
+gammas = rng.uniform(0, 5, size=N); gammas.sort()
 # kappa_pairs = [(0.80, 0.85), (0.80, 0.90), (0.80, 0.95)]
 kappa_pairs = [(0.75, 0.80), (0.80, 0.85), (0.85, 0.90), (0.90, 0.95)]
 R = 5000
@@ -96,7 +96,7 @@ def evaluate_kappa(mu, kappas, gammas, R):
     theta2_nodes = np.clip(theta2_nodes, 1e-9, 1-1e-9)
     E_inv1p_theta2 = float(np.sum(1.0/(1.0+theta2_nodes)*w_nodes))
     theta1_grid = np.linspace(0.001, 0.999, 15)
-    gamma_grid = np.linspace(0.0, 10.0, 15)
+    gamma_grid = np.linspace(0.0, 5.0, 15)
     s_cache = precompute_cache(kappas, theta1_grid, gamma_grid, theta2_nodes, w_nodes, E_inv1p_theta2)
     out = {}
     for kappa in kappas:
@@ -179,7 +179,7 @@ for contrast in contrasts:
     line_tiles.append(render_line_tile(gains_df, contrast, ylim=common_ylim))
 
 # Decile heatmaps
-deciles = pd.qcut(gammas, 10, labels=False)
+deciles = pd.qcut(gammas, 5, labels=False)
 
 records = []
 for mu in mu_grid:
@@ -192,7 +192,7 @@ for mu in mu_grid:
 
     kappas_needed = sorted(set([k for pair in kappa_pairs for k in pair]))
     theta1_grid = np.linspace(0.001, 0.999, 15)
-    gamma_grid = np.linspace(0.0, 10.0, 15)
+    gamma_grid = np.linspace(0.0, 5.0, 15)
     s_cache = precompute_cache(kappas_needed, theta1_grid, gamma_grid, theta2_nodes, w_nodes, E_inv1p_theta2)
 
     level_by_kappa = {}
@@ -246,8 +246,8 @@ def render_heatmap_image_shared(panel, contrast, metric, title_suffix, mu_grid, 
     cbar = fig.colorbar(im, ax=ax, fraction=0.046, pad=0.4/10)
     cbar.ax.tick_params(labelsize=8)
 
-    ax.set_yticks(np.arange(0, 10))
-    ax.set_yticklabels([f"{i+1}" for i in range(10)], fontsize=14)
+    ax.set_yticks(np.arange(0, 5))
+    ax.set_yticklabels([f"{i+1}" for i in range(5)], fontsize=14)
 
     tick_idx = np.arange(0, len(mu_grid), 3)
     ax.set_xticks(tick_idx)

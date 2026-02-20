@@ -69,7 +69,7 @@ def closed_form_s(N2_samples, kappa):
 # Parameters
 # --------------------------------
 mu_values = [8, 6, 3, 1]
-gamma_grid = np.linspace(0, 10, 30)
+gamma_grid = np.linspace(0, 5, 30)
 kappa_grid = np.linspace(0.6, 1.0, 20)
 s_min, s_max = 0.0, 1.0
 
