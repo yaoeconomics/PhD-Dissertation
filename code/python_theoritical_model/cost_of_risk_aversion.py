@@ -125,9 +125,9 @@ plt.show()
 
 # ---------------------- Figure 2: Sensitivity to θ2 (s* vs μ) ----------------------
 plt.figure(figsize=(10, 6))
+plt.plot(mu_values, s_RN, 'k--', lw=2, label=r"Risk-neutral $s^*$")
 for i, g in enumerate(gammas):
     plt.plot(mu_values, s_RA[i], color=colors[i], lw=2, label=rf"$\gamma={g}$")
-plt.plot(mu_values, s_RN, 'k--', lw=2, label=r"Risk-neutral $s^*$")
 
 if mu_star is not None:
     plt.axvline(mu_star, color='k', ls=':', lw=1)
