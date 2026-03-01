@@ -1,4 +1,3 @@
-
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import beta
@@ -48,8 +47,8 @@ def optimize_storage_share(theta2_draws, gamma, kappa):
         utilities.append(util)
     return s_grid[np.argmax(utilities)]
 
-# Modified mean values
-means_modified = [0.2, 0.4, 0.5, 0.8]
+# Modified mean values (dropped 0.8)
+means_modified = [0.2, 0.4, 0.5]
 variances = [0.02, 0.05]
 
 pdf_plots = []
@@ -73,14 +72,14 @@ for var in variances:
         y = beta.pdf(x, alpha, beta_param)
         pdf_plots.append((x, y, mu, var, alpha, beta_param))
 
-fig = plt.figure(figsize=(18, 12))
-gs = gridspec.GridSpec(4, 4, height_ratios=[1, 3, 3, 1])
+fig = plt.figure(figsize=(14, 12))
+gs = gridspec.GridSpec(4, 3, height_ratios=[1, 3, 3, 1])
 
-for i in range(4):
+for i in range(3):
     ax = fig.add_subplot(gs[0, i])
     x, y, mu, var, alpha, beta_param = pdf_plots[i]
     ax.plot(x, y)
-    ax.set_title(f"$\\mu={mu}$, $\\sigma^2={var}$\\n$\\alpha={alpha:.2f}, \\beta={beta_param:.2f}$")
+    ax.set_title(f"$\\mu={mu}$, $\\sigma^2={var}$\n$\\alpha={alpha:.2f}, \\beta={beta_param:.2f}$")
     ax.set_xlim(0, 1)
     ax.grid(True)
     if i == 0:
@@ -109,9 +108,9 @@ for i in range(4):
     ax.set_zlim(0, 1)
 
     ax = fig.add_subplot(gs[3, i])
-    x, y, mu, var, alpha, beta_param = pdf_plots[i + 4]
+    x, y, mu, var, alpha, beta_param = pdf_plots[i + 3]
     ax.plot(x, y)
-    ax.set_title(f"$\\mu={mu}$, $\\sigma^2={var}$\\n$\\alpha={alpha:.2f}, \\beta={beta_param:.2f}$")
+    ax.set_title(f"$\\mu={mu}$, $\\sigma^2={var}$\n$\\alpha={alpha:.2f}, \\beta={beta_param:.2f}$")
     ax.set_xlim(0, 1)
     ax.grid(True)
     if i == 0:
