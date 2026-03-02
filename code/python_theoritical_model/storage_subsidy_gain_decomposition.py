@@ -200,13 +200,13 @@ for mu in mu_grid:
             EU_bar += (Uvals  - EU_bar)/(r+1)
             s_bar += (s_star  - s_bar)/(r+1)
         CE_bar = np.array([crra_u_inv(EU_bar[i], gammas[i]) for i in range(N)])
-        RP_bar = Y_bar - CE_bar
+        RS_bar = Y_bar - CE_bar
         summary_rows.append({
             "mu": mu, "kappa": kappa,
             "mean_income": Y_bar.mean(),
             "median_income": np.median(Y_bar),
             "mean_CE": CE_bar.mean(),
-            "mean_RP": RP_bar.mean(),
+            "mean_RS": RS_bar.mean(),
             "share_storing": store_count/(N*R),
             "mean_s": s_bar.mean()
         })
@@ -276,28 +276,28 @@ def run_mu_contrast(mu, k0, k1, nodes_cache, worlds_cache, reuse_worlds):
             Y_bar += (inc - Y_bar)/(r+1)
             EU_bar += (Uvals - EU_bar)/(r+1)
         CE_bar = np.array([crra_u_inv(EU_bar[i], gammas[i]) for i in range(N)])
-        RP_bar = Y_bar - CE_bar
-        stats[kappa] = {"Y": Y_bar, "CE": CE_bar, "RP": RP_bar}
+        RS_bar = Y_bar - CE_bar
+        stats[kappa] = {"Y": Y_bar, "CE": CE_bar, "RS": RS_bar}
 
     df0 = pd.DataFrame({
         "gamma": gammas, "decile": deciles,
-        "Y0": stats[k0]["Y"], "CE0": stats[k0]["CE"], "RP0": stats[k0]["RP"]
+        "Y0": stats[k0]["Y"], "CE0": stats[k0]["CE"], "RS0": stats[k0]["RS"]
     })
     df1 = pd.DataFrame({
         "gamma": gammas, "decile": deciles,
-        "Y1": stats[k1]["Y"], "CE1": stats[k1]["CE"], "RP1": stats[k1]["RP"]
+        "Y1": stats[k1]["Y"], "CE1": stats[k1]["CE"], "RS1": stats[k1]["RS"]
     })
-    df = df0.merge(df1[["Y1", "CE1", "RP1"]], left_index=True, right_index=True)
+    df = df0.merge(df1[["Y1", "CE1", "RS1"]], left_index=True, right_index=True)
     df["dY"]  = df["Y1"]  - df["Y0"]
     df["dCE"] = df["CE1"] - df["CE0"]
-    df["dRP"] = df["RP1"] - df["RP0"]
+    df["dRS"] = df["RS1"] - df["RS0"]
 
     g = df.groupby("decile").agg(
         gamma_lo=("gamma", "min"),
         gamma_hi=("gamma", "max"),
         ΔEπ=("dY", "mean"),
         ΔCE=("dCE", "mean"),
-        ΔRP=("dRP", "mean")
+        ΔRS=("dRS", "mean")
     ).reset_index()
     g["μ"] = mu
     g["contrast"] = f"{k0:.2f}→{k1:.2f}"
@@ -316,9 +316,9 @@ avg_panel = panel.groupby(["contrast", "decile"]).agg(
     gamma_hi=("gamma_hi", "mean"),
     ΔEπ=("ΔEπ", "mean"),
     ΔCE=("ΔCE", "mean"),
-    ΔRP=("ΔRP", "mean")
+    ΔRS=("ΔRS", "mean")
 ).reset_index()
-avg_panel["−ΔRP (insurance gain)"] = -avg_panel["ΔRP"]
+avg_panel["−ΔRS (risk spreading)"] = -avg_panel["ΔRS"]
 
 # ---- Plot for (2): 2×2 grid, one subplot per κ-contrast ----
 fig, axes = plt.subplots(1, 4, figsize=(16, 8), sharey=True)
@@ -328,7 +328,7 @@ for ax, contrast in zip(axes, avg_panel["contrast"].unique()):
     x = sub["decile"] + 1
     width = 0.35
     ax.bar(x - width/2, sub["ΔEπ"], width=width, label="ΔE[π] (growth)")
-    ax.bar(x + width/2, sub["−ΔRP (insurance gain)"], width=width, label="−ΔRP (insurance)")
+    ax.bar(x + width/2, sub["−ΔRS (risk spreading)"], width=width, label="−ΔRS (risk spreading)")
     ax.plot(x, sub["ΔCE"], marker="o", linestyle="-", label="ΔCE (total)")
     ax.set_title(f"κ {contrast}")
     ax.set_xlabel("γ decile")
