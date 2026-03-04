@@ -1,4 +1,3 @@
-
 import os
 import numpy as np
 import pandas as pd
@@ -47,7 +46,7 @@ sigma2 = 0.10
 N = 100
 gammas = rng.uniform(0, 5, size=N); gammas.sort()
 # gammas = 10.0 * rng.beta(1, 5, size=N); gammas.sort()
-deciles = pd.qcut(gammas, 5, labels=False)  # 0..9
+quintiles = pd.qcut(gammas, 5, labels=False)  # 0..9
 kappa_scenarios = [0.75, 0.80, 0.85, 0.90, 0.95]
 kappa_pairs = [(0.75, 0.80), (0.80, 0.85), (0.85, 0.90), (0.90, 0.95)]
 R = 5000  # worlds per μ
@@ -58,11 +57,11 @@ x_nodes = 0.5*(nodes+1); w_nodes = 0.5*weights
 # -----------------------------
 # Utility and helpers
 # -----------------------------
-def crra_u(pi, gamma):
-    pi = np.maximum(pi, 1e-12)
+def crra_u(y, gamma):
+    y = np.maximum(y, 1e-12)
     if abs(gamma - 1.0) < 1e-12:
-        return np.log(pi)
-    return (pi**(1-gamma) - 1) / (1-gamma)
+        return np.log(y)
+    return (y**(1-gamma) - 1) / (1-gamma)
 
 def crra_u_inv(u, gamma):
     if abs(gamma - 1.0) < 1e-12:
@@ -214,37 +213,10 @@ for mu in mu_grid:
 summary_df = pd.DataFrame(summary_rows)
 rn_df = pd.DataFrame(rn_rows)
 
-# ---- Plots for (1) ----
-plt.figure(figsize=(10, 6))
-for kappa in kappa_scenarios:
-    d = summary_df[summary_df["kappa"] == kappa].sort_values("mu")
-    plt.plot(d["mu"], d["share_storing"], marker="o", label=f"κ={kappa}")
-plt.xlabel("Belief about buyer power mean μ")
-plt.ylabel("Share storing (farmer–world)")
-plt.title("Share of Storing vs. Beliefs μ, by Storage Efficiency κ")
-plt.grid(True)
-plt.legend(ncols=3)
-plt.tight_layout()
-plt.savefig(os.path.join(target_dir, "storage_subsidy_share_of_storage.png"),
-            dpi=300, bbox_inches="tight")
-plt.show()
 
-plt.figure(figsize=(10, 6))
-for kappa in kappa_scenarios:
-    d = summary_df[summary_df["kappa"] == kappa].sort_values("mu")
-    plt.plot(d["mu"], d["mean_s"], marker="o", label=f"κ={kappa}")
-plt.xlabel("Belief about buyer power mean μ")
-plt.ylabel("Mean storage share s*")
-plt.title("Mean s* vs. Beliefs μ, by Storage Efficiency κ")
-plt.grid(True)
-plt.legend(ncols=3)
-plt.tight_layout()
-plt.savefig(os.path.join(target_dir, "storage_subsidy_mean_s.png"),
-            dpi=300, bbox_inches="tight")
-plt.show()
 
 # -----------------------------
-# (2) Decile-by-γ decomposition across κ-contrasts
+# (1) quintile-by-γ decomposition across κ-contrasts
 # -----------------------------
 def run_mu_contrast(mu, k0, k1, nodes_cache, worlds_cache, reuse_worlds):
     key = mu_key(mu)
@@ -280,11 +252,11 @@ def run_mu_contrast(mu, k0, k1, nodes_cache, worlds_cache, reuse_worlds):
         stats[kappa] = {"Y": Y_bar, "CE": CE_bar, "RS": RS_bar}
 
     df0 = pd.DataFrame({
-        "gamma": gammas, "decile": deciles,
+        "gamma": gammas, "quintile": quintiles,
         "Y0": stats[k0]["Y"], "CE0": stats[k0]["CE"], "RS0": stats[k0]["RS"]
     })
     df1 = pd.DataFrame({
-        "gamma": gammas, "decile": deciles,
+        "gamma": gammas, "quintile": quintiles,
         "Y1": stats[k1]["Y"], "CE1": stats[k1]["CE"], "RS1": stats[k1]["RS"]
     })
     df = df0.merge(df1[["Y1", "CE1", "RS1"]], left_index=True, right_index=True)
@@ -292,10 +264,10 @@ def run_mu_contrast(mu, k0, k1, nodes_cache, worlds_cache, reuse_worlds):
     df["dCE"] = df["CE1"] - df["CE0"]
     df["dRS"] = df["RS1"] - df["RS0"]
 
-    g = df.groupby("decile").agg(
+    g = df.groupby("quintile").agg(
         gamma_lo=("gamma", "min"),
         gamma_hi=("gamma", "max"),
-        ΔEπ=("dY", "mean"),
+        Δy=("dY", "mean"),
         ΔCE=("dCE", "mean"),
         ΔRS=("dRS", "mean")
     ).reset_index()
@@ -310,11 +282,11 @@ for mu in mu_grid:
         records.append(run_mu_contrast(mu, k0, k1, nodes_cache, worlds_cache, REUSE_WORLDS))
 panel = pd.concat(records, ignore_index=True)
 
-# Average across μ to show a clean decile-by-γ summary per contrast
-avg_panel = panel.groupby(["contrast", "decile"]).agg(
+# Average across μ to show a clean quintile-by-γ summary per contrast
+avg_panel = panel.groupby(["contrast", "quintile"]).agg(
     gamma_lo=("gamma_lo", "mean"),
     gamma_hi=("gamma_hi", "mean"),
-    ΔEπ=("ΔEπ", "mean"),
+    Δy=("Δy", "mean"),
     ΔCE=("ΔCE", "mean"),
     ΔRS=("ΔRS", "mean")
 ).reset_index()
@@ -324,14 +296,14 @@ avg_panel["−ΔRS (risk spreading)"] = -avg_panel["ΔRS"]
 fig, axes = plt.subplots(1, 4, figsize=(16, 8), sharey=True)
 axes = axes.ravel()
 for ax, contrast in zip(axes, avg_panel["contrast"].unique()):
-    sub = avg_panel[avg_panel["contrast"] == contrast].sort_values("decile")
-    x = sub["decile"] + 1
+    sub = avg_panel[avg_panel["contrast"] == contrast].sort_values("quintile")
+    x = sub["quintile"] + 1
     width = 0.35
-    ax.bar(x - width/2, sub["ΔEπ"], width=width, label="ΔE[π] (growth)")
+    ax.bar(x - width/2, sub["Δy"], width=width, label="Δ[y] (income growth)")
     ax.bar(x + width/2, sub["−ΔRS (risk spreading)"], width=width, label="−ΔRS (risk spreading)")
     ax.plot(x, sub["ΔCE"], marker="o", linestyle="-", label="ΔCE (total)")
     ax.set_title(f"κ {contrast}")
-    ax.set_xlabel("γ decile")
+    ax.set_xlabel("γ quintile")
     ax.grid(True, axis="y", linestyle="--", alpha=0.5)
 axes[0].set_ylabel("Gain (price units)")
 axes[2].set_ylabel("Gain (price units)")
@@ -345,6 +317,145 @@ plt.savefig(os.path.join(target_dir, "storage_subsidy_gain_decomposition.png"),
             dpi=300, bbox_inches="tight")
 plt.show()
 
+
+# -----------------------------
+# (2) Storage regime composition: none / partial / full by γ quintile
+#     Stacked bars — two per quintile (low κ vs high κ) stacking to 1.0
+# -----------------------------
+def run_regime_shares(mu, k0, k1, nodes_cache, worlds_cache, reuse_worlds):
+    """Classify each farmer–world s* into none/partial/full.
+    Return quintile-level shares for both κ values."""
+    key = mu_key(mu)
+    ak = nodes_cache[key]["alpha"]; bk = nodes_cache[key]["beta"]
+    theta2_nodes = nodes_cache[key]["theta2_nodes"]
+    E_inv1p_theta2 = nodes_cache[key]["E_inv1p"]
+
+    if reuse_worlds:
+        theta1_worlds, theta2_worlds = worlds_cache[key]
+    else:
+        theta1_worlds = beta.rvs(ak, bk, size=R, random_state=rng)
+        theta2_worlds = beta.rvs(ak, bk, size=R, random_state=rng)
+
+    theta1_grid = np.linspace(0.001, 0.999, 15)
+    gamma_grid  = np.linspace(0.0, 5.0, 15)
+
+    s_cache_local = precompute_cache([k0, k1], theta1_grid, gamma_grid,
+                                     theta2_nodes, w_nodes, E_inv1p_theta2)
+
+    eps_lo = 1e-4
+    eps_hi = 1 - 1e-4
+
+    counts = {}
+    for kappa in [k0, k1]:
+        none_c = np.zeros(N); part_c = np.zeros(N); full_c = np.zeros(N)
+        for r in range(R):
+            t1 = theta1_worlds[r]
+            s_star = interp2_vec(theta1_grid, gamma_grid, s_cache_local[kappa], t1, gammas)
+            none_c += (s_star <= eps_lo)
+            full_c += (s_star >= eps_hi)
+            part_c += ((s_star > eps_lo) & (s_star < eps_hi))
+        counts[kappa] = {
+            "none": none_c / R, "partial": part_c / R, "full": full_c / R
+        }
+
+    rows = []
+    for kappa in [k0, k1]:
+        df_tmp = pd.DataFrame({
+            "quintile": quintiles,
+            "none": counts[kappa]["none"],
+            "partial": counts[kappa]["partial"],
+            "full": counts[kappa]["full"]
+        })
+        g = df_tmp.groupby("quintile").mean().reset_index()
+        g["kappa"] = kappa
+        g["mu"] = mu
+        g["contrast"] = f"{k0:.2f}→{k1:.2f}"
+        rows.append(g)
+    return pd.concat(rows, ignore_index=True)
+
+regime_records = []
+for mu in mu_grid:
+    for (k0, k1) in kappa_pairs:
+        regime_records.append(
+            run_regime_shares(mu, k0, k1, nodes_cache, worlds_cache, REUSE_WORLDS)
+        )
+regime_panel = pd.concat(regime_records, ignore_index=True)
+
+regime_avg = regime_panel.groupby(["contrast", "kappa", "quintile"]).agg(
+    none=("none", "mean"),
+    partial=("partial", "mean"),
+    full=("full", "mean")
+).reset_index()
+
+# ---- Plot (3): stacked bars, two per quintile ----
+fig, axes = plt.subplots(1, 4, figsize=(18, 5.5), sharey=True)
+
+color_none    = "#d9d9d9"   # light grey
+color_partial = "#fdae6b"   # warm orange
+color_full    = "#e6550d"   # deep orange
+
+bar_width = 0.32
+
+for ax, contrast in zip(axes, regime_avg["contrast"].unique()):
+    sub = regime_avg[regime_avg["contrast"] == contrast]
+    k0_val = sub["kappa"].min()
+    k1_val = sub["kappa"].max()
+    sub_lo = sub[sub["kappa"] == k0_val].sort_values("quintile")
+    sub_hi = sub[sub["kappa"] == k1_val].sort_values("quintile")
+    x = np.arange(1, 6)
+
+    # Low κ stacked bars (left of center)
+    ax.bar(x - bar_width/2, sub_lo["none"].values,    width=bar_width,
+           color=color_none, edgecolor="white", linewidth=0.8)
+    ax.bar(x - bar_width/2, sub_lo["partial"].values,  width=bar_width,
+           bottom=sub_lo["none"].values,
+           color=color_partial, edgecolor="white", linewidth=0.8)
+    ax.bar(x - bar_width/2, sub_lo["full"].values,     width=bar_width,
+           bottom=sub_lo["none"].values + sub_lo["partial"].values,
+           color=color_full, edgecolor="white", linewidth=0.8)
+
+    # High κ stacked bars (right of center)
+    ax.bar(x + bar_width/2, sub_hi["none"].values,    width=bar_width,
+           color=color_none, edgecolor="white", linewidth=0.8,
+           hatch="//", alpha=0.9)
+    ax.bar(x + bar_width/2, sub_hi["partial"].values,  width=bar_width,
+           bottom=sub_hi["none"].values,
+           color=color_partial, edgecolor="white", linewidth=0.8,
+           hatch="//", alpha=0.9)
+    ax.bar(x + bar_width/2, sub_hi["full"].values,     width=bar_width,
+           bottom=sub_hi["none"].values + sub_hi["partial"].values,
+           color=color_full, edgecolor="white", linewidth=0.8,
+           hatch="//", alpha=0.9)
+
+    # Quintile labels at bottom
+    ax.set_xticks(x)
+    ax.set_xticklabels([f"Q{i}" for i in x])
+    ax.set_title(f"κ: {k0_val:.2f} → {k1_val:.2f}")
+    ax.set_xlabel("γ quintile (low → high risk aversion)")
+    ax.set_ylim(0, 1.05)
+    ax.grid(True, axis="y", linestyle="--", alpha=0.3)
+
+axes[0].set_ylabel("Share of farmer–worlds")
+
+# Build legend manually
+from matplotlib.patches import Patch
+legend_elements = [
+    Patch(facecolor=color_none,    edgecolor="grey",  label="No storage (s*≈0)"),
+    Patch(facecolor=color_partial, edgecolor="grey",  label="Partial storage (0<s*<1)"),
+    Patch(facecolor=color_full,    edgecolor="grey",  label="Full storage (s*≈1)"),
+    Patch(facecolor="white", edgecolor="grey", label=f"Solid = low κ"),
+    Patch(facecolor="white", edgecolor="grey", hatch="//", label=f"Hatched = high κ"),
+]
+fig.legend(handles=legend_elements, loc="lower center", ncol=5,
+           bbox_to_anchor=(0.5, -0.08), fontsize=12,
+           frameon=True, fancybox=True, shadow=False)
+
+fig.suptitle("Storage Regime Composition by Risk Aversion and Efficiency Gain",
+             y=1.02, fontsize=16)
+plt.tight_layout()
+plt.savefig(os.path.join(target_dir, "storage_subsidy_regime_composition.png"),
+            dpi=300, bbox_inches="tight")
+plt.show()
 
 print("Saved figures and CSVs to:", target_dir,
       "\nREUSE_WORLDS =", REUSE_WORLDS)

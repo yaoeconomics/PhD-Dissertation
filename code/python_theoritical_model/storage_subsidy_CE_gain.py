@@ -53,7 +53,7 @@ rng = np.random.default_rng(314)
 N = 100
 gammas = rng.uniform(0.0, 5.0, size=N); gammas.sort()
 
-R = 20000  # <-- Number of Worlds
+R = 5000  # <-- Number of Worlds
 
 # s*(θ1,γ) interpolation grid
 theta1_grid = np.linspace(0.001, 0.999, 30)
@@ -411,7 +411,7 @@ def run_and_plot():
         borderpad=0.6
     )
 
-    footer = (f"N={N} farmers; R={R} worlds; γ~Uniform[0,10]; "
+    footer = (f"N={N} farmers; R={R} worlds; γ~Uniform[0,5]; "
               "CE = mean across farmers of individual certainty equivalents.")
     fig.text(0.5, 0.018, footer, ha="center", va="center", fontsize=12)
 
