@@ -1,19 +1,13 @@
 # -*- coding: utf-8 -*-
 """
-4x4 grid: % CE Gain vs No-Storage
+4x3 grid: % CE Gain vs No-Storage
 Rows:     κ in {0.95, 0.90, 0.85, 0.80} (top -> bottom)
-Columns:  Beta variance σ² in {0.05, 0.10, 0.15, 0.20} (left -> right)
+Columns:  Beta variance σ² in {0.02, 0.05, 0.10} (left -> right)
 
 Within each subplot:
 - y-axis: % CE gain vs no-storage (utilitarian mean of individual CEs)
 - x-axis: μ1 grid (mean of θ1), step 0.05
 - curves: gaps g ∈ {0.00, 0.05, 0.15}, interpreted as μ2 = μ1 − g
-
-Feasible μ1 ranges by column (strict feasibility at given variance):
-- Col 1 (σ²=0.05): base μ1 ∈ [0.10, 0.90]; g=0.05 uses [0.15, 0.90]; g=0.15 uses [0.25, 0.90]
-- Col 2 (σ²=0.10): base μ1 ∈ [0.15, 0.85]; g=0.05 uses [0.20, 0.85]; g=0.15 uses [0.30, 0.85]
-- Col 3 (σ²=0.15): base μ1 ∈ [0.20, 0.80]; g=0.05 uses [0.25, 0.80]; g=0.15 uses [0.35, 0.80]
-- Col 4 (σ²=0.20): base μ1 ∈ [0.30, 0.70]; g=0.05 uses [0.35, 0.70]; g=0.15 uses [0.45, 0.70]
 
 Runtime-friendly try: set R (worlds) to 200–1000 if needed; N=100 farmers; γ ~ Uniform(0,10).
 """
@@ -45,7 +39,7 @@ os.makedirs(target_dir, exist_ok=True)
 REUSE_WORLDS = True
 STORE_THRESHOLD = 0.01      # not directly used here, kept for consistency
 DPI = 300
-FIG_PATH = os.path.join(target_dir, "cegain_grid_4x4.png")
+FIG_PATH = os.path.join(target_dir, "cegain_grid_4x3.png")
 
 rng = np.random.default_rng(314)
 
@@ -53,7 +47,7 @@ rng = np.random.default_rng(314)
 N = 100
 gammas = rng.uniform(0.0, 5.0, size=N); gammas.sort()
 
-R = 5000  # <-- Number of Worlds
+R = 10000  # <-- Number of Worlds
 
 # s*(θ1,γ) interpolation grid
 theta1_grid = np.linspace(0.001, 0.999, 30)
@@ -64,9 +58,9 @@ nodes, weights = leggauss(12)
 x_nodes = 0.5 * (nodes + 1.0)
 w_nodes = 0.5 * weights
 
-# Rows and columns
+# Rows and columns (last column 0.15 removed)
 kappa_rows = [0.95, 0.90, 0.85, 0.80]
-sigma2_cols = [0.02, 0.05, 0.10, 0.15]
+sigma2_cols = [0.02, 0.05, 0.10]
 gap_list = [0.00, 0.05, 0.15]  # curves
 
 # Column-specific μ1 base ranges and narrower ranges for g>0
@@ -74,21 +68,18 @@ col_base_ranges = {
     0.02: (0.05, 0.95),
     0.05: (0.10, 0.90),
     0.10: (0.15, 0.85),
-    0.15: (0.20, 0.80),
 }
 
 col_gap005_ranges = {  # for g in {0.05}
     0.02: (0.10, 0.95),
     0.05: (0.15, 0.90),
     0.10: (0.20, 0.85),
-    0.15: (0.25, 0.80),
 }
 
 col_gap015_ranges = {  # for g in {0.15}
     0.02: (0.20, 0.95),
     0.05: (0.25, 0.90),
     0.10: (0.30, 0.85),
-    0.15: (0.35, 0.80),
 }
 
 # Curve aesthetics
@@ -341,9 +332,9 @@ def run_and_plot():
     else:
         y_lim = (0.0, 1.0)  # fallback
 
-    # Plotting
+    # Plotting — now 4x3 grid
     fig, axes = plt.subplots(len(kappa_rows), len(sigma2_cols),
-                             figsize=(12, 12), sharex=False, sharey=True)
+                             figsize=(9, 12), sharex=False, sharey=True)
 
     for r_idx, kappa in enumerate(kappa_rows):
         for c_idx, sigma2 in enumerate(sigma2_cols):
@@ -395,8 +386,8 @@ def run_and_plot():
 
     fig.suptitle(
         "Certainty-Equivalent (CE) Gain vs No-Storage\n"
-        "Rows: κ ∈ {0.95, 0.90, 0.85, 0.80}; "
-        "Cols: Var(θ) = {0.02, 0.05, 0.10, 0.15}",
+        r"Rows: $\kappa$ $\in$ {0.95, 0.90, 0.85, 0.80}; "
+        r"Cols: Var($\theta$) $\in$ {0.02, 0.05, 0.10}",
         fontsize=15, y=0.95
     )
     fig.legend(
@@ -410,10 +401,6 @@ def run_and_plot():
         columnspacing=1.6,
         borderpad=0.6
     )
-
-    footer = (f"N={N} farmers; R={R} worlds; γ~Uniform[0,5]; "
-              "CE = mean across farmers of individual certainty equivalents.")
-    fig.text(0.5, 0.018, footer, ha="center", va="center", fontsize=12)
 
     fig.tight_layout(rect=[0.04, 0.06, 0.98, 0.88])
     plt.savefig(FIG_PATH, dpi=DPI, bbox_inches="tight")

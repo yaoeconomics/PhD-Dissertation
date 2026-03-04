@@ -2,17 +2,12 @@
 """
 4x3 grid: % Mean Income Gain vs No-Storage
 Rows:     κ in {0.95, 0.90, 0.85, 0.80} (top -> bottom)
-Columns:  Beta variance σ² in {0.10, 0.15, 0.20} (left -> right)
+Columns:  Beta variance σ² in {0.02, 0.05, 0.10} (left -> right)
 
 Within each subplot:
 - y-axis: % mean income gain vs no-storage
 - x-axis: μ1 grid (mean of θ1), step 0.05
 - curves: gaps g ∈ {0.00, 0.05, 0.15}, interpreted as μ2 = μ1 − g
-
-Feasible μ1 ranges by column (fixed variance feasibility you specified):
-- Col 1 (σ²=0.10): base μ1 ∈ [0.20, 0.80]; gaps use [0.30, 0.80]
-- Col 2 (σ²=0.15): base μ1 ∈ [0.20, 0.80]; gaps use [0.35, 0.80]
-- Col 3 (σ²=0.20): base μ1 ∈ [0.30, 0.70]; gaps use [0.45, 0.70]
 
 Runtime-friendly try: R = 200 worlds; N = 100 farmers; γ ~ Uniform(0, 10).
 """
@@ -56,16 +51,15 @@ os.makedirs(target_dir, exist_ok=True)
 REUSE_WORLDS = True
 STORE_THRESHOLD = 0.01      # not directly used here, kept for consistency
 DPI = 300
-FIG_PATH = os.path.join(target_dir, "gainpct_grid_4x4.png")
+FIG_PATH = os.path.join(target_dir, "gainpct_grid_4x3.png")
 
 rng = np.random.default_rng(314)
 
 # Farmers & worlds
 N = 100
 gammas = rng.uniform(0.0, 5.0, size=N); gammas.sort()
-# gammas = 10.0 * rng.beta(1, 5, size=N); gammas.sort()
 
-R = 20000  # <-- The number of Worlds
+R = 10000  # <-- The number of Worlds
 
 # s*(θ1,γ) interpolation grid
 theta1_grid = np.linspace(0.001, 0.999, 30)
@@ -76,9 +70,9 @@ nodes, weights = leggauss(12)
 x_nodes = 0.5 * (nodes + 1.0)
 w_nodes = 0.5 * weights
 
-# Rows and columns
+# Rows and columns (last column 0.15 removed)
 kappa_rows = [0.95, 0.90, 0.85, 0.80]
-sigma2_cols = [0.02, 0.05, 0.10, 0.15]
+sigma2_cols = [0.02, 0.05, 0.10]
 gap_list = [0.00, 0.05, 0.15]  # curves
 
 # Column-specific μ1 base ranges and narrower ranges for g>0
@@ -86,21 +80,18 @@ col_base_ranges = {
     0.02: (0.05, 0.95),
     0.05: (0.10, 0.90),
     0.10: (0.15, 0.85),
-    0.15: (0.20, 0.80),
 }
 
 col_gap005_ranges = {  # for g in {0.05}
     0.02: (0.10, 0.95),
     0.05: (0.15, 0.90),
     0.10: (0.20, 0.85),
-    0.15: (0.25, 0.80),
 }
 
 col_gap015_ranges = {  # for g in {0.15}
     0.02: (0.20, 0.95),
     0.05: (0.25, 0.90),
     0.10: (0.30, 0.85),
-    0.15: (0.35, 0.80),
 }
 
 # Curve aesthetics (meaningful colors & shapes)
@@ -315,17 +306,16 @@ def run_and_plot():
     else:
         y_lim = (0.0, 1.0)  # fallback
 
-    # Plotting
+    # Plotting — now 4x3 grid
     fig, axes = plt.subplots(len(kappa_rows), len(sigma2_cols),
-                             figsize=(12, 12), sharex=False, sharey=True)
+                             figsize=(9, 12), sharex=False, sharey=True)
 
     for r_idx, kappa in enumerate(kappa_rows):
         for c_idx, sigma2 in enumerate(sigma2_cols):
             ax = axes[r_idx, c_idx]
             col_data = results[(r_idx, c_idx)]
 
-            # X ranges per column
-            ax.set_xlim(0.05, 0.95) # Force all x-axes to show 0–1, for consistent appearance
+            ax.set_xlim(0.05, 0.95)
             ax.set_ylim(*y_lim)
 
             # Plot curves with meaningful colors/markers
@@ -369,17 +359,17 @@ def run_and_plot():
                label=CURVE_STYLE[0.15]["label"]),
     ]
 
-    # Global title (slightly lower) and legend (just below it)
+    # Global title and legend
     fig.suptitle(
         "% Mean Income Gain vs No-Storage\n"
-        "Rows: κ ∈ {0.95, 0.90, 0.85, 0.80}; "
-        "Cols: Var(θ) = {0.02, 0.05, 0.10, 0.15}",
+        r"Rows: $\kappa$ $\in$ {0.95, 0.90, 0.85, 0.80}; "
+        r"Cols: Var($\theta$) $\in$ {0.02, 0.05, 0.10}",
         fontsize=15, y=0.95
     )
     fig.legend(
         handles=legend_handles,
         loc="upper center",
-        bbox_to_anchor=(0.5, 0.905),  # below suptitle, above panels
+        bbox_to_anchor=(0.5, 0.905),
         ncols=3,
         frameon=True,
         fontsize=14,
@@ -387,12 +377,6 @@ def run_and_plot():
         columnspacing=1.6,
         borderpad=0.6
     )
-
-    # Footer metadata
-    footer = (f"N={N} farmers; R= {R} worlds; γ~Uniform[0,5]; "
-              "s* via golden-section; Beta(μ,σ²) strict feasibility; "
-              "markers aid B/W reproduction.")
-    fig.text(0.5, 0.018, footer, ha="center", va="center", fontsize=12)
 
     # Tight layout: leave space for title & legend
     fig.tight_layout(rect=[0.04, 0.06, 0.98, 0.88])
