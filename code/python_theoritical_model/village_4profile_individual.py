@@ -98,9 +98,9 @@ village_profiles = [
     (gammas_v2, "#1f77b4", "--", 2.0,
      "V2: Uniform $[0,5]$  (mean $=2.5$)"),
     (gammas_v3, "#ff7f0e", "-.", 2.5,
-     "V3: Beta$(1.5,\\,3.5)$ scaled to $[0,5]$  (mean $\\approx1.5$, right-skewed)"),
+     "V3: Beta$(1.5,\\,3.5) * 5 $ (mean $\\approx1.5$, right-skewed)"),
     (gammas_v4, "#d62728", ":",  2.5,
-     "V4: Beta$(3.5,\\,1.5)$ scaled to $[0,5]$  (mean $\\approx3.5$, left-skewed)"),
+     "V4: Beta$(3.5,\\,1.5) * 5 $ (mean $\\approx3.5$, left-skewed)"),
 ]
 
 # ----------------------------- Core functions
@@ -365,9 +365,7 @@ fig.legend(
 fig.suptitle(
     "Village-Average Certainty-Equivalent Gain from Optimal Storage"
     r"  ($\mu_{\theta_1} = \mu_{\theta_2}$)" + "\n"
-    r"Four village risk-aversion profiles  $|$  "
-    r"Rows: storage efficiency $\kappa$  $|$  "
-    r"Cols: buyer-power variance $\sigma^2_\theta$",
+    r"Four village risk-aversion profiles",
     fontsize=FS_SUPTITLE,
     y=1.01
 )
