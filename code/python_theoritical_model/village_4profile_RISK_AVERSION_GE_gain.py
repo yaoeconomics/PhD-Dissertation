@@ -286,7 +286,7 @@ for v_idx, (title, color, pdf_fn, mean_v) in enumerate(dist_info):
         if v_idx == 1:   # Uniform: flat PDF, move label lower
             lbl_x, lbl_y = mean_v + 0.13, y.max() * 0.45
         elif v_idx == 3: # Left-skewed Beta: peak is on right, place label to the left
-            lbl_x, lbl_y = mean_v - 1.10, y.max() * 0.88
+            lbl_x, lbl_y = mean_v - 2.00, y.max() * 0.88
         else:            # Right-skewed Beta: default right placement
             lbl_x, lbl_y = mean_v + 0.13, y.max() * 0.88
         ax.text(lbl_x, lbl_y, f"$\\bar{{\\gamma}}={mean_v}$",
