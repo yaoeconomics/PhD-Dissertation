@@ -350,7 +350,7 @@ legend_handles = [
 fig.legend(
     handles=legend_handles,
     loc="lower center",
-    bbox_to_anchor=(0.5, -0.04),
+    bbox_to_anchor=(0.5, -0.08),
     ncols=2,
     frameon=True,
     framealpha=0.95,
@@ -372,7 +372,8 @@ fig.suptitle(
     y=1.01
 )
 
-fig.tight_layout(rect=[0.0, 0.13, 1.0, 1.0])
+fig.tight_layout(rect=[0.0, 0.18, 1.0, 1.0])
 plt.savefig(FIG_PATH, dpi=DPI, bbox_inches="tight")
 print(f"\nSaved → {FIG_PATH}")
 fig.show()
+
