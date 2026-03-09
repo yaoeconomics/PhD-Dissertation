@@ -111,8 +111,7 @@ if mu_star is not None:
 
 ax.set_xlabel(r"Expected second-period buyer power $\mathbb{E}[\theta_2]=\mu$")
 ax.set_ylabel(
-    r"Relative income gap  "
-    r"$\frac{\mathbb{E}[\pi(s^*_{RN})]-\mathbb{E}[\pi(s^*_{RA})]}{\mathbb{E}[\pi(s^*_{RN})]}\times100\%$"
+    r"Percentage relative income gap"
 )
 ax.set_title("Risk Aversion Cost: Relative Income Gap")
 ax.grid(True, alpha=0.3)

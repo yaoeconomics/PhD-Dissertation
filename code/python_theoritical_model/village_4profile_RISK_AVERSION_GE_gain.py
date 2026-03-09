@@ -63,7 +63,7 @@ target_dir      = os.path.join(grandparent_dir, "model_figures")
 os.makedirs(target_dir, exist_ok=True)
 
 DPI      = 300
-FIG_PATH = os.path.join(target_dir, "village_4profile_individual.png")
+FIG_PATH = os.path.join(target_dir, "village_4profile_CE.png")
 
 # ----------------------------- Quadrature (shared across all integrals)
 nodes, weights = leggauss(20)
@@ -349,9 +349,7 @@ for r_idx, kappa in enumerate(kappa_rows):
 fig.suptitle(
     "Village-Average Certainty-Equivalent Gain from Optimal Storage"
     r"  ($\mu_{\theta_1} = \mu_{\theta_2}$)" + "\n"
-    r"Four village risk-aversion profiles  $|$  "
-    r"Rows: storage efficiency $\kappa$  $|$  "
-    r"Cols: buyer-power variance $\sigma^2_\theta$",
+    r"Four village risk-aversion profiles",
     fontsize=FS_SUPTITLE,
     y=1.01
 )
