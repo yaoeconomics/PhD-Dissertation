@@ -109,8 +109,7 @@ def draw_pdf(ax, mu, var, show_ylabel):
     ax.set_xlim(0, 1)
     cap = np.percentile(yg, 99) * 1.15
     ax.set_ylim(0, max(cap, np.nanmax(yg[xg > 0.05]) * 1.1))
-    ax.set_title(fr"$\mu={mu},\ \sigma^2={var}$"
-                 fr"    ($\alpha={a:.2f},\ \beta={b:.2f}$)", fontsize=16, pad=5)
+    ax.set_title(fr"$\mu_{{\theta_2}}={mu},\ \sigma^2_{{\theta_2}}={var}$", fontsize=20, pad=5)
     ax.set_xlabel(r"$\theta_2$  (second-period buyer power)", fontsize=16, labelpad=2)
     if show_ylabel:
         ax.set_ylabel("density", fontsize=16, labelpad=4)
@@ -266,8 +265,7 @@ for r, var in enumerate([vlow, vhigh]):
             for t in lbls:
                 t.set_path_effects(HALO_T)
         a, b = pdf_params[(var, mu)]
-        ax.set_title(fr"$\mu={mu},\ \sigma^2={var}$   ($\alpha={a:.2f},\ \beta={b:.2f}$)",
-                     fontsize=16, pad=7)
+        ax.set_title(fr"$\mu_{{\theta_2}}={mu},\ \sigma^2_{{\theta_2}}={var}$", fontsize=20, pad=5)
         ax.set_xticks([0.6, 0.7, 0.8, 0.9, 1.0])
         ax.set_yticks([0, 1, 2, 3, 4, 5])
         ax.tick_params(labelsize=15)

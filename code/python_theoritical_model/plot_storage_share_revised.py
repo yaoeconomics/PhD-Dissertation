@@ -1,6 +1,6 @@
 """
 Optimal first-period storage share s*(kappa, gamma) under a Beta-distributed
-second-period buyer-power shock theta_2.
+second-period buyer-competition shock theta_2.
 
 Revision of `plot_4x4_panel_improved.py`. MODEL unchanged: same constants, fixed
 seed, CRRA objective; corner (bang-bang) solutions at gamma = 0 preserved.
@@ -115,9 +115,8 @@ def draw_pdf(ax, mu, var, show_ylabel):
     ax.set_xlim(0, 1)
     cap = np.percentile(yg, 99) * 1.15
     ax.set_ylim(0, max(cap, np.nanmax(yg[xg > 0.05]) * 1.1))
-    ax.set_title(fr"$\mu={mu},\ \sigma^2={var}$"
-                 fr"    ($\alpha={a:.2f},\ \beta={b:.2f}$)", fontsize=20, pad=5)
-    ax.set_xlabel(r"$\theta_2$  (second-period buyer power)", fontsize=20, labelpad=2)
+    ax.set_title(fr"$\mu_{{\theta_2}}={mu},\ \sigma^2_{{\theta_2}}={var}$", fontsize=20, pad=5)
+    ax.set_xlabel(r"$\theta_2$", fontsize=20, labelpad=2)
     if show_ylabel:
         ax.set_ylabel("density", fontsize=16, labelpad=4)
     ax.tick_params(labelsize=13)
@@ -193,9 +192,9 @@ fig.add_artist(Line2D([0.05, 0.985], [y_div, y_div], transform=fig.transFigure,
 # variance block labels, centred on each surface row
 y_low = (low_cell.y0 + low_cell.y1) / 2.0
 y_high = (high_cell.y0 + high_cell.y1) / 2.0
-fig.text(0.012, y_low, "LOW variance\n" + fr"$\sigma^2={vlow}$", rotation=90,
+fig.text(0.012, y_low, "LOW variance\n" + fr"$\sigma^2_{{\theta_2}}={vlow}$", rotation=90,
          va="center", ha="center", fontsize=20, fontweight="bold", color=BLUE)
-fig.text(0.012, y_high, "HIGH variance\n" + fr"$\sigma^2={vhigh}$", rotation=90,
+fig.text(0.012, y_high, "HIGH variance\n" + fr"$\sigma^2_{{\theta_2}}={vhigh}$", rotation=90,
          va="center", ha="center", fontsize=20, fontweight="bold", color=ORANGE)
 
 cax = fig.add_axes([0.32, 0.045, 0.38, 0.016])
@@ -282,8 +281,7 @@ for r, var in enumerate([vlow, vhigh]):
             for t in lbls:
                 t.set_path_effects(HALO_T)
         a, b = pdf_params[(var, mu)]
-        ax.set_title(fr"$\mu={mu},\ \sigma^2={var}$   ($\alpha={a:.2f},\ \beta={b:.2f}$)",
-                     fontsize=20, pad=7)
+        ax.set_title(fr"$\mu_{{\theta_2}}={mu},\ \sigma^2_{{\theta_2}}={var}$", fontsize=20, pad=7)
         ax.set_xticks([0.6, 0.7, 0.8, 0.9, 1.0])
         ax.set_yticks([0, 1, 2, 3, 4, 5])
         ax.tick_params(labelsize=15)

@@ -121,8 +121,8 @@ def draw_pmf(ax, mu, show_ylabel):
     ax.set_xlim(0.5, 9.5)
     ax.set_ylim(0, max(pmf_vals) * 1.18)
     ax.set_xticks(range(1, 10))
-    ax.set_title(fr"$\mu={mu}$   (Poisson, truncated $[1,9]$)", fontsize=16, pad=5)
-    ax.set_xlabel(r"$N_2$  (second-period buyers)", fontsize=16, labelpad=2)
+    ax.set_title(fr"$E(N_2)={mu}$   (Poisson, truncated $[1,9]$)", fontsize=18, pad=5)
+    ax.set_xlabel(r"$N_2$  (second-period # of buyers)", fontsize=16, labelpad=2)
     if show_ylabel:
         ax.set_ylabel("probability", fontsize=16, labelpad=4)
     ax.tick_params(labelsize=13)
@@ -146,7 +146,7 @@ def draw_surface(ax, Z, mu):
     ax.set_zlabel("")
     ax.text2D(0.05, 0.70, r"$s^{*}$", transform=ax.transAxes, fontsize=AX3D,
               fontweight="bold", ha="left", va="center")
-    ax.set_title(fr"$s^{{*}}(\kappa,\gamma)\ \mid\ \mu={mu}$", fontsize=16, pad=2)
+    ax.set_title(fr"$s^{{*}}(\kappa,\gamma)\ \mid\ E(N_2)={mu}$", fontsize=18, pad=2)
     ax.set_zlim(s_min, s_max)
     ax.set_xticks([0.6, 0.8, 1.0])
     ax.set_yticks([0, 2.5, 5])
